@@ -3,9 +3,13 @@ package sv.edu.ues.occ.ingenieria.prn335_2024.cine.entity;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Size;
 
+import java.util.List;
+
 @Entity
 @Table(name = "sala")
 public class Sala {
+    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL,mappedBy = "idSala")
+    public List<SalaCaracteristica> salaCaracteristicaList;
     @Id
     @Column(name = "id_sala", nullable = false)
     private Integer id;
@@ -24,6 +28,14 @@ public class Sala {
     @Lob
     @Column(name = "observaciones")
     private String observaciones;
+
+    public List<SalaCaracteristica> getSalaCaracteristicaList() {
+        return salaCaracteristicaList;
+    }
+
+    public void setSalaCaracteristicaList(List<SalaCaracteristica> salaCaracteristicaList) {
+        this.salaCaracteristicaList = salaCaracteristicaList;
+    }
 
     public Integer getId() {
         return id;

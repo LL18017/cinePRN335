@@ -5,30 +5,31 @@ import jakarta.persistence.TypedQuery;
 
 import java.util.List;
 
-public abstract  class AbstractDataAccess<T> {
+public abstract  class AbstractDataPersist<T> {
     final Class tipoDeDato;
 
-    public AbstractDataAccess(Class t) {
+    public AbstractDataPersist(Class t) {
         this.tipoDeDato=t;
     }
     public abstract EntityManager getEntityManager();
 
-    public T findById(Integer id) {
+    public T findById(Object id) throws IllegalArgumentException ,IllegalStateException {
         EntityManager em = null;
-        if (id!=null){
-            try {
-               em=getEntityManager();
-               if (em!=null){
-                   return (T) em.find(this.tipoDeDato,id);
-               }
-            }catch (IllegalStateException e){
-                //error de entity manager
-                throw new IllegalStateException("error al aceder al repositorio",e);
-            }
+        if (id==null){
+           throw new IllegalStateException("parametro no valido");
         }
-        return null;
+        try {
+            em=getEntityManager();
+            if (em==null){
+                throw new IllegalStateException("error al aceder al repositorio");
+            }
+        }catch (IllegalStateException e){
+            throw new IllegalStateException("error al aceder al repositorio",e);
+
+        }
+        return (T) em.find(this.tipoDeDato,id);
     }
-    public List<T> findAll() {
+    public List<T> findAll() throws IllegalStateException {
         EntityManager em = null;
         List<T> resultados=null;
             try {
@@ -38,13 +39,13 @@ public abstract  class AbstractDataAccess<T> {
                     resultados=query.getResultList();
                     return resultados;
                 }
-            }catch (IllegalStateException e){
+            }catch (java.lang.IllegalStateException e){
                 //error de entity manager
                 throw new IllegalStateException("error al aceder al repositorio",e);
             }
         return null;
     }
-    public void create(T registro) {
+    public void create(T registro) throws IllegalStateException {
         if (registro == null) {
             throw new IllegalArgumentException("El registro no puede ser nulo");
         }

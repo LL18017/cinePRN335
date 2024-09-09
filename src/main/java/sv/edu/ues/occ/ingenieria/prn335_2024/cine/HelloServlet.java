@@ -3,7 +3,6 @@ package sv.edu.ues.occ.ingenieria.prn335_2024.cine;
 import java.io.*;
 
 import jakarta.inject.Inject;
-import jakarta.resource.spi.IllegalStateException;
 import jakarta.servlet.http.*;
 import jakarta.servlet.annotation.*;
 import sv.edu.ues.occ.ingenieria.prn335_2024.cine.control.TipoSalaBean;
@@ -22,7 +21,7 @@ public class HelloServlet extends HttpServlet {
         response.setContentType("text/html");
         TipoSala noExiste= null;
         try {
-            noExiste = tsBean.findAll(1);
+            noExiste = tsBean.findById(1);
         } catch (IllegalStateException e) {
             throw new RuntimeException(e);
         }
