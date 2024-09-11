@@ -8,21 +8,21 @@ import jakarta.validation.constraints.Size;
 public class Pelicula {
     @Id
     @Column(name = "id_pelicula", nullable = false)
-    private Long id;
+    private Integer id;
 
     @Size(max = 255)
     @Column(name = "nombre")
     private String nombre;
 
-    @Lob
+
     @Column(name = "sinopsis")
     private String sinopsis;
 
-    public Long getId() {
+    public Integer getId() {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(Integer id) {
         this.id = id;
     }
 
