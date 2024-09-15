@@ -1,56 +1,77 @@
+/*
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
+ */
 package sv.edu.ues.occ.ingenieria.prn335_2024.cine.entity;
 
-import jakarta.persistence.*;
+import jakarta.persistence.Basic;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.NamedQueries;
+import jakarta.persistence.NamedQuery;
+import jakarta.persistence.OneToMany;
+import jakarta.persistence.Table;
 import jakarta.validation.constraints.Size;
-
+import java.io.Serializable;
 import java.util.List;
 
+/**
+ *
+ * @author mj99lopez
+ */
 @Entity
 @Table(name = "sala")
-public class Sala {
-    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL,mappedBy = "idSala")
-    public List<SalaCaracteristica> salaCaracteristicaList;
+@NamedQueries({
+    @NamedQuery(name = "Sala.findAll", query = "SELECT s FROM Sala s"),
+    @NamedQuery(name = "Sala.findByIdSala", query = "SELECT s FROM Sala s WHERE s.idSala = :idSala"),
+    @NamedQuery(name = "Sala.findByNombre", query = "SELECT s FROM Sala s WHERE s.nombre = :nombre"),
+    @NamedQuery(name = "Sala.findByActivo", query = "SELECT s FROM Sala s WHERE s.activo = :activo"),
+    @NamedQuery(name = "Sala.findByObservaciones", query = "SELECT s FROM Sala s WHERE s.observaciones = :observaciones")})
+public class Sala implements Serializable {
+
+    private static final long serialVersionUID = 1L;
     @Id
-    @Column(name = "id_sala", nullable = false)
-    private Integer id;
-
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "id_sucursal")
-    private Sucursal idSucursal;
-
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Basic(optional = false)
+    @Column(name = "id_sala")
+    private Integer idSala;
     @Size(max = 155)
-    @Column(name = "nombre", length = 155)
+    @Column(name = "nombre")
     private String nombre;
-
     @Column(name = "activo")
     private Boolean activo;
-
-    @Lob
+    @Size(max = 2147483647)
     @Column(name = "observaciones")
     private String observaciones;
+    @OneToMany(mappedBy = "idSala", fetch = FetchType.LAZY)
+    private List<Asiento> asientoList;
+    @OneToMany(mappedBy = "idSala", fetch = FetchType.LAZY)
+    private List<SalaCaracteristica> salaCaracteristicaList;
+    @JoinColumn(name = "id_sucursal", referencedColumnName = "id_sucursal")
+    @ManyToOne(fetch = FetchType.LAZY)
+    private Sucursal idSucursal;
+    @OneToMany(mappedBy = "idSala", fetch = FetchType.LAZY)
+    private List<Programacion> programacionList;
 
-    public List<SalaCaracteristica> getSalaCaracteristicaList() {
-        return salaCaracteristicaList;
+    public Sala() {
     }
 
-    public void setSalaCaracteristicaList(List<SalaCaracteristica> salaCaracteristicaList) {
-        this.salaCaracteristicaList = salaCaracteristicaList;
+    public Sala(Integer idSala) {
+        this.idSala = idSala;
     }
 
-    public Integer getId() {
-        return id;
+    public Integer getIdSala() {
+        return idSala;
     }
 
-    public void setId(Integer id) {
-        this.id = id;
-    }
-
-    public Sucursal getIdSucursal() {
-        return idSucursal;
-    }
-
-    public void setIdSucursal(Sucursal idSucursal) {
-        this.idSucursal = idSucursal;
+    public void setIdSala(Integer idSala) {
+        this.idSala = idSala;
     }
 
     public String getNombre() {
@@ -77,4 +98,61 @@ public class Sala {
         this.observaciones = observaciones;
     }
 
+    public List<Asiento> getAsientoList() {
+        return asientoList;
+    }
+
+    public void setAsientoList(List<Asiento> asientoList) {
+        this.asientoList = asientoList;
+    }
+
+    public List<SalaCaracteristica> getSalaCaracteristicaList() {
+        return salaCaracteristicaList;
+    }
+
+    public void setSalaCaracteristicaList(List<SalaCaracteristica> salaCaracteristicaList) {
+        this.salaCaracteristicaList = salaCaracteristicaList;
+    }
+
+    public Sucursal getIdSucursal() {
+        return idSucursal;
+    }
+
+    public void setIdSucursal(Sucursal idSucursal) {
+        this.idSucursal = idSucursal;
+    }
+
+    public List<Programacion> getProgramacionList() {
+        return programacionList;
+    }
+
+    public void setProgramacionList(List<Programacion> programacionList) {
+        this.programacionList = programacionList;
+    }
+
+    @Override
+    public int hashCode() {
+        int hash = 0;
+        hash += (idSala != null ? idSala.hashCode() : 0);
+        return hash;
+    }
+
+    @Override
+    public boolean equals(Object object) {
+        // TODO: Warning - this method won't work in the case the id fields are not set
+        if (!(object instanceof Sala)) {
+            return false;
+        }
+        Sala other = (Sala) object;
+        if ((this.idSala == null && other.idSala != null) || (this.idSala != null && !this.idSala.equals(other.idSala))) {
+            return false;
+        }
+        return true;
+    }
+
+    @Override
+    public String toString() {
+        return "sv.edu.ues.occ.ingenieria.prn335_2024.cine.entity.Sala[ idSala=" + idSala + " ]";
+    }
+    
 }
