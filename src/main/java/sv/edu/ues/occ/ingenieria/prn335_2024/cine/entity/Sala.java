@@ -7,6 +7,14 @@ import java.util.List;
 
 @Entity
 @Table(name = "sala")
+@NamedQueries(
+        {
+                @NamedQuery(
+                        name = "Sala.findByIdTipoSala",
+                        query = "SELECT s FROM SalaCaracteristica sc JOIN sc.idSala s WHERE sc.idTipoSala.idTipoSala = :idTipoSala GROUP BY s.nombre"
+                )
+        }
+)
 public class Sala {
     @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL,mappedBy = "idSala")
     public List<SalaCaracteristica> salaCaracteristicaList;

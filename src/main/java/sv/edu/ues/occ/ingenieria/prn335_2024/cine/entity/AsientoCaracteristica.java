@@ -17,6 +17,7 @@ public class AsientoCaracteristica {
     @JoinColumn(name = "id_tipo_asiento")
     private TipoAsiento idTipoAsiento;
 
+
     @Lob
     @Column(name = "valor")
     private String valor;
