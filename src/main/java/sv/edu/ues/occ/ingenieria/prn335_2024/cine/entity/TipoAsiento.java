@@ -16,6 +16,8 @@ import jakarta.persistence.NamedQuery;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.Size;
+import jakarta.xml.bind.annotation.XmlRootElement;
+import jakarta.xml.bind.annotation.XmlTransient;
 import java.io.Serializable;
 import java.util.List;
 
@@ -25,6 +27,7 @@ import java.util.List;
  */
 @Entity
 @Table(name = "tipo_asiento")
+@XmlRootElement
 @NamedQueries({
     @NamedQuery(name = "TipoAsiento.findAll", query = "SELECT t FROM TipoAsiento t"),
     @NamedQuery(name = "TipoAsiento.findByIdTipoAsiento", query = "SELECT t FROM TipoAsiento t WHERE t.idTipoAsiento = :idTipoAsiento"),
@@ -101,6 +104,7 @@ public class TipoAsiento implements Serializable {
         this.expresionRegular = expresionRegular;
     }
 
+    @XmlTransient
     public List<AsientoCaracteristica> getAsientoCaracteristicaList() {
         return asientoCaracteristicaList;
     }

@@ -16,6 +16,8 @@ import jakarta.persistence.NamedQuery;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.Size;
+import jakarta.xml.bind.annotation.XmlRootElement;
+import jakarta.xml.bind.annotation.XmlTransient;
 import java.io.Serializable;
 import java.util.List;
 
@@ -25,6 +27,7 @@ import java.util.List;
  */
 @Entity
 @Table(name = "sucursal")
+@XmlRootElement
 @NamedQueries({
     @NamedQuery(name = "Sucursal.findAll", query = "SELECT s FROM Sucursal s"),
     @NamedQuery(name = "Sucursal.findByIdSucursal", query = "SELECT s FROM Sucursal s WHERE s.idSucursal = :idSucursal"),
@@ -112,6 +115,7 @@ public class Sucursal implements Serializable {
         this.activo = activo;
     }
 
+    @XmlTransient
     public List<Sala> getSalaList() {
         return salaList;
     }

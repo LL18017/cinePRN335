@@ -24,5 +24,27 @@
     <class>sv.edu.ues.occ.ingenieria.prn335_2024.cine.entity.Programacion</class>
     <class>sv.edu.ues.occ.ingenieria.prn335_2024.cine.entity.FacturaDetalleProducto</class>
     <class>sv.edu.ues.occ.ingenieria.prn335_2024.cine.entity.Asiento</class>
+    <class>sv.edu.ues.occ.ingenieria.prn335_2024.cine.control.Factura</class>
+    <class>sv.edu.ues.occ.ingenieria.prn335_2024.cine.control.TipoAsiento</class>
+    <class>sv.edu.ues.occ.ingenieria.prn335_2024.cine.control.TipoReserva</class>
+    <class>sv.edu.ues.occ.ingenieria.prn335_2024.cine.control.PagoDetalle</class>
+    <class>sv.edu.ues.occ.ingenieria.prn335_2024.cine.control.Programacion</class>
+    <class>sv.edu.ues.occ.ingenieria.prn335_2024.cine.control.Pelicula</class>
+    <class>sv.edu.ues.occ.ingenieria.prn335_2024.cine.control.AsientoCaracteristica</class>
+    <class>sv.edu.ues.occ.ingenieria.prn335_2024.cine.control.SalaCaracteristica</class>
+    <class>sv.edu.ues.occ.ingenieria.prn335_2024.cine.control.TipoSala</class>
+    <class>sv.edu.ues.occ.ingenieria.prn335_2024.cine.control.TipoPelicula</class>
+    <class>sv.edu.ues.occ.ingenieria.prn335_2024.cine.control.Producto</class>
+    <class>sv.edu.ues.occ.ingenieria.prn335_2024.cine.control.ReservaDetalle</class>
+    <class>sv.edu.ues.occ.ingenieria.prn335_2024.cine.control.TipoProducto</class>
+    <class>sv.edu.ues.occ.ingenieria.prn335_2024.cine.control.PeliculaCaracteristica</class>
+    <class>sv.edu.ues.occ.ingenieria.prn335_2024.cine.control.Asiento</class>
+    <class>sv.edu.ues.occ.ingenieria.prn335_2024.cine.control.FacturaDetalleProducto</class>
+    <class>sv.edu.ues.occ.ingenieria.prn335_2024.cine.control.TipoPago</class>
+    <class>sv.edu.ues.occ.ingenieria.prn335_2024.cine.control.Sala</class>
+    <class>sv.edu.ues.occ.ingenieria.prn335_2024.cine.control.Pago</class>
+    <class>sv.edu.ues.occ.ingenieria.prn335_2024.cine.control.Sucursal</class>
+    <class>sv.edu.ues.occ.ingenieria.prn335_2024.cine.control.FacturaDetalleSala</class>
+    <class>sv.edu.ues.occ.ingenieria.prn335_2024.cine.control.Reserva</class>
   </persistence-unit>
 </persistence>

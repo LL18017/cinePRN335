@@ -20,6 +20,8 @@ import jakarta.persistence.Table;
 import jakarta.persistence.Temporal;
 import jakarta.persistence.TemporalType;
 import jakarta.validation.constraints.Size;
+import jakarta.xml.bind.annotation.XmlRootElement;
+import jakarta.xml.bind.annotation.XmlTransient;
 import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
@@ -30,6 +32,7 @@ import java.util.List;
  */
 @Entity
 @Table(name = "programacion")
+@XmlRootElement
 @NamedQueries({
     @NamedQuery(name = "Programacion.findAll", query = "SELECT p FROM Programacion p"),
     @NamedQuery(name = "Programacion.findByIdProgramacion", query = "SELECT p FROM Programacion p WHERE p.idProgramacion = :idProgramacion"),
@@ -117,6 +120,7 @@ public class Programacion implements Serializable {
         this.idSala = idSala;
     }
 
+    @XmlTransient
     public List<Reserva> getReservaList() {
         return reservaList;
     }

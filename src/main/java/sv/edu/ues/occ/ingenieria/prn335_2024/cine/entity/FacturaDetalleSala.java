@@ -16,6 +16,7 @@ import jakarta.persistence.ManyToOne;
 import jakarta.persistence.NamedQueries;
 import jakarta.persistence.NamedQuery;
 import jakarta.persistence.Table;
+import jakarta.xml.bind.annotation.XmlRootElement;
 import java.io.Serializable;
 import java.math.BigDecimal;
 
@@ -25,6 +26,7 @@ import java.math.BigDecimal;
  */
 @Entity
 @Table(name = "factura_detalle_sala")
+@XmlRootElement
 @NamedQueries({
     @NamedQuery(name = "FacturaDetalleSala.findAll", query = "SELECT f FROM FacturaDetalleSala f"),
     @NamedQuery(name = "FacturaDetalleSala.findByIdFacturaDetalleSala", query = "SELECT f FROM FacturaDetalleSala f WHERE f.idFacturaDetalleSala = :idFacturaDetalleSala"),
