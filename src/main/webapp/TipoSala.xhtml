@@ -1,6 +1,4 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
-        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml"
       xmlns:h="http://xmlns.jcp.org/jsf/html"
       xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
@@ -16,8 +14,6 @@
             border-collapse: collapse;
             margin:50px auto;
         }
-
-        /* Zebra striping */
         tr:nth-of-type(odd) {
             background: #eee;
         }
@@ -35,25 +31,17 @@
             font-size: 18px;
         }
 
-        /*
-        Max width before this PARTICULAR table gets nasty
-        This query will take effect for any screen smaller than 760px
-        and also iPads specifically.
-        */
         @media
         only screen and (max-width: 760px),
         (min-device-width: 768px) and (max-device-width: 1024px)  {
-
             table {
                 width: 100%;
             }
 
-            /* Force table to not be like tables anymore */
             table, thead, tbody, th, td, tr {
                 display: block;
             }
 
-            /* Hide table headers (but not display: none;, for accessibility) */
             thead tr {
                 position: absolute;
                 top: -9999px;
@@ -63,7 +51,6 @@
             tr { border: 1px solid #ccc; }
 
             td {
-                /* Behave  like a "row" */
                 border: none;
                 border-bottom: 1px solid #eee;
                 position: relative;
@@ -71,17 +58,13 @@
             }
 
             td:before {
-                /* Now like a table header */
                 position: absolute;
-                /* Top/left values mimic padding */
                 top: 6px;
                 left: 6px;
                 width: 45%;
                 padding-right: 10px;
                 white-space: nowrap;
-                /* Label the data */
                 content: attr(data-column);
-
                 color: #000;
                 font-weight: bold;
             }
@@ -91,59 +74,49 @@
 </h:head>
 <f:view>
     <h:outputLabel value="Tipo Sala"/>
-
-<!--    <h:outputText value="#{frmTipoSala}"/>-->
     <h:form id="frmTabla">
-
-
-<h:dataTable value="#{frmTipoSala.registros}" var="r" >
-    <h:column>
-        <f:facet name="header">
-            Id
-        </f:facet>
-        <h:outputText value="#{r.idTipoSala}"/>
-    </h:column>
-    <h:column>
-        <f:facet name="header">
-            Nombre
-        </f:facet>
-        <h:outputText value="#{r.nombre}"/>
-    </h:column>
-    <h:column>
-        <f:facet name="header">
-            Estado
-        </f:facet>
-        <h:outputText value="#{r.activo?'ACTIVO':'INACTIVO'}"/>
-    </h:column>
-    <h:column>
-        <f:facet name="header">
-            Expresion Regular
-        </f:facet>
-        <h:outputText value="#{r.expresionRegular}"/>
-    </h:column>
-    <h:column>
-        <h:commandButton value="Selecionar" actionListener="#{frmTipoSala.btnSelecionarREgistroHandler}" />
-    </h:column>
-</h:dataTable>
-
+        <h:dataTable value="#{frmTipoSala.registros}" var="r" >
+            <h:column>
+                <f:facet name="header">
+                    Id
+                </f:facet>
+                <h:outputText value="#{r.idTipoSala}"/>
+            </h:column>
+            <h:column>
+                <f:facet name="header">
+                    Nombre
+                </f:facet>
+                <h:outputText value="#{r.nombre}"/>
+            </h:column>
+            <h:column>
+                <f:facet name="header">
+                    Estado
+                </f:facet>
+                <h:outputText value="#{r.activo ? 'ACTIVO' : 'INACTIVO'}"/>
+            </h:column>
+            <h:column>
+                <f:facet name="header">
+                    Expresión Regular
+                </f:facet>
+                <h:outputText value="#{r.expresionRegular}"/>
+            </h:column>
+            <h:column>
+                <h:commandButton value="Seleccionar" actionListener="#{frmTipoSala.btnSelecionarRegistroHandler}" />
+            </h:column>
+        </h:dataTable>
     </h:form>
-    <h:panelGroup rendered="#{frmTipoSala.registro= not empty}">
+
+    <h:panelGroup rendered="#{not empty frmTipoSala.registro}">
         <h:panelGrid columns="2">
             <h:outputLabel value="ID" for="txtId"/>
-            <h:inputText id="txtId" value="#{frmTipoSala.registro.idTipoSala}" readonly="true" disabled="id"/>
+            <h:inputText id="txtId" value="#{frmTipoSala.registro.idTipoSala}" readonly="true" />
 
-            <h:outputLabel value="NOmbre" for="txtNombre"/>
+            <h:outputLabel value="Nombre" for="txtNombre"/>
             <h:inputText id="txtNombre" value="#{frmTipoSala.registro.nombre}"/>
-
 
             <h:outputLabel value="Activo" for="chkActivo"/>
             <h:selectBooleanCheckbox id="chkActivo" value="#{frmTipoSala.registro.activo}"/>
-
-            <h:outputLabel value="NOmbre" for="txtNombre"/>
-            <h:inputText id="txtNombre" value="#{frmTipoSala.registro.nombre}"/>
-
         </h:panelGrid>
     </h:panelGroup>
-
 </f:view>
 </html>

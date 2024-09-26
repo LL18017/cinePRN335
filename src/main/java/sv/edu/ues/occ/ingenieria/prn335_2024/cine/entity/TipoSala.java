@@ -1,6 +1,9 @@
 package sv.edu.ues.occ.ingenieria.prn335_2024.cine.entity;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Max;
+import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 
 @Entity
@@ -11,6 +14,9 @@ public class TipoSala {
     @Column(name = "id_tipo_sala", nullable = false)
     private Integer idTipoSala;
 
+    @NotBlank(message = "debe ingrear un nombre valido")
+    @Min(value = 5,message = "el nombre debe poseer almenos 5 caracteres")
+    @Max(value = 155,message = "el nombre no puede tener mas de 55 caracteres")
     @Size(max = 155)
     @Column(name = "nombre", length = 155)
     private String nombre;
