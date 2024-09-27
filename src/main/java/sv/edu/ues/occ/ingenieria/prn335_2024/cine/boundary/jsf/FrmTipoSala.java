@@ -55,7 +55,7 @@ public class FrmTipoSala implements Serializable {
     public void setRegistro(TipoSala registro) {
         this.registro = registro;
     }
-    public void btnSelecionarREgistroHandler(ActionEvent ae) {
+    public void btnSelecionarRegistroHandler(ActionEvent ae) {
         System.out.println("selecionado");
     }
 }
