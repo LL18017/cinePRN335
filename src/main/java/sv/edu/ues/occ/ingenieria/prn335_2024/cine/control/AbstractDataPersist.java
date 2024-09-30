@@ -112,19 +112,21 @@ public abstract  class AbstractDataPersist<T> {
             throw new IllegalStateException("Error al acceder al repositorio jj", e);
         }
     }
-    public void modify(T registro) {
+    public T update(T registro) {
         if (registro == null) {
             throw new IllegalArgumentException("El registro no puede ser nulo");
         }
+        T modificado=null;
         EntityManager em = null;
         try {
             em = getEntityManager();
             if (em != null) {
-                em.merge(registro);
+               modificado= em.merge(registro);
             }
         } catch (IllegalStateException e) {
             throw new IllegalStateException("Error al acceder al repositorio", e);
         }
+        return modificado;
     }
     public int count() {
         EntityManager em = null;

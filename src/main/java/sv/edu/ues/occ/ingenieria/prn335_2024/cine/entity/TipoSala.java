@@ -1,10 +1,7 @@
 package sv.edu.ues.occ.ingenieria.prn335_2024.cine.entity;
 
 import jakarta.persistence.*;
-import jakarta.validation.constraints.Max;
-import jakarta.validation.constraints.Min;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.Size;
+import jakarta.validation.constraints.*;
 
 @Entity
 @Table(name = "tipo_sala")
@@ -13,7 +10,7 @@ public class TipoSala {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id_tipo_sala", nullable = false)
     private Integer idTipoSala;
-
+//    @Pattern(regexp = "/d/d/d" ,message = "dui no valido")
     @NotBlank(message = "Debe ingresar un nombre válido")
     @Size(min = 5, max = 155, message = "El nombre debe tener entre 5 y 155 caracteres")
     @Column(name = "nombre", length = 155)

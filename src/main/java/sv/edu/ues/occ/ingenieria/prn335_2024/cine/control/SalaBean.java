@@ -28,21 +28,21 @@ public class SalaBean extends AbstractDataPersist<SalaBean> implements Serializa
     public EntityManager getEntityManager() {
         return em;
     }
-    public List<Sala> findBiIdTipoSala(Integer idTipoSala,int first,int max) {
-        if (idTipoSala!=null && first>=0 &&max>0){
-            try {
-                if (em!=null){
-                    Query query=em.createNamedQuery("Sala.findByIdTipoSala");
-                    query.setParameter("idTipoSala", idTipoSala);
-                    query.setFirstResult(first);
-                    query.setMaxResults(max);
-                    return query.getResultList();
-                }
-            }catch (Exception e){
-                Logger.getLogger(getClass().getName()).log(Level.SEVERE,e.getMessage(),e);
-            }
-
-        }
-        return Collections.emptyList();
-    }
+//    public List<Sala> findBiIdTipoSala(Integer idTipoSala,int first,int max) {
+//        if (idTipoSala!=null && first>=0 &&max>0){
+//            try {
+//                if (em!=null){
+//                    Query query=em.createNamedQuery("Sala.findByIdTipoSala");
+//                    query.setParameter("idTipoSala", idTipoSala);
+//                    query.setFirstResult(first);
+//                    query.setMaxResults(max);
+//                    return query.getResultList();
+//                }
+//            }catch (Exception e){
+//                Logger.getLogger(getClass().getName()).log(Level.SEVERE,e.getMessage(),e);
+//            }
+//
+//        }
+//        return Collections.emptyList();
+//    }
 }

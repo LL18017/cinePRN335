@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Created by IntelliJ IDEA.
+  User: mj99lopez
+  Date: 29/9/24
+  Time: 18:57
+-->
+
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+
+<h:head>
+    <title>Tipo Asiento</title>
+</h:head>
+
+<h:body>
+
+    <h:form id="frmTabla">
+        <h:dataTable id="grlList" value="#{frmTipoAsiento.registros}" var="r" >
+            <h:column>
+                <f:facet name="header">
+                    Id
+                </f:facet>
+                <h:outputText value="#{r.idTipoAsiento}"/>
+            </h:column>
+            <h:column>
+                <f:facet name="header">
+                    Nombre
+                </f:facet>
+                <h:outputText value="#{r.nombre}"/>
+            </h:column>
+            <h:column>
+                <f:facet name="header">
+                    Estado
+                </f:facet>
+                <h:outputText value="#{r.activo ? 'ACTIVO' : 'INACTIVO'}"/>
+            </h:column>
+            <h:column>
+                <f:facet name="header">
+                    Expresión Regular
+                </f:facet>
+                <h:outputText value="#{r.expresionRegular}"/>
+            </h:column>
+            <h:column>
+                <f:facet name="header">
+                    comentarios
+                </f:facet>
+                <h:outputText value="#{r.comentarios}"/>
+            </h:column>
+            <h:column>
+                <h:commandButton value="Seleccionar"
+                                 action="#{frmTipoAsiento.btnSelecionarRegistroHandler(r.idTipoAsiento)}">
+
+                    <f:ajax render=":pnlDetalle" execute="@form"/>
+                </h:commandButton>
+            </h:column>
+        </h:dataTable>
+        <h:panelGroup>
+            <h:commandButton value="CANCELAR" actionListener="#{frmTipoAsiento.btnCancelarHandler}">
+                <f:ajax render=":pnlDetalle" execute="@form"/>
+            </h:commandButton>
+            <h:commandButton value="NUEVO" actionListener="#{frmTipoAsiento.btnNuevoHandler}">
+                <f:ajax render=":pnlDetalle" execute="@form"/>
+            </h:commandButton>
+        </h:panelGroup>
+        <h:messages showSummary="true" showDetail="true" />
+    </h:form>
+    <h:panelGroup id="pnlDetalle">
+<!--        <h:outputText id="mensajeEstado" value="#{frmTipoAsiento.estado}"/>-->
+        <h:form id="frmDetalle"  rendered="#{not empty frmTipoAsiento.registro}">
+            <h:panelGroup >
+                <h:panelGrid columns="2" >
+                    <h:outputLabel value="ID" for="txtId"/>
+                    <h:inputText id="txtId" value="#{frmTipoAsiento.registro.idTipoAsiento}" readonly="true" disabled="true"/>
+
+                    <h:outputLabel value="Nombre" for="txtNombre"/>
+                    <h:inputText id="txtNombre" value="#{frmTipoAsiento.registro.nombre}"/>
+
+                    <h:outputLabel value="Expresion Regular" for="txtExpresionREgular"/>
+                    <h:inputText id="txtExpresionREgular" value="#{frmTipoAsiento.registro.expresionRegular}"/>
+
+                    <h:outputLabel value="Activo" for="chkActivo"/>
+                    <h:selectBooleanCheckbox id="chkActivo" value="#{frmTipoAsiento.registro.activo}"/>
+
+                    <h:outputLabel value="Comentarios" for="txtAreaComentarios"/>
+                    <h:inputText id="txtAreaComentarios" value="#{frmTipoAsiento.registro.comentarios}"/>
+                </h:panelGrid>
+            </h:panelGroup>
+            <h:panelGrid id="botones">
+                <h:panelGroup >
+                    <h:commandButton value="GUARDAR" actionListener="#{frmTipoAsiento.btnGuardarHandler}" rendered="#{frmTipoAsiento.estado=='CREAR'}">
+                        <f:ajax render=":frmTabla pnlDetalle" execute="@this"/>
+                    </h:commandButton>
+                    <h:commandButton value="ACTUALIZAR" actionListener="#{frmTipoAsiento.btnModificarHandler}" rendered="#{frmTipoAsiento.estado=='MODIFICAR'}">
+                        <f:ajax render=":frmTabla" execute="@form"/>
+                        <f:ajax render="mensajeEstado pnlDetalle" execute="@this"/>
+                    </h:commandButton>
+                    <h:commandButton value="ELIMINAR" actionListener="#{frmTipoAsiento.btneEliminarHandler}" rendered="#{frmTipoAsiento.estado=='MODIFICAR'}">
+                        <f:ajax render=":frmTabla pnlDetalle" execute="@this"/>
+                    </h:commandButton>
+
+                </h:panelGroup>
+            </h:panelGrid>
+
+        </h:form>
+    </h:panelGroup>
+</h:body>
+
+</html>

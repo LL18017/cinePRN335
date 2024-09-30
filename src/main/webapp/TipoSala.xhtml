@@ -73,7 +73,7 @@
     </style>
 </h:head>
 <f:view>
-    <h:outputLabel value="Tipo Sala"/>
+    <h:outputText value="Tipo Sala 2"/>
     <h:form id="frmTabla">
         <h:dataTable value="#{frmTipoSala.registros}" var="r" >
             <h:column>
@@ -101,22 +101,49 @@
                 <h:outputText value="#{r.expresionRegular}"/>
             </h:column>
             <h:column>
-                <h:commandButton value="Seleccionar" actionListener="#{frmTipoSala.btnSelecionarRegistroHandler}" />
+                <h:commandButton value="Seleccionar"
+                                 action="#{frmTipoSala.btnSelecionarRegistroHandler(r.idTipoSala)}">
+
+                                 <f:ajax render=":pnlDetalle" execute="@form"/>
+                </h:commandButton>
             </h:column>
         </h:dataTable>
+    <h:panelGroup>
+        <h:commandButton value="CANCELAR" actionListener="#{frmTipoSala.btnCancelarHandler}"/>
+        <h:commandButton value="NUEVO" actionListener="#{frmTipoSala.btnNuevoHandler}"/>
+    </h:panelGroup>
+        <h:messages showSummary="true" showDetail="true" />
     </h:form>
 
-    <h:panelGroup rendered="#{not empty frmTipoSala.registro}">
-        <h:panelGrid columns="2">
-            <h:outputLabel value="ID" for="txtId"/>
-            <h:inputText id="txtId" value="#{frmTipoSala.registro.idTipoSala}" readonly="true" />
+   <h:panelGroup id="pnlDetalle">
+       <h:form id="frmDetalle"  rendered="#{not empty frmTipoSala.registro}">
+           <h:panelGroup >
+               <h:panelGrid columns="2">
+                   <h:outputLabel value="ID" for="txtId"/>
+                   <h:inputText id="txtId" value="#{frmTipoSala.registro.idTipoSala}" readonly="true" disabled="true"/>
 
-            <h:outputLabel value="Nombre" for="txtNombre"/>
-            <h:inputText id="txtNombre" value="#{frmTipoSala.registro.nombre}"/>
+                   <h:outputLabel value="Nombre" for="txtNombre"/>
+                   <h:inputText id="txtNombre" value="#{frmTipoSala.registro.nombre}"/>
 
-            <h:outputLabel value="Activo" for="chkActivo"/>
-            <h:selectBooleanCheckbox id="chkActivo" value="#{frmTipoSala.registro.activo}"/>
-        </h:panelGrid>
-    </h:panelGroup>
+                   <h:outputLabel value="Expresion Regular" for="txtExpresionREgular"/>
+                   <h:inputText id="txtExpresionREgular" value="#{frmTipoSala.registro.expresionRegular}"/>
+
+                   <h:outputLabel value="Activo" for="chkActivo"/>
+                   <h:selectBooleanCheckbox id="chkActivo" value="#{frmTipoSala.registro.activo}"/>
+               </h:panelGrid>
+           </h:panelGroup>
+           <h:panelGrid>
+               <h:messages showSummary="true" showDetail="true" />
+               <h:panelGroup >
+                   <h:commandButton value="GUARDAR" actionListener="#{frmTipoSala.btnGuardarHandler}" rendered="#{frmTipoSala.estado=='CREAR'}"/>
+                   <h:commandButton value="ACTUALIZAR" actionListener="#{frmTipoSala.btnModificarHandler}" rendered="#{frmTipoSala.estado=='MODIFICAR'}"/>
+                   <h:commandButton value="ELIMINAR" actionListener="#{frmTipoSala.btnEliminarHandler}" rendered="#{frmTipoSala.estado=='MODIFICAR'}"/>
+                   <h:commandButton value="CANCELAR" actionListener="#{frmTipoSala.btnCancelarHandler}"/>
+
+               </h:panelGroup>
+           </h:panelGrid>
+
+       </h:form>
+   </h:panelGroup>
 </f:view>
 </html>
