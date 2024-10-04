@@ -4,12 +4,17 @@ import jakarta.annotation.PostConstruct;
 import jakarta.faces.application.FacesMessage;
 import jakarta.faces.context.FacesContext;
 import jakarta.faces.event.ActionEvent;
+import org.primefaces.model.FilterMeta;
+import org.primefaces.model.LazyDataModel;
+import org.primefaces.model.SortMeta;
 import sv.edu.ues.occ.ingenieria.prn335_2024.cine.control.AbstractDataPersist;
 import sv.edu.ues.occ.ingenieria.prn335_2024.cine.entity.TipoSala;
 
+import java.lang.annotation.Retention;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -20,11 +25,15 @@ public abstract class AbstractFrm<T>{
    public abstract AbstractDataPersist<T> getAbstractDataPersist();
    public abstract void btnSelecionarRegistroHandler(final Object id);
    public abstract Object getIdEntity();
+   public abstract String getIdObject(T object);
+
+   public abstract T getObjectId(String id);
 
    //propiedades
    ESTADO_CRUD estado=ESTADO_CRUD.NINGUNO;
     T registro;
     List<T> registros;
+    LazyDataModel<T> modelo;
    //botones
    public void btnCancelarHandler(ActionEvent actionEvent) {
       this.estado=ESTADO_CRUD.NINGUNO;
@@ -42,7 +51,53 @@ public abstract class AbstractFrm<T>{
       inicioRegistros();
    }
    public void  inicioRegistros(){
-      registros = getUpdateList();
+      this.modelo=new LazyDataModel<T>() {
+         //se indica cuantas filas tiene el entity atravas del metod count
+         @Override
+         public int count(Map<String, FilterMeta> map) {
+            AbstractDataPersist<T> clBean=getAbstractDataPersist();
+            int result=0;
+            try {
+               result=clBean.count();
+            }catch (Exception ex){
+               Logger.getLogger(AbstractFrm.class.getName()).log(Level.SEVERE, null, ex);
+            }
+
+            return result;
+         }
+         //se cargarn elelmetos de acuerdo al findrabge
+         @Override
+         public List<T> load(int init, int max, Map<String, SortMeta> map, Map<String, FilterMeta> map1) {
+
+           if (init>0 && max>init){
+
+              try {
+                 AbstractDataPersist<T> clBean=getAbstractDataPersist();
+                 return clBean.findRange(init,max);
+              }catch (Exception e) {
+                 Logger.getLogger(AbstractFrm.class.getName()).log(Level.SEVERE, null, e);
+              }
+           }
+
+            return List.of();
+         }
+         @Override
+         public String getRowKey(T object) {
+            if (object != null) {
+               return getIdObject(object);
+            }
+            return null;
+         }
+
+         @Override
+         public T getRowData(String rowKey) {
+            if (rowKey != null) {
+               return getObjectId(rowKey);
+
+            }
+            return null;
+         }
+      };
 
    }
    //persistencia
@@ -114,6 +169,16 @@ public abstract class AbstractFrm<T>{
 
       }
    }
+   //modelo
+
+   public LazyDataModel<T> getModelo() {
+      return modelo;
+   }
+
+   public void setModelo(LazyDataModel<T> modelo) {
+      this.modelo = modelo;
+   }
+
    //otros
 
    public List<T> getUpdateList(){

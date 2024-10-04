@@ -50,4 +50,14 @@ public class FrmTipoAsiento extends AbstractFrm<TipoAsiento> implements Serializ
     public Object getIdEntity() {
         return this.registro.getIdTipoAsiento();
     }
+
+    @Override
+    public String getIdObject(TipoAsiento object) {
+        return "";
+    }
+
+    @Override
+    public TipoAsiento getObjectId(String id) {
+        return null;
+    }
 }
