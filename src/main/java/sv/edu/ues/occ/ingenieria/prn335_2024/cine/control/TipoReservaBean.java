@@ -8,9 +8,12 @@ import jakarta.persistence.PersistenceException;
 import jakarta.resource.spi.IllegalStateException;
 import sv.edu.ues.occ.ingenieria.prn335_2024.cine.entity.TipoReserva;
 import sv.edu.ues.occ.ingenieria.prn335_2024.cine.entity.TipoSala;
+
+import java.io.Serializable;
+
 @Stateless
 @LocalBean
-public class TipoReservaBean extends AbstractDataPersist<TipoReserva> {
+public class TipoReservaBean extends AbstractDataPersist<TipoReserva> implements Serializable {
 
     @PersistenceContext(unitName = "cinePU")
     EntityManager em;

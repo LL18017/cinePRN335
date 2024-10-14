@@ -14,6 +14,7 @@ import java.util.logging.Logger;
 
 public abstract  class AbstractDataPersist<T> {
     final Class tipoDeDato;
+    private String Orden;
 
     public AbstractDataPersist(Class t) {
         this.tipoDeDato=t;
@@ -56,29 +57,38 @@ public abstract  class AbstractDataPersist<T> {
                 throw new IllegalStateException("error al aceder al repositorio",e);
             }
     }
-    public List<T> findRange(int first, int max) throws IllegalStateException,IllegalArgumentException {
+
+    public List<T> findRange(int first, int max) throws IllegalStateException, IllegalArgumentException {
+        return findRange(first, max, "",""); // Llama al método con orden como cadena vacía
+    }
+    public List<T> findRange(int first, int max,String orden,String direccion) throws IllegalStateException,IllegalArgumentException {
         EntityManager em = null;
 
         if (first >= 0 && max > 0) {
             try {
                 em = getEntityManager();
                 if (em != null) {
-
-                    //construir consultas de criterios (criteria queries). Este es un componente clave de JPA para construir consultas dinámicas.
+                    // Construir consultas de criterios
                     CriteriaBuilder cb = em.getCriteriaBuilder();
-                    // estructura de la consulta con criterios que se va a construir. A partir de este punto,
-                    CriteriaQuery q = cb.createQuery(this.tipoDeDato);
-//              Root representa la entidad raíz de la consulta, que es tipoDatos. Esto se utiliza para definir desde qué entidad se realizará la consulta.
+                    CriteriaQuery<T> cq = cb.createQuery(this.tipoDeDato);
+                    Root<T> raiz = cq.from(this.tipoDeDato);
+                    cq.select(raiz);
 
-                    //indicamo de donde selecionamos
-                    Root<T> raiz = q.from(this.tipoDeDato);
-                    CriteriaQuery cq=q.select(raiz);
+                    // Agregar ordenamiento si se proporciona
+                    if (!orden.isEmpty()) {
+                        if (!direccion.equals("ASCENDING")) {
 
-                    TypedQuery query = em.createQuery(cq);
+                            cq.orderBy(cb.desc(raiz.get(orden))); // Orden ascendente
+                        }else{
+
+                            cq.orderBy(cb.asc(raiz.get(orden))); // Orden ascendente
+                        }
+                    }
+
+                    TypedQuery<T> query = em.createQuery(cq);
                     query.setFirstResult(first);
                     query.setMaxResults(max);
-                    return (query.getResultList());
-
+                    return query.getResultList();
                 }
             } catch (Exception e) {
                 System.out.println("error: " + e.getMessage());

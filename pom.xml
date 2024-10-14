@@ -5,7 +5,7 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>sv.edu.ues.occ.ingenieria.prn335_2024</groupId>
-    <artifactId>cine</artifactId>
+    <artifactId>Cine</artifactId>
     <version>1.0-SNAPSHOT</version>
     <name>CinePRN335</name>
     <packaging>war</packaging>
@@ -19,11 +19,19 @@
 
     <dependencies>
         <dependency>
+            <groupId>jakarta.faces</groupId>
+            <artifactId>jakarta.faces-api</artifactId>
+            <version>2.3.2</version> <!-- Asegúrate de usar la versión correcta -->
+            <scope>provided</scope>
+        </dependency>
+
+        <dependency>
             <groupId>jakarta.platform</groupId>
             <artifactId>jakarta.jakartaee-api</artifactId>
             <version>10.0.0</version>
             <scope>provided</scope>
         </dependency>
+
 <!--        pruebas unitariias-->
         <dependency>
             <groupId>org.junit.jupiter</groupId>
@@ -48,11 +56,10 @@
         <dependency>
             <groupId>org.primefaces</groupId>
             <artifactId>primefaces</artifactId>
-            <version>14.0.4</version> <!-- Reemplazar con la versión que necesites -->
-
+            <version>14.0.5</version>
+<!--             <scope>provided</scope>-->
+<!--            <classifier>jakarta</classifier>-->
         </dependency>
-        
-
 
     </dependencies>
 

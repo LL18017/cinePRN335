@@ -7,160 +7,75 @@ import jakarta.faces.event.ActionEvent;
 import jakarta.faces.view.ViewScoped;
 import jakarta.inject.Inject;
 import jakarta.inject.Named;
+import org.primefaces.event.SelectEvent;
+import sv.edu.ues.occ.ingenieria.prn335_2024.cine.control.AbstractDataPersist;
 import sv.edu.ues.occ.ingenieria.prn335_2024.cine.control.TipoSalaBean;
 import sv.edu.ues.occ.ingenieria.prn335_2024.cine.entity.TipoSala;
 
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
-@Named
+    @Named
     @ViewScoped
-public class FrmTipoSala implements Serializable {
+public class FrmTipoSala extends AbstractFrm<TipoSala> implements Serializable {
     @Inject
     TipoSalaBean tsBean;
-    ESTADO_CRUD estado;
     @Inject
     FacesContext fc;
 
-    private List<TipoSala> registros;
-    private TipoSala registro;
 
-    @PostConstruct
-    public void init() {
-        estado=ESTADO_CRUD.NINGUNO;
-        registros = getUpdateList();
-    }
+        @Override
+        public void instanciarRegistro() {
+            this.registro=new TipoSala();
+            this.registro.setActivo(true);
+        }
 
-    public List<TipoSala> getRegistros() {
-        return registros;
-    }
+        @Override
+        public FacesContext getFC() {
+            return fc;
+        }
 
-    public void setRegistros(List<TipoSala> registros) {
-        this.registros = registros;
-    }
+        @Override
+        public AbstractDataPersist<TipoSala> getAbstractDataPersist() {
+            return tsBean;
+        }
 
-    public Integer getSelecionado() {
-        if (registro == null) {
+        @Override
+        public void btnSelecionarRegistroHandler(Object id) {
+
+        }
+
+        @Override
+        public String getIdByObject(TipoSala object) {
+            if (object!=null){
+                return object.getIdTipoSala().toString();
+            }
             return null;
         }
-        return registro.getIdTipoSala();
-    }
 
-    public void setSelecionado(Integer selecionado) {
-        if (selecionado == null || this.registros == null) {
-            this.registro = null;
-            this.estado = ESTADO_CRUD.NINGUNO;
-            return;
-        }
+        @Override
+        public TipoSala getObjectById(String id) {
 
-        this.registro = this.registros.stream()
-                .filter(r -> r.getIdTipoSala().equals(selecionado))
-                .findFirst()
-                .orElse(null);
+            if (id!=null && modelo!=null && modelo.getWrappedData()!=null){
 
-        if (this.registro == null) {
-            this.estado = ESTADO_CRUD.NINGUNO;
-        }
-    }
-
-
-    public TipoSala getRegistro() {
-        return registro;
-    }
-
-    public void setRegistro(TipoSala registro) {
-        this.registro = registro;
-    }
-
-    public ESTADO_CRUD getEstado() {
-        return estado;
-    }
-
-    public void setEstado(ESTADO_CRUD estado) {
-        this.estado = estado;
-    }
-
-    public void btnSelecionarRegistroHandler(final Integer idTipoSala) {
-        if (idTipoSala!=null){
-            this.registro = this.registros.stream().filter(t -> t.getIdTipoSala() == idTipoSala).
-                    findFirst().orElse(null);
-            this.estado=ESTADO_CRUD.MODIFICAR;
-            return;
-        }
-        this.registro=null;
-    }
-
-    public void btnCancelarHandler(ActionEvent actionEvent) {
-        this.estado=ESTADO_CRUD.NINGUNO;
-        this.registro=null;
-    }
-    public void btnNuevoHandler(ActionEvent actionEvent) {
-        this.registro=new TipoSala();
-        this.registro.setActivo(true);
-        this.estado=ESTADO_CRUD.CREAR;
-    }
-    public void btnGuardarHandler(ActionEvent actionEvent) {
-
-           FacesMessage mensaje=new FacesMessage();
-        try {
-            this.tsBean.create(registro);
-            getUpdateList();
-            this.registro=null;
-            this.estado=ESTADO_CRUD.NINGUNO;
-           mensaje.setSeverity(FacesMessage.SEVERITY_INFO);
-           mensaje.setSummary("registro guardado");
-            fc.addMessage(null,mensaje);
-        }catch (Exception e){
-            mensaje.setSeverity(FacesMessage.SEVERITY_ERROR);
-            mensaje.setSummary("no se pudo guardar el datos");
-            mensaje.setDetail(e.getMessage());
-            fc.addMessage(null,mensaje);
-        }
-    }
-    public void btnModificarHandler(ActionEvent actionEvent) {
-           FacesMessage mensaje=new FacesMessage();
-
-       TipoSala actualizado= this.tsBean.update(registro);
-       if (actualizado!=null){
-           this.registro=null;
-           this.estado=ESTADO_CRUD.NINGUNO;
-
-
-           mensaje.setSeverity(FacesMessage.SEVERITY_INFO);
-           mensaje.setSummary("registro modificado");
-           fc.addMessage(null,mensaje);
-       }else{
-
-           mensaje.setSeverity(FacesMessage.SEVERITY_ERROR);
-           mensaje.setSummary("no se pudo modificar el datos");
-
-           fc.addMessage(null,mensaje);
-       }
-
-    }
-
-     public void btnEliminarHandler(ActionEvent actionEvent) {
-           FacesMessage mensaje=new FacesMessage();
-            try {
-            this.tsBean.delete(registro);
-           this.registro=null;
-           this.estado=ESTADO_CRUD.NINGUNO;
-           mensaje.setSeverity(FacesMessage.SEVERITY_INFO);
-           mensaje.setSummary("registro eliminado");
-                fc.addMessage(null,mensaje);
-       }catch (Exception e){
-           mensaje.setSeverity(FacesMessage.SEVERITY_INFO);
-           mensaje.setSummary("registro eliminado");
-           mensaje.setDetail(e.getMessage());
-           fc.addMessage(null,mensaje);
-
+                return modelo.getWrappedData().stream().
+                        filter(r->id.equals(r.getIdTipoSala().toString())).findFirst().
+                        orElseGet(()-> {
+                            Logger.getLogger(getClass().getName()).log(Level.INFO,"No se ha encontrado objeto");
+                            return null;});
             }
-    }
+            return null;
+        }
 
-    public List<TipoSala> getUpdateList() {
-        return tsBean.findRange(0,10000);
+        @Override
+        public void selecionarFila(SelectEvent<TipoSala> event) {
+            TipoSala tipoSalaSelected = (TipoSala) event.getObject();
+            FacesMessage mensaje=new FacesMessage("Tipo de sala seleccionada",tipoSalaSelected.getNombre());
+            fc.addMessage(null, mensaje);
+            this.estado=ESTADO_CRUD.MODIFICAR;
+        }
     }
-
-}

@@ -1,29 +1,24 @@
 package sv.edu.ues.occ.ingenieria.prn335_2024.cine.control;
 
-
 import jakarta.ejb.LocalBean;
 import jakarta.ejb.Stateless;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
-import java.lang.IllegalArgumentException;
-import java.lang.IllegalStateException;
-import sv.edu.ues.occ.ingenieria.prn335_2024.cine.entity.TipoSala;
+import sv.edu.ues.occ.ingenieria.prn335_2024.cine.entity.Sucursal;
 
 import java.io.Serializable;
-import java.util.List;
 
 @Stateless
 @LocalBean
-public class TipoSalaBean extends AbstractDataPersist<TipoSala>{
+public class SucursalBean extends AbstractDataPersist<Sucursal> implements Serializable {
     @PersistenceContext(unitName = "cinePU")
-    EntityManager em;
-
-    public TipoSalaBean() {
-        super(TipoSala.class);
+    EntityManager Em;
+    public SucursalBean() {
+        super(Sucursal.class);
     }
 
     @Override
     public EntityManager getEntityManager() {
-        return em;
+        return Em;
     }
 }

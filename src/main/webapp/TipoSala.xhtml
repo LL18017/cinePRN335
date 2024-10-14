@@ -1,149 +1,69 @@
 <?xml version="1.0" encoding="UTF-8"?>
+
 <html xmlns="http://www.w3.org/1999/xhtml"
       xmlns:h="http://xmlns.jcp.org/jsf/html"
       xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
-      xmlns:f="http://xmlns.jcp.org/jsf/core">
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:p="http://primefaces.org/ui">
+
+
 <h:head>
-    <title>TipoSala</title>
-    <style type="text/css">
-        body{
-            background-color: #e3fbe9;
-        }
-        table {
-            width: 750px;
-            border-collapse: collapse;
-            margin:50px auto;
-        }
-        tr:nth-of-type(odd) {
-            background: #eee;
-        }
-
-        th {
-            background: #3498db;
-            color: white;
-            font-weight: bold;
-        }
-
-        td, th {
-            padding: 10px;
-            border: 1px solid #ccc;
-            text-align: left;
-            font-size: 18px;
-        }
-
-        @media
-        only screen and (max-width: 760px),
-        (min-device-width: 768px) and (max-device-width: 1024px)  {
-            table {
-                width: 100%;
-            }
-
-            table, thead, tbody, th, td, tr {
-                display: block;
-            }
-
-            thead tr {
-                position: absolute;
-                top: -9999px;
-                left: -9999px;
-            }
-
-            tr { border: 1px solid #ccc; }
-
-            td {
-                border: none;
-                border-bottom: 1px solid #eee;
-                position: relative;
-                padding-left: 50%;
-            }
-
-            td:before {
-                position: absolute;
-                top: 6px;
-                left: 6px;
-                width: 45%;
-                padding-right: 10px;
-                white-space: nowrap;
-                content: attr(data-column);
-                color: #000;
-                font-weight: bold;
-            }
-
-        }
-    </style>
+    <title>TIPO SALA</title>
 </h:head>
-<f:view>
-    <h:outputText value="Tipo Sala 2"/>
-    <h:form id="frmTabla">
-        <h:dataTable value="#{frmTipoSala.registros}" var="r" >
-            <h:column>
-                <f:facet name="header">
-                    Id
-                </f:facet>
-                <h:outputText value="#{r.idTipoSala}"/>
-            </h:column>
-            <h:column>
-                <f:facet name="header">
-                    Nombre
-                </f:facet>
-                <h:outputText value="#{r.nombre}"/>
-            </h:column>
-            <h:column>
-                <f:facet name="header">
-                    Estado
-                </f:facet>
-                <h:outputText value="#{r.activo ? 'ACTIVO' : 'INACTIVO'}"/>
-            </h:column>
-            <h:column>
-                <f:facet name="header">
-                    Expresión Regular
-                </f:facet>
-                <h:outputText value="#{r.expresionRegular}"/>
-            </h:column>
-            <h:column>
-                <h:commandButton value="Seleccionar"
-                                 action="#{frmTipoSala.btnSelecionarRegistroHandler(r.idTipoSala)}">
 
-                                 <f:ajax render=":pnlDetalle" execute="@form"/>
-                </h:commandButton>
-            </h:column>
-        </h:dataTable>
-    <h:panelGroup>
-        <h:commandButton value="CANCELAR" actionListener="#{frmTipoSala.btnCancelarHandler}"/>
-        <h:commandButton value="NUEVO" actionListener="#{frmTipoSala.btnNuevoHandler}"/>
-    </h:panelGroup>
-        <h:messages showSummary="true" showDetail="true" />
+<h:body>
+    <p:outputLabel value="TipoSala"/>
+    <h:form id="frmTabla">
+        <p:dataTable value="#{frmTipoSala.modelo}" var="r"
+                     lazy="true"
+                     paginator="true"
+                     rows="5"
+                     first="0"
+                     selectionMode="single"
+                     selection="#{frmTipoSala.registro}"
+                     rendered="#{empty frmTipoSala.registro}"
+        >
+            <p:ajax  process="@this" update=":pnlDetalle @form" event="rowSelect" listener="#{frmTipoSala.selecionarFila}"/>
+            <p:column headerText="ID"><h:outputText value="#{r.idTipoSala}"/></p:column>
+            <p:column headerText="NOMBRE"><h:outputText value="#{r.nombre}"/></p:column>
+            <p:column headerText="ACTIVO"><h:outputText value="#{r.activo?'ACTIVO':'INACTIVO'}"/></p:column>
+            <p:column headerText="COMENTARIOS"><h:outputText value="#{r.comentarios}"/></p:column>
+            <p:column headerText="EXPRESION REGULAR"><h:outputText value="#{r.expresionRegular}"/></p:column>
+
+        </p:dataTable>
+        <h:panelGrid columns="2">
+            <p:commandButton value="CANCELAR" rendered="#{frmTipoSala.estado ne 'NINGUNO'}" update=":pnlDetalle @form" actionListener="#{frmTipoSala.btnCancelarHandler}"/>
+            <p:commandButton value="NUEVO" update=":pnlDetalle @form" actionListener="#{frmTipoSala.btnNuevoHandler}"/>
+        </h:panelGrid>
+        <p:growl id="growl" showDetail="true" sticky="false" life="1500" />
     </h:form>
 
-   <h:panelGroup id="pnlDetalle">
-       <h:form id="frmDetalle"  rendered="#{not empty frmTipoSala.registro}">
-           <h:panelGroup >
-               <h:panelGrid columns="2">
-                   <h:outputLabel value="ID" for="txtId"/>
-                   <h:inputText id="txtId" value="#{frmTipoSala.registro.idTipoSala}" readonly="true" disabled="true"/>
+    <h:panelGroup id="pnlDetalle">
+        <h:form rendered="#{not empty frmTipoSala.registro}" id="frmDetalle">
+            <h:panelGrid columns="2">
+                <p:outputLabel value="ID" for="txtid"/>
+                <p:inputText id="txtid" value="#{frmTipoSala.registro.idTipoSala}" readonly="true" disabled="true"/>
 
-                   <h:outputLabel value="Nombre" for="txtNombre"/>
-                   <h:inputText id="txtNombre" value="#{frmTipoSala.registro.nombre}"/>
+                <p:outputLabel value="Nombre" for="txtNombre"/>
+                <p:inputText id="txtNombre" value="#{frmTipoSala.registro.nombre}" size="70" />
 
-                   <h:outputLabel value="Expresion Regular" for="txtExpresionREgular"/>
-                   <h:inputText id="txtExpresionREgular" value="#{frmTipoSala.registro.expresionRegular}"/>
+                <p:outputLabel value="Nombre" for="chkActivo"/>
+                <p:selectBooleanCheckbox id="chkActivo" value="#{frmTipoSala.registro.activo}" size="70" />
 
-                   <h:outputLabel value="Activo" for="chkActivo"/>
-                   <h:selectBooleanCheckbox id="chkActivo" value="#{frmTipoSala.registro.activo}"/>
-               </h:panelGrid>
-           </h:panelGroup>
-           <h:panelGrid>
-               <h:messages showSummary="true" showDetail="true" />
-               <h:panelGroup >
-                   <h:commandButton value="GUARDAR" actionListener="#{frmTipoSala.btnGuardarHandler}" rendered="#{frmTipoSala.estado=='CREAR'}"/>
-                   <h:commandButton value="ACTUALIZAR" actionListener="#{frmTipoSala.btnModificarHandler}" rendered="#{frmTipoSala.estado=='MODIFICAR'}"/>
-                   <h:commandButton value="ELIMINAR" actionListener="#{frmTipoSala.btnEliminarHandler}" rendered="#{frmTipoSala.estado=='MODIFICAR'}"/>
-                   <h:commandButton value="CANCELAR" actionListener="#{frmTipoSala.btnCancelarHandler}"/>
+                <p:outputLabel value="Comentarios" for="txtComentarios"/>
+                <p:inputText id="txtComentarios" value="#{frmTipoSala.registro.comentarios}" size="70" />
 
-               </h:panelGroup>
-           </h:panelGrid>
+                <p:outputLabel value="ExpresionRegular" for="txtExpresionRegular"/>
+                <p:inputText id="txtExpresionRegular" value="#{frmTipoSala.registro.expresionRegular}" size="70" />
 
-       </h:form>
-   </h:panelGroup>
-</f:view>
+            </h:panelGrid>
+            <h:panelGrid columns="3">
+                <p:commandButton value="GUARDAR" rendered="#{frmTipoSala.estado=='CREAR'}" update=":frmTabla  :pnlDetalle @form" actionListener="#{frmTipoSala.btnGuardarHandler}"/>
+                <p:commandButton value="MODIFICAR" rendered="#{frmTipoSala.estado=='MODIFICAR'}" update=":frmTabla :pnlDetalle @form" actionListener="#{frmTipoSala.btnModificarHandler}"/>
+                <p:commandButton value="ELIMINAR" rendered="#{frmTipoSala.estado=='MODIFICAR'}" update=":frmTabla  :pnlDetalle @form" actionListener="#{frmTipoSala.btneEliminarHandler}"/>
+            </h:panelGrid>
+        </h:form>
+    </h:panelGroup>
+</h:body>
+
 </html>

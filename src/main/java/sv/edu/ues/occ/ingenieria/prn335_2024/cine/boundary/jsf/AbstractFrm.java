@@ -4,30 +4,33 @@ import jakarta.annotation.PostConstruct;
 import jakarta.faces.application.FacesMessage;
 import jakarta.faces.context.FacesContext;
 import jakarta.faces.event.ActionEvent;
+import org.primefaces.event.SelectEvent;
 import org.primefaces.model.FilterMeta;
 import org.primefaces.model.LazyDataModel;
 import org.primefaces.model.SortMeta;
+import org.primefaces.model.SortOrder;
+import sv.edu.ues.occ.ingenieria.prn335_2024.cine.boundary.jsf.orden.LazySorted;
 import sv.edu.ues.occ.ingenieria.prn335_2024.cine.control.AbstractDataPersist;
-import sv.edu.ues.occ.ingenieria.prn335_2024.cine.entity.TipoSala;
+import sv.edu.ues.occ.ingenieria.prn335_2024.cine.entity.TipoProducto;
 
-import java.lang.annotation.Retention;
-import java.util.Collection;
+import java.io.Serializable;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.stream.Collectors;
 
-public abstract class AbstractFrm<T>{
+public abstract class AbstractFrm<T> implements Serializable {
    //metodos abstractos
    public abstract void instanciarRegistro();
    public abstract FacesContext getFC();
    public abstract AbstractDataPersist<T> getAbstractDataPersist();
    public abstract void btnSelecionarRegistroHandler(final Object id);
-   public abstract Object getIdEntity();
-   public abstract String getIdObject(T object);
-
-   public abstract T getObjectId(String id);
+   public abstract String getIdByObject(T object);
+   public abstract T getObjectById(String id);
+   public abstract void selecionarFila(SelectEvent<T> event);
 
    //propiedades
    ESTADO_CRUD estado=ESTADO_CRUD.NINGUNO;
@@ -48,10 +51,13 @@ public abstract class AbstractFrm<T>{
    @PostConstruct
    public void init() {
       estado=ESTADO_CRUD.NINGUNO;
+
       inicioRegistros();
    }
    public void  inicioRegistros(){
+      Logger.getLogger(AbstractFrm.class.getName()).log(Level.INFO, "iniciando registro");
       this.modelo=new LazyDataModel<T>() {
+
          //se indica cuantas filas tiene el entity atravas del metod count
          @Override
          public int count(Map<String, FilterMeta> map) {
@@ -62,29 +68,52 @@ public abstract class AbstractFrm<T>{
             }catch (Exception ex){
                Logger.getLogger(AbstractFrm.class.getName()).log(Level.SEVERE, null, ex);
             }
-
             return result;
          }
          //se cargarn elelmetos de acuerdo al findrabge
          @Override
          public List<T> load(int init, int max, Map<String, SortMeta> map, Map<String, FilterMeta> map1) {
 
-           if (init>0 && max>init){
+           if (init >= 0 && max > 0){
 
               try {
                  AbstractDataPersist<T> clBean=getAbstractDataPersist();
+
+                 //implementacion para ordenar
+//                 if (!map.isEmpty()){
+//                    String CampoOrden=map.values().stream().findFirst().get().getField();
+//                    String direcion=map.values().stream().findFirst().get().getOrder().toString();
+//                    return clBean.findRange(init,max,CampoOrden,direcion);
+//                 }
                  return clBean.findRange(init,max);
               }catch (Exception e) {
                  Logger.getLogger(AbstractFrm.class.getName()).log(Level.SEVERE, null, e);
               }
            }
-
             return List.of();
          }
+//         @Override
+//         public List<T> load(int init, int max, Map<String, SortMeta> map, Map<String, FilterMeta> map1) {
+//
+//           if (init >= 0 && max > 0){
+//
+//              try {
+//                 AbstractDataPersist<T> clBean=getAbstractDataPersist();
+//
+//                 //implementacion para ordenar
+//
+//
+//                 return clBean.findRange(init,max);
+//              }catch (Exception e) {
+//                 Logger.getLogger(AbstractFrm.class.getName()).log(Level.SEVERE, null, e);
+//              }
+//           }
+//            return List.of();
+//         }
          @Override
          public String getRowKey(T object) {
             if (object != null) {
-               return getIdObject(object);
+               return getIdByObject(object);
             }
             return null;
          }
@@ -92,7 +121,7 @@ public abstract class AbstractFrm<T>{
          @Override
          public T getRowData(String rowKey) {
             if (rowKey != null) {
-               return getObjectId(rowKey);
+               return getObjectById(rowKey);
 
             }
             return null;
@@ -171,6 +200,7 @@ public abstract class AbstractFrm<T>{
    }
    //modelo
 
+
    public LazyDataModel<T> getModelo() {
       return modelo;
    }
@@ -218,4 +248,5 @@ public abstract class AbstractFrm<T>{
    public void setEstado(ESTADO_CRUD estado) {
       this.estado = estado;
    }
+
 }
