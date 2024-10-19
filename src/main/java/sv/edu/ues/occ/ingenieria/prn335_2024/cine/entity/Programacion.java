@@ -35,9 +35,12 @@ import java.util.List;
 @XmlRootElement
 @NamedQueries({
     @NamedQuery(name = "Programacion.findAll", query = "SELECT p FROM Programacion p"),
+    @NamedQuery(name = "Programacion.CountAll", query = "SELECT COUNT (p) FROM Programacion p"),
     @NamedQuery(name = "Programacion.findByIdProgramacion", query = "SELECT p FROM Programacion p WHERE p.idProgramacion = :idProgramacion"),
     @NamedQuery(name = "Programacion.findByDesde", query = "SELECT p FROM Programacion p WHERE p.desde = :desde"),
     @NamedQuery(name = "Programacion.findByHasta", query = "SELECT p FROM Programacion p WHERE p.hasta = :hasta"),
+    @NamedQuery(name = "Programacion.findProgramacionBySala", query = "SELECT p FROM Programacion p WHERE p.idSala = :sala"),
+    @NamedQuery(name = "Programacion.findProgramacionBySala", query = "SELECT p FROM Programacion p WHERE p.idSala = :sala"),
     @NamedQuery(name = "Programacion.findByComentarios", query = "SELECT p FROM Programacion p WHERE p.comentarios = :comentarios")})
 public class Programacion implements Serializable {
 

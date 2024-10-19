@@ -79,12 +79,12 @@ public abstract class AbstractFrm<T> implements Serializable {
               try {
                  AbstractDataPersist<T> clBean=getAbstractDataPersist();
 
-                 //implementacion para ordenar
-//                 if (!map.isEmpty()){
-//                    String CampoOrden=map.values().stream().findFirst().get().getField();
-//                    String direcion=map.values().stream().findFirst().get().getOrder().toString();
-//                    return clBean.findRange(init,max,CampoOrden,direcion);
-//                 }
+//                 implementacion para ordenar
+                 if (!map.isEmpty()){
+                    String CampoOrden=map.values().stream().findFirst().get().getField();
+                    String direcion=map.values().stream().findFirst().get().getOrder().toString();
+                    return clBean.findRange(init,max,CampoOrden,direcion);
+                 }
                  return clBean.findRange(init,max);
               }catch (Exception e) {
                  Logger.getLogger(AbstractFrm.class.getName()).log(Level.SEVERE, null, e);

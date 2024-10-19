@@ -8,10 +8,15 @@ import jakarta.faces.view.ViewScoped;
 import jakarta.inject.Inject;
 import jakarta.inject.Named;
 import org.primefaces.event.SelectEvent;
+import org.primefaces.model.FilterMeta;
+import org.primefaces.model.LazyDataModel;
+import org.primefaces.model.SortMeta;
 import org.w3c.dom.events.Event;
 import sv.edu.ues.occ.ingenieria.prn335_2024.cine.control.AbstractDataPersist;
+import sv.edu.ues.occ.ingenieria.prn335_2024.cine.control.ProgramacionBean;
 import sv.edu.ues.occ.ingenieria.prn335_2024.cine.control.SalaBean;
 import sv.edu.ues.occ.ingenieria.prn335_2024.cine.control.SucursalBean;
+import sv.edu.ues.occ.ingenieria.prn335_2024.cine.entity.Programacion;
 import sv.edu.ues.occ.ingenieria.prn335_2024.cine.entity.Sala;
 import sv.edu.ues.occ.ingenieria.prn335_2024.cine.entity.Sucursal;
 import sv.edu.ues.occ.ingenieria.prn335_2024.cine.entity.TipoAsiento;
@@ -20,8 +25,11 @@ import jakarta.faces.event.ValueChangeEvent;
 import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 @Named
 @ViewScoped
@@ -32,9 +40,14 @@ public class FrmSala extends AbstractFrm<Sala> implements Serializable {
     FacesContext fc;
     @Inject
     SucursalBean suBean;
+    @Inject
+    ProgramacionBean programacionBean;
     Sucursal sucursalSelected;
     List<Sucursal> sucursales;
+    List<Programacion> programaciones;
     Date fecha;
+
+    LazyDataModel modeloPeliculas;
 
     //registro
     private int sucursalId;
@@ -93,6 +106,7 @@ public class FrmSala extends AbstractFrm<Sala> implements Serializable {
         this.registro=selectedSala;
         estado=ESTADO_CRUD.MODIFICAR;
         getAllSucursales();
+        getProgramacionBYSala();
     }
 
 
@@ -102,11 +116,20 @@ public class FrmSala extends AbstractFrm<Sala> implements Serializable {
     }
     public void sucursalSelecionada() {
 
+        Sucursal sucursalSElecionada=getSucursales().get(getSucursalId()-1);
           if (getSucursalId()>0){
               fc.addMessage(null, new FacesMessage(
-                      "Seleccionado", "se ha selecionado la sucursal: "+getSucursales().get(getSucursalId()-1).getNombre()));
+                      "Seleccionado", "se ha selecionado la sucursal: "+sucursalSElecionada));
               this.registro.setIdSucursal(getSucursales().get(getSucursalId()-1));
           }
+          getProgramacionBYSala();
+    }
+
+    public void getProgramacionBYSala(){
+        List<Programacion> programacionesBySala = this.programacionBean.getProgramacionByIdSala(registro);
+
+        setProgramaciones(programacionesBySala);
+        fc.addMessage(null, new FacesMessage("se han encontrado: ", String.valueOf(programacionesBySala.size())));
     }
 
     //getter y settter
@@ -146,4 +169,23 @@ public class FrmSala extends AbstractFrm<Sala> implements Serializable {
     public void setFecha(Date fecha) {
         this.fecha = fecha;
     }
+
+    public List<Programacion> getProgramaciones() {
+        return programaciones;
+    }
+
+    public void setProgramaciones(List<Programacion> programaciones) {
+        this.programaciones = programaciones;
+    }
+
+    public LazyDataModel getModeloPeliculas() {
+        return modeloPeliculas;
+    }
+
+    public void setModeloProgramacion(LazyDataModel modeloPeliculas) {
+        this.modeloPeliculas = modeloPeliculas;
+    }
+
+
+
 }

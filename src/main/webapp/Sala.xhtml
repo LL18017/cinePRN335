@@ -37,7 +37,7 @@
                              actionListener="#{frmSala.btnCancelarHandler}"/>
             <p:commandButton value="NUEVO" update=":pnlDetalle @form" actionListener="#{frmSala.btnNuevoHandler}"/>
         </h:panelGrid>
-        <p:growl id="growl" showDetail="true" sticky="false" life="1500" />
+        <p:growl id="growl" showDetail="true" sticky="false" life="10500" />
     </h:form>
 
     <h:panelGroup id="pnlDetalle">
@@ -117,10 +117,23 @@
                     </h:panelGrid>
                 </h:form>
             </p:tab>
+            <p:tab closable="false" title="Peliculas" rendered="#{frmSala.estado!='CREAR'}">
+                <p:outputLabel value="Peliculas disponibles en #{frmSala.registro.nombre}"/>
 
+            </p:tab>
             //calendar
-            <p:tab>
-                <p:calendar value="#{frmSala.fecha}" pattern="dd/MM/yyyy HH:mm:ss" showTime="true" />
+            <p:tab closable="false" title="info programaciones">
+                <p:outputLabel value="Peliculas disponibles en #{frmSala.registro.nombre}"/>
+
+               <h:form>
+                   <p:dataTable value="#{frmSala.registro.programacionList}" var="r"
+                   >
+
+                       <p:column headerText="desde"><h:outputText value="#{r.desde}"/></p:column>
+                       <p:column headerText="hasta"><h:outputText value="#{r.hasta}"/></p:column>
+                   </p:dataTable>
+               </h:form>
+
 
             </p:tab>
 
