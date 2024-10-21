@@ -1,18 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
+<f:composition xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="jakarta.faces.html"
+      xmlns:f="jakarta.faces.facelets"
+      xmlns:p="http://primefaces.org/ui"
+        template="WEB-INF/templates/principal.xhtml"
+    >
 
-<html xmlns="http://www.w3.org/1999/xhtml"
-      xmlns:h="http://xmlns.jcp.org/jsf/html"
-      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
-      xmlns:f="http://xmlns.jcp.org/jsf/core"
-      xmlns:p="http://primefaces.org/ui">
 
+<f:define name="titulo">
+    #{frmTipoPago.titulo}
+</f:define>
 
-<h:head>
-    <title>TIPO PAGO</title>
-</h:head>
-
-<h:body>
-    <p:outputLabel value="TipoProducto"/>
+<f:define name="cuerpo">
     <h:form id="frmTabla">
         <p:dataTable value="#{frmTipoPago.modelo}" var="r"
                      lazy="true"
@@ -57,6 +56,6 @@
             </h:panelGrid>
         </h:form>
     </h:panelGroup>
-</h:body>
+</f:define>
 
-</html>
+</f:composition>

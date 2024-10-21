@@ -26,6 +26,8 @@ public class FrmTipoPago extends AbstractFrm<TipoPago> implements Serializable {
         registro.setActivo(true);
     }
 
+    String Titulo="TipoPago";
+
     @Override
     public FacesContext getFC() {
         return fc;
@@ -67,5 +69,9 @@ public class FrmTipoPago extends AbstractFrm<TipoPago> implements Serializable {
         this.registro=filaSelelcted;
         this.estado=ESTADO_CRUD.MODIFICAR;
 
+    }
+
+    public String getTitulo() {
+        return Titulo;
     }
 }
