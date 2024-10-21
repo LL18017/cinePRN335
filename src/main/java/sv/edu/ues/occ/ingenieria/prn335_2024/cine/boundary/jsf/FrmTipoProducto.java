@@ -39,10 +39,6 @@ public class FrmTipoProducto extends AbstractFrm<TipoProducto> implements Serial
         return tpBean;
     }
 
-    @Override
-    public void btnSelecionarRegistroHandler(Object id) {
-        System.out.println(registro.getNombre());
-    }
 
 
 

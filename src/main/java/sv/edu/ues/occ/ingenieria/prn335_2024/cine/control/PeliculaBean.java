@@ -30,7 +30,6 @@ public class PeliculaBean extends AbstractDataPersist<Pelicula> implements Seria
     public List<Pelicula> getAllPeliculas(int init , int max , String campo,String orden) {
         try {
           List<Pelicula> ps= em.createNamedQuery("Pelicula.findAll", Pelicula.class).setFirstResult(init).setMaxResults(max).getResultList();
-            ps.forEach(System.out::println);
             return ps;
         }catch (Exception ex){
             Logger.getLogger(SalaBean.class.getName()).log(Level.SEVERE, null, ex);
@@ -40,10 +39,17 @@ public class PeliculaBean extends AbstractDataPersist<Pelicula> implements Seria
 
     public int countAllPeliculas() {
         try {
-            return 4;
-        }catch (Exception ex){
-            Logger.getLogger(SalaBean.class.getName()).log(Level.SEVERE, null, ex);
+
+            Number result = (Number) em.createNamedQuery("Pelicula.countAll").getSingleResult();
+
+            if (result == null) {
+                return 0;
+            }
+
+            return result.intValue();
+        } catch (Exception ex) {
+            Logger.getLogger(SalaBean.class.getName()).log(Level.SEVERE, "Error al contar las peliculas", ex);
+            return 0;
         }
-        return 4;
     }
 }

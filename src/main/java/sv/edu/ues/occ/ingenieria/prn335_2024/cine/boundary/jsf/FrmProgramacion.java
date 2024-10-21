@@ -41,10 +41,6 @@ public class FrmProgramacion extends AbstractFrm<Programacion> implements Serial
         return pBean;
     }
 
-    @Override
-    public void btnSelecionarRegistroHandler(Object id) {
-
-    }
 
     @Override
     public String getIdByObject(Programacion object) {

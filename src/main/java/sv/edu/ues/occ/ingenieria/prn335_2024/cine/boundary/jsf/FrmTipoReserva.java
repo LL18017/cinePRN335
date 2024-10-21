@@ -36,10 +36,7 @@ public class FrmTipoReserva extends AbstractFrm<TipoReserva> {
         return trBean;
     }
 
-    @Override
-    public void btnSelecionarRegistroHandler(Object id) {
 
-    }
 
     @Override
     public String getIdByObject(TipoReserva object) {

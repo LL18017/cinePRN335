@@ -81,7 +81,9 @@
                         <h:panelGroup>
                             <p:selectOneMenu id="selectOneMenuSucursal" value="#{frmSala.sucursalId}">
                                 <f:selectItem itemValue="0" itemLabel="selecione una sucursal"/>
-                                <f:selectItems value="#{frmSala.sucursales}" var="sucursal" itemLabel="#{sucursal.nombre}" itemValue="#{sucursal.idSucursal}" />
+                                <f:selectItems value="#{frmSala.sucursales}" var="sucursal"
+                                               itemLabel="#{sucursal.nombre}"
+                                               itemValue="#{sucursal.idSucursal}" />
                                 <p:ajax
                                         listener="#{frmSala.sucursalSelecionada}"
                                         process="selectOneMenuSucursal"

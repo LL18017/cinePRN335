@@ -27,7 +27,7 @@ public abstract class AbstractFrm<T> implements Serializable {
    public abstract void instanciarRegistro();
    public abstract FacesContext getFC();
    public abstract AbstractDataPersist<T> getAbstractDataPersist();
-   public abstract void btnSelecionarRegistroHandler(final Object id);
+//   public abstract void btnSelecionarRegistroHandler(final Object id);
    public abstract String getIdByObject(T object);
    public abstract T getObjectById(String id);
    public abstract void selecionarFila(SelectEvent<T> event);

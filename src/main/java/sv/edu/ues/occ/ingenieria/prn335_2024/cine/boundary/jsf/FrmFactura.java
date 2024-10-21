@@ -37,10 +37,7 @@ public class FrmFactura extends AbstractFrm<Factura> implements Serializable {
         return fBean;
     }
 
-    @Override
-    public void btnSelecionarRegistroHandler(Object id) {
 
-    }
 
     @Override
     public String getIdByObject(Factura object) {

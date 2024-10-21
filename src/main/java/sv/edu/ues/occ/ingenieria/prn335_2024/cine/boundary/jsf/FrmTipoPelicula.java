@@ -36,10 +36,7 @@ public class FrmTipoPelicula extends AbstractFrm<TipoPelicula> {
         return tpBean;
     }
 
-    @Override
-    public void btnSelecionarRegistroHandler(Object id) {
 
-    }
 
     @Override
     public String getIdByObject(TipoPelicula object) {

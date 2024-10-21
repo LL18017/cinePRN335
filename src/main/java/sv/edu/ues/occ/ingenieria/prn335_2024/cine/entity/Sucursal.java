@@ -35,6 +35,7 @@ import java.util.List;
     @NamedQuery(name = "Sucursal.findByLongitud", query = "SELECT s FROM Sucursal s WHERE s.longitud = :longitud"),
     @NamedQuery(name = "Sucursal.findByLatitud", query = "SELECT s FROM Sucursal s WHERE s.latitud = :latitud"),
     @NamedQuery(name = "Sucursal.findByComentarios", query = "SELECT s FROM Sucursal s WHERE s.comentarios = :comentarios"),
+    @NamedQuery(name = "Sucursal.findSucursalAndSalas", query = "SELECT su,sa FROM Sala sa join sa.idSucursal su ORDER BY su.nombre"),
     @NamedQuery(name = "Sucursal.findByActivo", query = "SELECT s FROM Sucursal s WHERE s.activo = :activo")})
 public class Sucursal implements Serializable {
 

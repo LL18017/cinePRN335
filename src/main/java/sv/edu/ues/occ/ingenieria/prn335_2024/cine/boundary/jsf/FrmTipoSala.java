@@ -44,10 +44,7 @@ public class FrmTipoSala extends AbstractFrm<TipoSala> implements Serializable {
             return tsBean;
         }
 
-        @Override
-        public void btnSelecionarRegistroHandler(Object id) {
 
-        }
 
         @Override
         public String getIdByObject(TipoSala object) {

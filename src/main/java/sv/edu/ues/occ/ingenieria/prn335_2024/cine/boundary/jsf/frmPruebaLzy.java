@@ -40,10 +40,7 @@ public class frmPruebaLzy extends AbstractFrm<Pelicula> implements Serializable 
         return peliculaBean;
     }
 
-    @Override
-    public void btnSelecionarRegistroHandler(Object id) {
 
-    }
 
     @Override
     public String getIdByObject(Pelicula object) {

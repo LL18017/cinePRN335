@@ -7,15 +7,15 @@ import jakarta.faces.event.ActionEvent;
 import jakarta.faces.view.ViewScoped;
 import jakarta.inject.Inject;
 import jakarta.inject.Named;
+import org.primefaces.event.NodeSelectEvent;
 import org.primefaces.event.SelectEvent;
-import org.primefaces.model.FilterMeta;
-import org.primefaces.model.LazyDataModel;
-import org.primefaces.model.SortMeta;
+import org.primefaces.model.*;
 import org.w3c.dom.events.Event;
 import sv.edu.ues.occ.ingenieria.prn335_2024.cine.control.AbstractDataPersist;
 import sv.edu.ues.occ.ingenieria.prn335_2024.cine.control.ProgramacionBean;
 import sv.edu.ues.occ.ingenieria.prn335_2024.cine.control.SalaBean;
 import sv.edu.ues.occ.ingenieria.prn335_2024.cine.control.SucursalBean;
+import sv.edu.ues.occ.ingenieria.prn335_2024.cine.control.utils.TreeNodeBuilder;
 import sv.edu.ues.occ.ingenieria.prn335_2024.cine.entity.Programacion;
 import sv.edu.ues.occ.ingenieria.prn335_2024.cine.entity.Sala;
 import sv.edu.ues.occ.ingenieria.prn335_2024.cine.entity.Sucursal;
@@ -42,6 +42,8 @@ public class FrmSala extends AbstractFrm<Sala> implements Serializable {
     SucursalBean suBean;
     @Inject
     ProgramacionBean programacionBean;
+    private TreeNode root;
+    private TreeNode selectedNode;
     Sucursal sucursalSelected;
     List<Sucursal> sucursales;
     List<Programacion> programaciones;
@@ -67,10 +69,7 @@ public class FrmSala extends AbstractFrm<Sala> implements Serializable {
         return sbean;
     }
 
-    @Override
-    public void btnSelecionarRegistroHandler(Object id) {
 
-    }
 
     @Override
     public String getIdByObject(Sala object) {
@@ -96,6 +95,7 @@ public class FrmSala extends AbstractFrm<Sala> implements Serializable {
     @Override
     public void selecionarFila(SelectEvent<Sala> event) {
 //        Logger.getLogger(getClass().getName()).log(Level.INFO,"NO");
+
         Sala selectedSala = event.getObject();
         if (selectedSala!=null) {
          fc.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Selecionado ", selectedSala.getNombre()));
@@ -131,6 +131,28 @@ public class FrmSala extends AbstractFrm<Sala> implements Serializable {
         setProgramaciones(programacionesBySala);
         fc.addMessage(null, new FacesMessage("se han encontrado: ", String.valueOf(programacionesBySala.size())));
     }
+
+    @Override
+    public void inicioRegistros() {
+        root= new TreeNodeBuilder<Sucursal,Sala>(suBean.getSucursalAnsSalas()).getRoot();
+        System.out.println(root.getChildCount());
+
+    }
+//    public void onNodeSelect(NodeSelectEvent event) {
+//        // Verificar si el nodo seleccionado es padre o hijo
+//        String nombre=(selectedNode.getData() instanceof Sucursal)?((Sucursal)selectedNode.getData()).getNombre():((Sala)selectedNode.getData()).getNombre();
+//        if (selectedNode != null) {
+//            nombre==null?"no hay":nombre;
+//            fc.addMessage(null,new FacesMessage("El nodo: ",nombre));
+//        }
+//    }
+
+
+
+
+
+
+    // Inicializar el árbol raíz
 
     //getter y settter
 
@@ -186,6 +208,19 @@ public class FrmSala extends AbstractFrm<Sala> implements Serializable {
         this.modeloPeliculas = modeloPeliculas;
     }
 
+    public TreeNode getRoot() {
+        return root;
+    }
 
+    public void setRoot(TreeNode root) {
+        this.root = root;
+    }
 
+    public TreeNode getSelectedNode() {
+        return selectedNode;
+    }
+
+    public void setSelectedNode(TreeNode selectedNode) {
+        this.selectedNode = selectedNode;
+    }
 }

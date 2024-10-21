@@ -36,10 +36,7 @@ public class FrmTipoPago extends AbstractFrm<TipoPago> implements Serializable {
         return tpBean;
     }
 
-    @Override
-    public void btnSelecionarRegistroHandler(Object id) {
 
-    }
 
     @Override
     public String getIdByObject(TipoPago object) {

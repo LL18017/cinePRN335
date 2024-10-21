@@ -39,7 +39,7 @@ public class FrmTipoAsiento extends AbstractFrm<TipoAsiento> implements Serializ
         return taBean;
     }
 
-    @Override
+
     public void btnSelecionarRegistroHandler(Object id) {
         if (id!=null){
             this.registro = this.registros.stream().filter(t -> t.getIdTipoAsiento() == id).

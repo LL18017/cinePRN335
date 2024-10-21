@@ -6,6 +6,7 @@ import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import sv.edu.ues.occ.ingenieria.prn335_2024.cine.entity.Programacion;
 import sv.edu.ues.occ.ingenieria.prn335_2024.cine.entity.Sala;
+import sv.edu.ues.occ.ingenieria.prn335_2024.cine.entity.Sucursal;
 
 import java.io.Serializable;
 import java.util.Arrays;
@@ -41,6 +42,17 @@ public class SalaBean extends AbstractDataPersist<Sala> implements Serializable 
 //                Logger.getLogger(SalaBean.class.getName()).log(Level.SEVERE, null, ex);
 //            }
 //        }
+
+
+        return List.of();
+    }
+    public List<Sala> getSalasBySucursal(Sucursal sucursal) {
+        try {
+            return em.createNamedQuery("Sala.findSalBySucursal", Sala.class).
+                    setParameter("sucursal",sucursal ).getResultList();
+        }catch (Exception ex){
+            Logger.getLogger(SalaBean.class.getName()).log(Level.SEVERE, "error al buscar sucursales y salas", ex);
+        }
 
 
         return List.of();
