@@ -3,7 +3,9 @@
       xmlns:h="jakarta.faces.html"
       xmlns:f="jakarta.faces.facelets"
       xmlns:p="http://primefaces.org/ui"
+               xmlns:crud="jakarta.faces.composite/crud"
         template="WEB-INF/templates/principal.xhtml"
+
     >
 
 
@@ -12,28 +14,29 @@
 </f:define>
 
 <f:define name="cuerpo">
-    <h:form id="frmTabla">
-        <p:dataTable value="#{frmTipoPago.modelo}" var="r"
-                     lazy="true"
-                     paginator="true"
-                     rows="5"
-                     first="0"
-                     selectionMode="single"
-                     selection="#{frmTipoPago.registro}"
-                     rendered="#{empty frmTipoPago.registro}"
-        >
-            <p:ajax  process="@this" update=":pnlDetalle @form" event="rowSelect" listener="#{frmTipoPago.selecionarFila}"/>
-            <p:column headerText="ID"><h:outputText value="#{r.idTipoPago}"/></p:column>
-            <p:column headerText="NOMBRE"><h:outputText value="#{r.nombre}"/></p:column>
-            <p:column headerText="ACTIVO"><h:outputText value="#{r.activo?'ACTIVO':'INACTIVO'}"/></p:column>
+    <h:panelGrid>
+        <h:panelGroup id="pnlTabla">
+            <h:form id="frmTabla">
+                <p:dataTable value="#{frmTipoPago.modelo}" var="r"
+                             lazy="true"
+                             paginator="true"
+                             rows="5"
+                             first="0"
+                             selectionMode="single"
+                             selection="#{frmTipoPago.registro}"
+                             rendered="#{empty frmTipoPago.registro}"
+                >
+                    <p:ajax  process="@this" update=":pnlDetalle @form" event="rowSelect" listener="#{frmTipoPago.selecionarFila}"/>
+                    <p:column headerText="ID"><h:outputText value="#{r.idTipoPago}"/></p:column>
+                    <p:column headerText="NOMBRE"><h:outputText value="#{r.nombre}"/></p:column>
+                    <p:column headerText="ACTIVO"><h:outputText value="#{r.activo?'ACTIVO':'INACTIVO'}"/></p:column>
 
-        </p:dataTable>
-        <h:panelGrid columns="2">
-            <p:commandButton value="CANCELAR" rendered="#{frmTipoPago.estado ne 'NINGUNO'}" update=":pnlDetalle @form" actionListener="#{frmTipoPago.btnCancelarHandler}"/>
-            <p:commandButton value="NUEVO" update=":pnlDetalle @form" actionListener="#{frmTipoPago.btnNuevoHandler}"/>
-        </h:panelGrid>
-        <p:growl id="growl" showDetail="true" sticky="false" life="1500" />
-    </h:form>
+                </p:dataTable>
+                <crud:botonesTop frm="#{frmTipoPago}" />
+                <p:growl id="growl" showDetail="true" sticky="false" life="1500" />
+            </h:form>
+        </h:panelGroup>
+    </h:panelGrid>
 
     <h:panelGroup id="pnlDetalle">
         <h:form rendered="#{not empty frmTipoPago.registro}" id="frmDetalle">
@@ -49,7 +52,7 @@
 
 
             </h:panelGrid>
-            <h:panelGrid columns="3">
+            <h:panelGrid columns="#{frmTipoPago.estado=='CREAR'?'1':'2'}">
                 <p:commandButton value="GUARDAR" rendered="#{frmTipoPago.estado=='CREAR'}" update=":frmTabla  :pnlDetalle @form" actionListener="#{frmTipoPago.btnGuardarHandler}"/>
                 <p:commandButton value="MODIFICAR" rendered="#{frmTipoPago.estado=='MODIFICAR'}" update=":frmTabla :pnlDetalle @form" actionListener="#{frmTipoPago.btnModificarHandler}"/>
                 <p:commandButton value="ELIMINAR" rendered="#{frmTipoPago.estado=='MODIFICAR'}" update=":frmTabla  :pnlDetalle @form" actionListener="#{frmTipoPago.btneEliminarHandler}"/>
