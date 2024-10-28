@@ -16,14 +16,32 @@
 <h:body>
     <div class="ui-g">
         <p:growl id="growl" showDetail="true" sticky="false" life="1500" />
-        <div class="">
+        <!--    menu-->
+        <div class="ui-g-12 ui-md-2">
             <h:form id="frmMenuPrincipal">
-                <p:outputLabel value="jajaj"/>
                 <p:menu model="#{frmMenu.model}" appendTo="body" toggleable="true">
 
                 </p:menu>
             </h:form>
         </div>
+            <div class="ui-g-8" id="sesion">
+                <p:toolbar>
+                    <p:toolbarGroup align="right">
+                        <h:form id="frmIdioma">
+                            <p:selectOneMenu value="#{sesionUsuario.idiomaSelecionado}"
+                                             valueChangeListener="#{sesionUsuario.CambiarIdioma}">
+                                <c:selectItem noSelectionOption="true" itemValue="#{null}" itemLabel="Idioma"/>
+                                <c:selectItems value="#{sesionUsuario.idiomas.entrySet()}" var="idioma"
+                                               itemValue="#{idioma.key}" itemLabel="#{idioma.key}"/>
+                                <c:ajax execute="@form" render="@all"/>
+                            </p:selectOneMenu>
+                            <p:commandButton type="button" icon="pi pi-user" styleClass="mr-2"/>
+                        </h:form>
+
+                    </p:toolbarGroup>
+                </p:toolbar>
+            </div>
+
         <div class="ui-g-12 ui-md-12">
             <div class="ui-g-12">
                 <h1>
