@@ -24,6 +24,11 @@ public class FrmTipoAsiento extends AbstractFrm<TipoAsiento> implements Serializ
     TipoAsientoBean taBean;
 
     @Override
+    public String paginaNombre() {
+        return "Tipo Asiento";
+    }
+
+    @Override
     public void instanciarRegistro() {
         this.registro = new TipoAsiento();
         registro.setActivo(true);

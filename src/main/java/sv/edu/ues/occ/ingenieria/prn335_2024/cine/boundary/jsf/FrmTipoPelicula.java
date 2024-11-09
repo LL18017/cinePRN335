@@ -66,4 +66,9 @@ public class FrmTipoPelicula extends AbstractFrm<TipoPelicula> {
         fc.addMessage(null, mensaje);
         this.estado=ESTADO_CRUD.MODIFICAR;
     }
+
+    @Override
+    public String paginaNombre() {
+        return "Tipo Pelicula";
+    }
 }

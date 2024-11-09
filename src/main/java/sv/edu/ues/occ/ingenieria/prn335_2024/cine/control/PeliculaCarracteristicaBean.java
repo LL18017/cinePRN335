@@ -1,0 +1,50 @@
+package sv.edu.ues.occ.ingenieria.prn335_2024.cine.control;
+
+import jakarta.ejb.LocalBean;
+import jakarta.ejb.Stateless;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.PersistenceContext;
+import jakarta.persistence.TypedQuery;
+import sv.edu.ues.occ.ingenieria.prn335_2024.cine.entity.PeliculaCaracteristica;
+
+import java.io.Serializable;
+import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
+@Stateless
+@LocalBean
+public class PeliculaCarracteristicaBean extends AbstractDataPersist<PeliculaCaracteristica> implements Serializable {
+    @PersistenceContext(unitName = "cinePU")
+    EntityManager em;
+    public PeliculaCarracteristicaBean() {
+        super(PeliculaCaracteristica.class);
+    }
+
+    @Override
+    public EntityManager getEntityManager() {
+        return em;
+    }
+    public List<PeliculaCaracteristica> findByIdPelicula(final long idPeicula,int first,int last) {
+        try {
+            TypedQuery<PeliculaCaracteristica> q = em.createNamedQuery("PeliculaCaracteristica.findByIdPelicula", PeliculaCaracteristica.class);
+            q.setParameter("idPelicula", idPeicula);
+            q.setFirstResult(first);
+            q.setMaxResults(last);
+            return q.getResultList();
+        }catch (Exception e){
+            Logger.getLogger(getClass().getName()).log(Level.SEVERE,e.getMessage(),e);
+        }
+        return List.of();
+    }
+    public int countPeliculaCarracteristica(final long idPeicula,int first,int last) {
+        try {
+            TypedQuery<Long> q = em.createNamedQuery("PeliculaCaracteristica.countByIdPelicula", Long.class);
+            q.setParameter("idPelicula", idPeicula);
+            return q.getSingleResult().intValue();
+        } catch (Exception e) {
+            Logger.getLogger(getClass().getName()).log(Level.SEVERE, e.getMessage(), e);
+        }
+        return 0;
+    }
+}

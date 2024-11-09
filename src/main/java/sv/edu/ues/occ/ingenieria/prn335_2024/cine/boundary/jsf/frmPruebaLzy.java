@@ -41,6 +41,10 @@ public class frmPruebaLzy extends AbstractFrm<Pelicula> implements Serializable 
     }
 
 
+    @Override
+    public String paginaNombre() {
+        return "";
+    }
 
     @Override
     public String getIdByObject(Pelicula object) {

@@ -20,6 +20,11 @@ import java.util.List;
 @Named
 @RequestScoped
 public class frmReservaCliente extends AbstractFrm<Reserva> implements Serializable {
+    @Override
+    public String paginaNombre() {
+        return "REserva cliente";
+    }
+
     private TreeNode root;
     private TreeNode selectedNode;
     @Inject

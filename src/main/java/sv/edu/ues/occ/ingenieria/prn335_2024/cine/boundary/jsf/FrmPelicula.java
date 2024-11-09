@@ -6,6 +6,7 @@ import jakarta.faces.view.ViewScoped;
 import jakarta.inject.Inject;
 import jakarta.inject.Named;
 import org.primefaces.event.SelectEvent;
+import org.primefaces.event.TabChangeEvent;
 import sv.edu.ues.occ.ingenieria.prn335_2024.cine.control.AbstractDataPersist;
 import sv.edu.ues.occ.ingenieria.prn335_2024.cine.control.PeliculaBean;
 import sv.edu.ues.occ.ingenieria.prn335_2024.cine.entity.Pelicula;
@@ -21,6 +22,11 @@ public class FrmPelicula extends AbstractFrm<Pelicula> implements Serializable {
     PeliculaBean pBean;
     @Inject
     FacesContext fc;
+
+    @Inject
+    FrmPeliculaCarracteristica frmPeliculaCarractreistica;
+
+
     @Override
     public void instanciarRegistro() {
         this.registro=new Pelicula();
@@ -35,7 +41,6 @@ public class FrmPelicula extends AbstractFrm<Pelicula> implements Serializable {
     public AbstractDataPersist<Pelicula> getAbstractDataPersist() {
         return pBean;
     }
-
 
 
     @Override
@@ -65,5 +70,31 @@ public class FrmPelicula extends AbstractFrm<Pelicula> implements Serializable {
         FacesMessage mensaje=new FacesMessage("pelicula selecionada ", peliculaSelected.getNombre());
         fc.addMessage(null,mensaje);
         this.estado=ESTADO_CRUD.MODIFICAR;
+    }
+
+    @Override
+    public String paginaNombre() {
+        return "Pelicula";
+    }
+    public void cambiarTab(TabChangeEvent tce)
+    {
+        if (tce.getTab().getTitle().equals("Tipos")){
+            if (registro!=null && this.frmPeliculaCarractreistica!=null){
+                this.frmPeliculaCarractreistica.setIdPelicula(registro.getIdPelicula());
+            }
+        }
+    }
+//    public void validarDatos(FacesContext fc , UIComponent components,Object valor){
+//        if (registro!=null){
+////            Pattern patron=Pattern.compile(this.registro.getIdPelicula().get);
+//        }
+//    }
+
+    public FrmPeliculaCarracteristica getFrmPeliculaCarractreistica() {
+        return frmPeliculaCarractreistica;
+    }
+
+    public void setFrmPeliculaCarractreistica(FrmPeliculaCarracteristica frmPeliculaCarractreistica) {
+        this.frmPeliculaCarractreistica = frmPeliculaCarractreistica;
     }
 }

@@ -17,6 +17,11 @@ import java.util.logging.Logger;
 @Named
 @ViewScoped
 public class FrmFactura extends AbstractFrm<Factura> implements Serializable {
+    @Override
+    public String paginaNombre() {
+        return "";
+    }
+
     @Inject
     FacturaBean fBean;
     @Inject

@@ -6,9 +6,11 @@ import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import sv.edu.ues.occ.ingenieria.prn335_2024.cine.entity.TipoPelicula;
 
+import java.io.Serializable;
+
 @Stateless
 @LocalBean
-public class TipoPeliculaBean extends AbstractDataPersist<TipoPelicula>{
+public class TipoPeliculaBean extends AbstractDataPersist<TipoPelicula> implements Serializable {
     @PersistenceContext(unitName = "cinePU")
     EntityManager em;
     public TipoPeliculaBean() {

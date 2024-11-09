@@ -31,7 +31,7 @@ public class FrmMenu implements Serializable {
         System.out.println("Inicializando el menú...");
 
         DefaultSubMenu tipos = DefaultSubMenu.builder()
-                .label("Tipos")
+                .label("Tiposs")
                 .expanded(true)
                 .build();
 

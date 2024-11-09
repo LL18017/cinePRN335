@@ -34,6 +34,7 @@ import java.util.stream.Stream;
 @Named
 @ViewScoped
 public class FrmSala extends AbstractFrm<Sala> implements Serializable {
+
     @Inject
     SalaBean sbean;
     @Inject
@@ -54,6 +55,10 @@ public class FrmSala extends AbstractFrm<Sala> implements Serializable {
     //registro
     private int sucursalId;
 
+    @Override
+    public String paginaNombre() {
+        return "Sala";
+    }
     @Override
     public void instanciarRegistro() {
         this.registro=new Sala();

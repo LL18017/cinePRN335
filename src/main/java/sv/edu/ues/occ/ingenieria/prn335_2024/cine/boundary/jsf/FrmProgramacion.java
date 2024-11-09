@@ -69,6 +69,11 @@ public class FrmProgramacion extends AbstractFrm<Programacion> implements Serial
         fc.addMessage(null,new FacesMessage("se ha selecionado una programacion"+programacionSelected));
     }
 
+    @Override
+    public String paginaNombre() {
+        return "Programacion";
+    }
+
     public List<Programacion> getProgramaciones() {
         return programaciones;
     }

@@ -31,6 +31,7 @@ public abstract class AbstractFrm<T> implements Serializable {
    public abstract String getIdByObject(T object);
    public abstract T getObjectById(String id);
    public abstract void selecionarFila(SelectEvent<T> event);
+   public abstract String paginaNombre();
 
    //propiedades
    ESTADO_CRUD estado=ESTADO_CRUD.NINGUNO;
@@ -55,44 +56,21 @@ public abstract class AbstractFrm<T> implements Serializable {
       inicioRegistros();
    }
    public void  inicioRegistros(){
-      Logger.getLogger(AbstractFrm.class.getName()).log(Level.INFO, "iniciando registro");
       this.modelo=new LazyDataModel<T>() {
 
          //se indica cuantas filas tiene el entity atravas del metod count
          @Override
          public int count(Map<String, FilterMeta> map) {
-            AbstractDataPersist<T> clBean=getAbstractDataPersist();
             int result=0;
             try {
-               result=clBean.count();
+               result=contar();
             }catch (Exception ex){
                Logger.getLogger(AbstractFrm.class.getName()).log(Level.SEVERE, null, ex);
             }
+            System.out.println("tiene : "+result);
             return result;
          }
          //se cargarn elelmetos de acuerdo al findrabge
-         @Override
-         public List<T> load(int init, int max, Map<String, SortMeta> map, Map<String, FilterMeta> map1) {
-
-           if (init >= 0 && max > 0){
-
-              try {
-                 AbstractDataPersist<T> clBean=getAbstractDataPersist();
-
-//                 implementacion para ordenar
-                 if (!map.isEmpty()){
-                    String CampoOrden=map.values().stream().findFirst().get().getField();
-                    String direcion=map.values().stream().findFirst().get().getOrder().toString();
-                    return clBean.findRange(init,max,CampoOrden,direcion);
-                 }
-                 return clBean.findRange(init,max);
-              }catch (Exception e) {
-                 Logger.getLogger(AbstractFrm.class.getName()).log(Level.SEVERE, null, e);
-              }
-           }
-            return List.of();
-         }
-//         @Override
 //         public List<T> load(int init, int max, Map<String, SortMeta> map, Map<String, FilterMeta> map1) {
 //
 //           if (init >= 0 && max > 0){
@@ -100,9 +78,12 @@ public abstract class AbstractFrm<T> implements Serializable {
 //              try {
 //                 AbstractDataPersist<T> clBean=getAbstractDataPersist();
 //
-//                 //implementacion para ordenar
-//
-//
+////                 implementacion para ordenar
+//                 if (!map.isEmpty()){
+//                    String CampoOrden=map.values().stream().findFirst().get().getField();
+//                    String direcion=map.values().stream().findFirst().get().getOrder().toString();
+//                    return clBean.findRange(init,max,CampoOrden,direcion);
+//                 }
 //                 return clBean.findRange(init,max);
 //              }catch (Exception e) {
 //                 Logger.getLogger(AbstractFrm.class.getName()).log(Level.SEVERE, null, e);
@@ -110,6 +91,20 @@ public abstract class AbstractFrm<T> implements Serializable {
 //           }
 //            return List.of();
 //         }
+         @Override
+         public List<T> load(int init, int max, Map<String, SortMeta> map, Map<String, FilterMeta> map1) {
+
+           if (init >= 0 && max > 0){
+
+              try {
+                 //implementacion para ordenar
+                 return cargar(init,max);
+              }catch (Exception e) {
+                 Logger.getLogger(AbstractFrm.class.getName()).log(Level.SEVERE, null, e);
+              }
+           }
+            return List.of();
+         }
          @Override
          public String getRowKey(T object) {
             if (object != null) {
@@ -207,6 +202,23 @@ public abstract class AbstractFrm<T> implements Serializable {
 
    public void setModelo(LazyDataModel<T> modelo) {
       this.modelo = modelo;
+   }
+
+   public int contar(){
+      try {
+         return getAbstractDataPersist().count();
+      }catch (Exception e) {
+         Logger.getLogger(getClass().getName()).log(Level.SEVERE, e.getMessage(), e);
+      }
+      return 0;
+   }
+   public List<T> cargar(int first,int max){
+      try {
+         return getAbstractDataPersist().findRange(first,max);
+      }catch (Exception e) {
+         Logger.getLogger(getClass().getName()).log(Level.SEVERE, e.getMessage(), e);
+      }
+      return List.of();
    }
 
    //otros

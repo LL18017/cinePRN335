@@ -39,7 +39,6 @@ public class PeliculaBean extends AbstractDataPersist<Pelicula> implements Seria
 
     public int countAllPeliculas() {
         try {
-
             Number result = (Number) em.createNamedQuery("Pelicula.countAll").getSingleResult();
 
             if (result == null) {

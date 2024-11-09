@@ -76,4 +76,9 @@ public class FrmTipoProducto extends AbstractFrm<TipoProducto> implements Serial
         this.registro=selectedProduct;
         estado=ESTADO_CRUD.MODIFICAR;
     }
+
+    @Override
+    public String paginaNombre() {
+        return "Tipo Producto";
+    }
 }

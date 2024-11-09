@@ -66,4 +66,9 @@ public class FrmTipoReserva extends AbstractFrm<TipoReserva> {
         fc.addMessage(null, mensaje);
         this.estado=ESTADO_CRUD.MODIFICAR;
     }
+
+    @Override
+    public String paginaNombre() {
+        return "Tipo Reserva";
+    }
 }

@@ -29,7 +29,8 @@ import java.io.Serializable;
 @XmlRootElement
 @NamedQueries({
     @NamedQuery(name = "PeliculaCaracteristica.findAll", query = "SELECT p FROM PeliculaCaracteristica p"),
-    @NamedQuery(name = "PeliculaCaracteristica.findByIdPeliculaCaracteristica", query = "SELECT p FROM PeliculaCaracteristica p WHERE p.idPeliculaCaracteristica = :idPeliculaCaracteristica"),
+    @NamedQuery(name = "PeliculaCaracteristica.findByIdPelicula", query = "SELECT pc FROM PeliculaCaracteristica pc WHERE pc.idPelicula.idPelicula = :idPelicula order by pc.idPeliculaCaracteristica asc "),
+    @NamedQuery(name = "PeliculaCaracteristica.countByIdPelicula", query = "SELECT COUNT (pc.idPeliculaCaracteristica) FROM PeliculaCaracteristica pc WHERE pc.idPelicula.idPelicula = :idPelicula "),
     @NamedQuery(name = "PeliculaCaracteristica.findByValor", query = "SELECT p FROM PeliculaCaracteristica p WHERE p.valor = :valor")})
 public class PeliculaCaracteristica implements Serializable {
 
