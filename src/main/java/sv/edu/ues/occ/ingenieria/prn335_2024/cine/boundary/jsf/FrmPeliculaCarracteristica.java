@@ -87,6 +87,21 @@ public class FrmPeliculaCarracteristica extends AbstractFrm<PeliculaCaracteristi
     @Override
     public void selecionarFila(SelectEvent<PeliculaCaracteristica> event) {
 
+        FacesMessage mensaje=new FacesMessage("pelicula selecionada ", registro.getValor());
+        fc.addMessage(null,mensaje);
+        this.estado=ESTADO_CRUD.MODIFICAR;
+    }
+
+    public Integer getIdTipoPeliculaSelecionada(){
+        if (registro!=null && registro.getIdPelicula()!=null){
+            return registro.getIdTipoPelicula().getIdTipoPelicula();
+        }
+        return null;
+    }
+    public void settIdTipoPeliculaSelecionada(final Integer idTipoPelicula){
+        if (registro!=null && registro.getIdPelicula()!=null && !tipoPeliculaList.isEmpty()){
+            this.registro.setIdTipoPelicula(this.tipoPeliculaList.stream().filter(r->r.getIdTipoPelicula().equals(idTipoPelicula)).findFirst().orElse(null));
+        }
     }
 
     public void enviarMensaje(String mensaje, String detalle, FacesMessage.Severity level) {

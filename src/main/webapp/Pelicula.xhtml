@@ -2,6 +2,7 @@
 <f:composition xmlns="http://www.w3.org/1999/xhtml"
                xmlns:h="jakarta.faces.html"
                xmlns:f="jakarta.faces.facelets"
+               xmlns:o="http://xmlns.jcp.org/jsf/core"
                xmlns:p="http://primefaces.org/ui"
                xmlns:crud="jakarta.faces.composite/crud"
                template="WEB-INF/templates/principal.xhtml"
@@ -39,9 +40,9 @@
       </h:panelGrid>
 
       <h:panelGroup id="pnlDetalle">
-         <p:tabView id="tabDetalle">
+         <p:tabView id="tabDetalle" rendered="#{not empty frmPelicula.registro}">
 <!--            generalidades-->
-            <p:tab title="generalidades" id="generalidades" cache="false" dynamic="true" closable="false" rendered="#{not empty frmPelicula.registro}">
+            <p:tab title="generalidades" id="generalidades" cache="false" dynamic="true" closable="false">
                <h:form id="frmDetalle">
                   <h:panelGrid columns="2">
                      <p:outputLabel value="ID" for="txtid"/>
@@ -55,11 +56,8 @@
 
 
                   </h:panelGrid>
-                  <h:panelGrid columns="#{frmTipoPago.estado=='CREAR'?'1':'2'}">
-                     <p:commandButton value="GUARDAR" rendered="#{frmPelicula.estado=='CREAR'}" update=":frmTabla  :pnlDetalle @form" actionListener="#{frmPelicula.btnGuardarHandler}"/>
-                     <p:commandButton value="MODIFICAR" rendered="#{frmPelicula.estado=='MODIFICAR'}" update=":frmTabla :pnlDetalle @form" actionListener="#{frmPelicula.btnModificarHandler}"/>
-                     <p:commandButton value="ELIMINAR" rendered="#{frmPelicula.estado=='MODIFICAR'}" update=":frmTabla  :pnlDetalle @form" actionListener="#{frmPelicula.btneEliminarHandler}"/>
-                  </h:panelGrid>
+                  <crud:botonesBottom frm="#{frmPelicula}" actualizar=":frmTabla  :pnlDetalle @form"/>
+
                </h:form>
             </p:tab>
 <!--            Tipos-->
@@ -74,25 +72,38 @@
                                         first="0"
                                         selectionMode="single"
                                         selection="#{frmPelicula.frmPeliculaCarractreistica.registro}"
-                                        rendered="#{empty frmPelicula.frmPeliculaCarractreistica.registro}"
+                                        rendered="#{frmPelicula.frmPeliculaCarractreistica.estado=='NINGUNO'}"
                            >
-                              <p:ajax  process="@this" update=":pnlDetalleC :panelTablaC @form" event="rowSelect" listener="#{frmPelicula.frmPeliculaCarractreistica.selecionarFila}"/>
+                              <p:ajax  process="@this" update=":growl Tipos" event="rowSelect" listener="#{frmPelicula.frmPeliculaCarractreistica.selecionarFila}"/>
                               <p:column headerText="ID"><h:outputText value="#{rc.idPeliculaCaracteristica}"/></p:column>
-                              <p:column headerText="VALOR"><h:outputText value="#{rC.valor}"/></p:column>
-<!--                              <p:column headerText="sinopsis"><h:outputText value="#{r.sinopsis}"/></p:column>-->
+                              <p:column headerText="VALOR"><h:outputText value="#{rc.valor}"/></p:column>
 
                            </p:dataTable>
-                           <crud:botonesTop frm="#{frmPelicula}" />
+                           <crud:botonesTop frm="#{frmPelicula.frmPeliculaCarractreistica}" actualizar=":growl tabDetalle"/>
                         </h:form>
                      </h:panelGroup>
 
+                  </h:panelGrid>
+                     <h:panelGroup id="pnlDetalleC" rendered="#{not empty frmPelicula.frmPeliculaCarractreistica.registro}" >
+                        <h:form id="frmDetalleC">
+                           <h:panelGrid columns="2">
+                              <p:outputLabel value="ID" for="txtid"/>
+                              <p:inputText id="txtidPC" value="#{frmPelicula.frmPeliculaCarractreistica.registro.idPeliculaCaracteristica}" readonly="true" disabled="true"/>
 
-                  </h:panelGrid>
-                  <h:panelGrid columns="#{frmTipoPago.estado=='CREAR'?'1':'2'}">
-                     <p:commandButton value="GUARDAR" rendered="#{frmPelicula.estado=='CREAR'}" update=":frmTabla  :pnlDetalle @form" actionListener="#{frmPelicula.btnGuardarHandler}"/>
-                     <p:commandButton value="MODIFICAR" rendered="#{frmPelicula.estado=='MODIFICAR'}" update=":frmTabla :pnlDetalle @form" actionListener="#{frmPelicula.btnModificarHandler}"/>
-                     <p:commandButton value="ELIMINAR" rendered="#{frmPelicula.estado=='MODIFICAR'}" update=":frmTabla  :pnlDetalle @form" actionListener="#{frmPelicula.btneEliminarHandler}"/>
-                  </h:panelGrid>
+                              <p:outputLabel value="TIPO PELICULA" for="lstTipoPelicula"/>
+                              <p:selectOneMenu id="lstTipoPelicula" value="${frmPelicula.frmPeliculaCarractreistica.idTipoPeliculaSelecionada}">
+                                 <o:selectItem value="#{frmPelicula.frmPeliculaCarractreistica.tipoPeliculaList}" var="tp" itemLabel="#{tp.nombre}"
+                                 itemValue="${tp.idTipoPelicula}"/>
+                              </p:selectOneMenu>
+
+                              <p:outputLabel value="Valor" for="txtValor"/>
+                              <p:inputText id="txtValorPC" value="#{frmPelicula.frmPeliculaCarractreistica.registro.valor}" size="70" />
+
+
+                           </h:panelGrid>
+                          <crud:botonesBottom frm="#{frmPelicula.frmPeliculaCarractreistica}" actualizar="Tipos"/>
+                        </h:form>
+                     </h:panelGroup>
             </p:tab>
          </p:tabView>
 

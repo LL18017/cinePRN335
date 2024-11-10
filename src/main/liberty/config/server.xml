@@ -44,8 +44,5 @@
     <library id="global">
         <fileset dir="{wlp.install.dir}/lib/global" includes="primefaces-14.0.5.jar"/>
     </library>
-    <!-- Aplicación -->
-    <application location="cine-1.0-SNAPSHOT.war">
-        <classloader commonLibraryRef="global"/>
-    </application>
+
 </server>

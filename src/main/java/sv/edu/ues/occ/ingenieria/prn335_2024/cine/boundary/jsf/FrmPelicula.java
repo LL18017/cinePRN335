@@ -66,8 +66,9 @@ public class FrmPelicula extends AbstractFrm<Pelicula> implements Serializable {
 
     @Override
     public void selecionarFila(SelectEvent<Pelicula> event) {
-            Pelicula peliculaSelected = (Pelicula) event.getObject();
-        FacesMessage mensaje=new FacesMessage("pelicula selecionada ", peliculaSelected.getNombre());
+        frmPeliculaCarractreistica.registro=null;
+        frmPeliculaCarractreistica.estado=ESTADO_CRUD.NINGUNO;
+        FacesMessage mensaje=new FacesMessage("pelicula selecionada ", registro.getNombre());
         fc.addMessage(null,mensaje);
         this.estado=ESTADO_CRUD.MODIFICAR;
     }
@@ -97,4 +98,5 @@ public class FrmPelicula extends AbstractFrm<Pelicula> implements Serializable {
     public void setFrmPeliculaCarractreistica(FrmPeliculaCarracteristica frmPeliculaCarractreistica) {
         this.frmPeliculaCarractreistica = frmPeliculaCarractreistica;
     }
+
 }
