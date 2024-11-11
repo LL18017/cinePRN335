@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Created by IntelliJ IDEA.
+  User: hdz
+  Date: 11/11/24
+  Time: 17:37
+-->
+
+
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="jakarta.faces.html"
+      xmlns:f="jakarta.faces.core"
+>
+<h:head>
+    <title>TipoReserva</title>
+    <style type="text/css">
+        table {
+            border-collapse: collapse;
+            background-color: white;
+            overflow: hidden;
+            width: 500px;
+            border-radius: 10px;
+        }
+
+        th, td {
+            font-family: 'Motnserrat', sans-serif;
+            text-align: left;
+            font-size: 12px;
+            padding: 10px;
+        }
+
+        th {
+            background-color: #7691ab;
+            color: white;
+        }
+    </style>
+</h:head>
+<h:body>
+    <h1>Tipo de Reserva</h1>
+
+    <h:form id="frmTabla">
+        <h:dataTable value="#{frmTipoReserva2.registros}" var="r">
+            <h:column>
+                <f:facet name="header">
+                    ID
+                </f:facet>
+                <h:outputText value="#{r.idTipoReserva}"/>
+            </h:column>
+            <h:column>
+                <f:facet name="header">
+                    Nombre
+                </f:facet>
+                <h:outputText value="#{r.nombre}"/>
+            </h:column>
+            <h:column>
+                <f:facet name="header">
+                    Estado
+                </f:facet>
+                <h:outputText value="#{r.activo?'ACTIVO' : 'INACTIVO'}"/>
+            </h:column>
+            <h:column>
+                <f:facet name="header">
+                    Comentarios
+                </f:facet>
+                <h:outputText value="#{r.comentarios}"/>
+            </h:column>
+        </h:dataTable>
+    </h:form>
+</h:body>
+
+</html>
