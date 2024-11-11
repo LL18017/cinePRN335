@@ -1,5 +1,6 @@
 package sv.edu.ues.occ.ingenieria.prn335_2024.cine.boundary.jsf;
 
+import jakarta.el.MethodExpression;
 import jakarta.faces.application.FacesMessage;
 import jakarta.faces.context.FacesContext;
 import jakarta.faces.view.ViewScoped;
@@ -91,4 +92,11 @@ public class FrmPelicula extends AbstractFrm<Pelicula> implements Serializable {
         this.frmPeliculaCarractreistica = frmPeliculaCarractreistica;
     }
 
+    public void cambiarTab(TabChangeEvent tce) {
+        if (tce.getTab().getTitle().equals("Tipos")){
+            if (this.registro.getIdPelicula()!=null && this.frmPeliculaCarractreistica!=null){
+                frmPeliculaCarractreistica.setIdPelicula(this.registro.getIdPelicula());
+            }
+        }
+    }
 }

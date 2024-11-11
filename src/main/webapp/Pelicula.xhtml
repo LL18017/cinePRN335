@@ -34,7 +34,7 @@
 
                </p:dataTable>
                <crud:botonesTop frm="#{frmPelicula}" />
-               <p:growl id="growl" showDetail="true" sticky="false" life="10000" />
+               <p:growl id="growl" showDetail="true" sticky="false" life="1500" />
             </h:form>
          </h:panelGroup>
       </h:panelGrid>
@@ -75,12 +75,13 @@
                                         selection="#{frmPelicula.frmPeliculaCarractreistica.registro}"
                                         rendered="#{frmPelicula.frmPeliculaCarractreistica.estado=='NINGUNO'}"
                            >
-                              <p:ajax  process="@this" update=":growl tabDetalle:pnlTablaC tabDetalle:pnlDetalleC Tipos" event="rowSelect" listener="#{frmPelicula.frmPeliculaCarractreistica.selecionarFila}"/>
+                              <p:ajax  process="@this" update=":growl Tipos" event="rowSelect"
+                                       listener="#{frmPelicula.frmPeliculaCarractreistica.selecionarFila}"/>
                               <p:column headerText="ID"><h:outputText value="#{rc.idPeliculaCaracteristica}"/></p:column>
                               <p:column headerText="VALOR"><h:outputText value="#{rc.valor}"/></p:column>
 
                            </p:dataTable>
-                           <crud:botonesTop frm="#{frmPelicula.frmPeliculaCarractreistica}" actualizar=":growl tabDetalle:pnlTablaC tabDetalle:pnlDetalleC Tipos"/>
+                           <crud:botonesTop frm="#{frmPelicula.frmPeliculaCarractreistica}" actualizar=":growl tabDetalle:pnlDetalleC Tipos"/>
                         </h:form>
                      </h:panelGroup>
 
@@ -104,7 +105,7 @@
                                            value="#{frmPelicula.frmPeliculaCarractreistica.registro.valor}" size="70" />
 
                            </h:panelGrid>
-                          <crud:botonesBottom frm="#{frmPelicula.frmPeliculaCarractreistica}" actualizar=":pnlDetalle tabDetalle :growl @form"/>
+                          <crud:botonesBottom frm="#{frmPelicula.frmPeliculaCarractreistica}" actualizar="tabDetalle:pnlDetalleC :growl @form"/>
                         </h:form>
                      </h:panelGroup>
             </p:tab>

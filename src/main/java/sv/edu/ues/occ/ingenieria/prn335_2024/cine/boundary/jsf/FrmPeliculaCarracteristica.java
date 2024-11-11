@@ -57,23 +57,23 @@ public class FrmPeliculaCarracteristica extends AbstractFrm<PeliculaCaracteristi
         }
     }
     public void validarDatos(FacesContext fc , UIComponent components, Object valor) {
-//        UIInput input = (UIInput) components;
-//        String expresion =registro.getIdTipoPelicula().getExpresionRegular();
-//        System.out.println("el valor de es "+registro.getIdTipoPelicula().getExpresionRegular());
-//        if (expresion.equals(".") || expresion.isEmpty()) {
-//            return;
-//        }
-//        if (registro != null && registro.getIdPelicula() != null) {
-//            String nuevo = valor.toString();
-//            Pattern patron = Pattern.compile(this.registro.getIdTipoPelicula().getExpresionRegular());
-//            Matcher validator = patron.matcher(nuevo);
-//            if (validator.find()) {
-//                return;
-//            }
-//        }
-//
-//        ((UIInput) components).setValid(false);
-//        enviarMensaje("VALOR NO VALIDO",valor.toString(), FacesMessage.SEVERITY_ERROR);
+        UIInput input = (UIInput) components;
+        String expresion =registro.getIdTipoPelicula().getExpresionRegular();
+        System.out.println("el valor de es "+registro.getIdTipoPelicula().getExpresionRegular());
+        if (expresion.equals(".") || expresion.isEmpty()) {
+            return;
+        }
+        if (registro != null && registro.getIdPelicula() != null) {
+            String nuevo = valor.toString();
+            Pattern patron = Pattern.compile(this.registro.getIdTipoPelicula().getExpresionRegular());
+            Matcher validator = patron.matcher(nuevo);
+            if (validator.find()) {
+                return;
+            }
+        }
+
+        ((UIInput) components).setValid(false);
+        enviarMensaje("VALOR NO VALIDO",valor.toString(), FacesMessage.SEVERITY_ERROR);
     }
 
     @Override
@@ -149,8 +149,8 @@ public class FrmPeliculaCarracteristica extends AbstractFrm<PeliculaCaracteristi
     }
 
     public Integer getIdTipoPeliculaSelecionada(){
+            enviarMensaje("tipo pelicula selecionada: ",registro.getIdTipoPelicula().getNombre(),FacesMessage.SEVERITY_INFO);
         if (registro!=null && registro.getIdPelicula()!=null){
-            enviarMensaje("",registro.getIdTipoPelicula().getNombre(),FacesMessage.SEVERITY_INFO);
             return registro.getIdTipoPelicula().getIdTipoPelicula();
         }
         return null;
