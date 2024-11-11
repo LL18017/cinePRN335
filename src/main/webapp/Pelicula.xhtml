@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<f:composition xmlns="http://www.w3.org/1999/xhtml"
+               xmlns:h="jakarta.faces.html"
+               xmlns:f="jakarta.faces.facelets"
+               xmlns:o="http://xmlns.jcp.org/jsf/core"
+               xmlns:p="http://primefaces.org/ui"
+               xmlns:crud="jakarta.faces.composite/crud"
+               template="WEB-INF/templates/principal.xhtml"
+
+>
+
+
+   <f:define name="titulo">
+      <p:outputLabel  styleClass="italic" value=" #{frmPelicula.paginaNombre()}"/>
+   </f:define>
+
+   <f:define name="cuerpo">
+      <h:panelGrid>
+         <h:panelGroup id="pnlTabla">
+            <h:form id="frmTabla">
+               <p:dataTable value="#{frmPelicula.modelo}" var="r"
+                            lazy="true"
+                            paginator="true"
+                            rows="5"
+                            first="0"
+                            selectionMode="single"
+                            selection="#{frmPelicula.registro}"
+                            rendered="#{empty frmPelicula.registro}"
+               >
+                  <p:ajax  process="@this" update=":pnlDetalle @form" event="rowSelect" listener="#{frmPelicula.selecionarFila}"/>
+                  <p:column headerText="ID"><h:outputText value="#{r.idPelicula}"/></p:column>
+                  <p:column headerText="NOMBRE"><h:outputText value="#{r.nombre}"/></p:column>
+                  <p:column headerText="sinopsis"><h:outputText value="#{r.sinopsis}"/></p:column>
+
+               </p:dataTable>
+               <crud:botonesTop frm="#{frmPelicula}" />
+               <p:growl id="growl" showDetail="true" sticky="false" life="10000" />
+            </h:form>
+         </h:panelGroup>
+      </h:panelGrid>
+
+      <h:panelGroup id="pnlDetalle">
+         <p:tabView id="tabDetalle" rendered="#{not empty frmPelicula.registro}">
+<!--            generalidades-->
+            <p:tab title="generalidades" id="generalidades" cache="false" dynamic="true" closable="false">
+               <h:form id="frmDetalle">
+                  <h:panelGrid columns="2">
+                     <p:outputLabel value="ID" for="txtid"/>
+                     <p:inputText id="txtid" value="#{frmPelicula.registro.idPelicula}" readonly="true" disabled="true"/>
+
+                     <p:outputLabel value="Nombre" for="txtNombre"/>
+                     <p:inputText id="txtNombre" value="#{frmPelicula.registro.nombre}" size="70" />
+
+                     <p:outputLabel value="Sinopsis" for="txtSinopsis"/>
+                     <p:inputText id="txtSinopsis" value="#{frmPelicula.registro.sinopsis}" size="70" />
+
+
+                  </h:panelGrid>
+                  <crud:botonesBottom frm="#{frmPelicula}" actualizar=":frmTabla  :pnlDetalle @form"/>
+
+               </h:form>
+            </p:tab>
+               <p:ajax process="@this" event="tabChange" listener="#{frmPelicula.cambiarTab}" update=":growl"/>
+<!--            Tipos-->
+            <p:tab title="Tipos" id="Tipos" disabled="#{frmPelicula.estado!='MODIFICAR'}" >
+                  <h:panelGrid columns="2">
+                     <h:panelGroup id="pnlTablaC">
+                        <h:form id="frmTablaC">
+                           <p:dataTable value="#{frmPelicula.frmPeliculaCarractreistica.modelo}" var="rc"
+                                        lazy="true"
+                                        paginator="true"
+                                        rows="5"
+                                        first="0"
+                                        selectionMode="single"
+                                        selection="#{frmPelicula.frmPeliculaCarractreistica.registro}"
+                                        rendered="#{frmPelicula.frmPeliculaCarractreistica.estado=='NINGUNO'}"
+                           >
+                              <p:ajax  process="@this" update=":growl tabDetalle:pnlTablaC tabDetalle:pnlDetalleC Tipos" event="rowSelect" listener="#{frmPelicula.frmPeliculaCarractreistica.selecionarFila}"/>
+                              <p:column headerText="ID"><h:outputText value="#{rc.idPeliculaCaracteristica}"/></p:column>
+                              <p:column headerText="VALOR"><h:outputText value="#{rc.valor}"/></p:column>
+
+                           </p:dataTable>
+                           <crud:botonesTop frm="#{frmPelicula.frmPeliculaCarractreistica}" actualizar=":growl tabDetalle:pnlTablaC tabDetalle:pnlDetalleC Tipos"/>
+                        </h:form>
+                     </h:panelGroup>
+
+                  </h:panelGrid>
+                     <h:panelGroup id="pnlDetalleC" rendered="#{frmPelicula.frmPeliculaCarractreistica.estado!='NINGUNO'}" >
+                        <h:form id="frmDetalleC">
+                           <h:panelGrid columns="2">
+                              <p:outputLabel value="ID" for="txtid"/>
+                              <p:inputText id="txtidPC" value="#{frmPelicula.frmPeliculaCarractreistica.registro.idPeliculaCaracteristica}" readonly="false" disabled="false"/>
+
+                              <p:outputLabel value="TIPO PELICULA" for="lstTipoPelicula"/>
+                              <p:selectOneMenu id="lstTipoPelicula" value="#{frmPelicula.frmPeliculaCarractreistica.idTipoPeliculaSelecionada}">
+                                 <o:selectItems value="#{frmPelicula.frmPeliculaCarractreistica.tipoPeliculaList}" var="tp" itemLabel="#{tp.nombre}"
+                                 itemValue="#{tp.idTipoPelicula}"/>
+                                 <p:ajax event="change" update=":growl txtValorPC" process="@this"/>
+                              </p:selectOneMenu>
+
+                              <p:outputLabel value="Valor" for="txtValor"/>
+                              <p:inputText id="txtValorPC"
+                                             validator="#{frmPelicula.frmPeliculaCarractreistica.validarDatos}"
+                                           value="#{frmPelicula.frmPeliculaCarractreistica.registro.valor}" size="70" />
+
+                           </h:panelGrid>
+                          <crud:botonesBottom frm="#{frmPelicula.frmPeliculaCarractreistica}" actualizar=":pnlDetalle tabDetalle :growl @form"/>
+                        </h:form>
+                     </h:panelGroup>
+            </p:tab>
+         </p:tabView>
+
+      </h:panelGroup>
+   </f:define>
+
+</f:composition>
