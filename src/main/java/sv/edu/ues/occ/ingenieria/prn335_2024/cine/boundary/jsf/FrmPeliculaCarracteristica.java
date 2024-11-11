@@ -141,12 +141,18 @@ public class FrmPeliculaCarracteristica extends AbstractFrm<PeliculaCaracteristi
     public void instanciarRegistro() {
         PeliculaCaracteristica pc=new PeliculaCaracteristica();
 
-//        if (idPelicula!=null){
-//            pc.setIdPelicula(new Pelicula(idPelicula));
-//        }
-//        if (tipoPeliculaList!=null && tipoPeliculaList.isEmpty()){
-//            pc.setIdTipoPelicula(tipoPeliculaList.getLast());
-//        }
+        try {
+            System.out.println(idPelicula);
+//            if (idPelicula!=null){
+////            pc.setIdPelicula(new Pelicula(idPelicula));
+//            }
+//            if (tipoPeliculaList!=null && !tipoPeliculaList.isEmpty()){
+////            pc.setIdTipoPelicula(tipoPeliculaList.getLast());
+//                System.out.println(tipoPeliculaList.getLast().getNombre());
+//            }
+        }catch (Exception e){
+            Logger.getLogger(getClass().getName()).log(Level.SEVERE,e.getMessage(),e);
+        }
 
         registro=pc;
 
