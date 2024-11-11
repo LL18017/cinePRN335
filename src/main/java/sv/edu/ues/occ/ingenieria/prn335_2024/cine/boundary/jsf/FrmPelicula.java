@@ -11,9 +11,12 @@ import sv.edu.ues.occ.ingenieria.prn335_2024.cine.control.AbstractDataPersist;
 import sv.edu.ues.occ.ingenieria.prn335_2024.cine.control.PeliculaBean;
 import sv.edu.ues.occ.ingenieria.prn335_2024.cine.entity.Pelicula;
 
+import javax.faces.component.UIComponent;
+import javax.faces.component.UIInput;
 import java.io.Serializable;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.regex.Pattern;
 
 @Named
 @ViewScoped
@@ -66,30 +69,19 @@ public class FrmPelicula extends AbstractFrm<Pelicula> implements Serializable {
 
     @Override
     public void selecionarFila(SelectEvent<Pelicula> event) {
-        frmPeliculaCarractreistica.registro=null;
         frmPeliculaCarractreistica.estado=ESTADO_CRUD.NINGUNO;
         FacesMessage mensaje=new FacesMessage("pelicula selecionada ", registro.getNombre());
         fc.addMessage(null,mensaje);
         this.estado=ESTADO_CRUD.MODIFICAR;
+        this.frmPeliculaCarractreistica.idPelicula=registro.getIdPelicula();
     }
 
     @Override
     public String paginaNombre() {
         return "Pelicula";
     }
-    public void cambiarTab(TabChangeEvent tce)
-    {
-        if (tce.getTab().getTitle().equals("Tipos")){
-            if (registro!=null && this.frmPeliculaCarractreistica!=null){
-                this.frmPeliculaCarractreistica.setIdPelicula(registro.getIdPelicula());
-            }
-        }
-    }
-//    public void validarDatos(FacesContext fc , UIComponent components,Object valor){
-//        if (registro!=null){
-////            Pattern patron=Pattern.compile(this.registro.getIdPelicula().get);
-//        }
-//    }
+
+
 
     public FrmPeliculaCarracteristica getFrmPeliculaCarractreistica() {
         return frmPeliculaCarractreistica;

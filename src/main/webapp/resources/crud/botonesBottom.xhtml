@@ -21,10 +21,10 @@
 
         />
         <cc:implementation>
-            <h:panelGrid columns="#{frmTipoPago.estado=='CREAR'?'1':'2'}">
-                <p:commandButton value="GUARDAR" rendered="#{frmPelicula.estado=='CREAR'}" update="#{cc.attrs.actualizar}" actionListener="#{cc.attrs.frm.btnGuardarHandler}"/>
-                <p:commandButton value="MODIFICAR" rendered="#{frmPelicula.estado=='MODIFICAR'}" update="#{cc.attrs.actualizar}" actionListener="#{cc.attrs.frm.btnModificarHandler}"/>
-                <p:commandButton value="ELIMINAR" rendered="#{frmPelicula.estado=='MODIFICAR'}" update="#{cc.attrs.actualizar}" actionListener="#{cc.attrs.frm.btneEliminarHandler}"/>
+            <h:panelGrid columns="#{cc.attrs.frm.estado=='CREAR'?'1':'2'}">
+                <p:commandButton value="GUARDAR" rendered="#{cc.attrs.frm.estado=='CREAR'}" update="#{cc.attrs.actualizar}" actionListener="#{cc.attrs.frm.btnGuardarHandler}"/>
+                <p:commandButton value="MODIFICAR" rendered="#{cc.attrs.frm.estado=='MODIFICAR'}" update="#{cc.attrs.actualizar}" actionListener="#{cc.attrs.frm.btnModificarHandler}"/>
+                <p:commandButton value="ELIMINAR" rendered="#{cc.attrs.frm.estado=='MODIFICAR'}" update="#{cc.attrs.actualizar}" actionListener="#{cc.attrs.frm.btneEliminarHandler}"/>
             </h:panelGrid>
 
         </cc:implementation>

@@ -65,9 +65,9 @@ public abstract class AbstractFrm<T> implements Serializable {
             try {
                result=contar();
             }catch (Exception ex){
-               Logger.getLogger(AbstractFrm.class.getName()).log(Level.SEVERE, null, ex);
+               Logger.getLogger(AbstractFrm.class.getName()).log(Level.SEVERE, ex.getMessage(), ex);
             }
-            System.out.println("tiene : "+result);
+
             return result;
          }
          //se cargarn elelmetos de acuerdo al findrabge
@@ -100,7 +100,7 @@ public abstract class AbstractFrm<T> implements Serializable {
                  //implementacion para ordenar
                  return cargar(init,max);
               }catch (Exception e) {
-                 Logger.getLogger(AbstractFrm.class.getName()).log(Level.SEVERE, null, e);
+                 Logger.getLogger(AbstractFrm.class.getName()).log(Level.SEVERE, e.getMessage(), e);
               }
            }
             return List.of();
@@ -147,6 +147,7 @@ public abstract class AbstractFrm<T> implements Serializable {
    }
 
    public void btnModificarHandler(ActionEvent ex) {
+      System.out.println("se esta modificando");
       T modificado = null;
       FacesMessage mensaje=new FacesMessage();;
       try {

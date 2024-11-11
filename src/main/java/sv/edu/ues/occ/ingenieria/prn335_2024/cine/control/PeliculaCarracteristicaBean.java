@@ -6,6 +6,7 @@ import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import jakarta.persistence.TypedQuery;
 import sv.edu.ues.occ.ingenieria.prn335_2024.cine.entity.PeliculaCaracteristica;
+import sv.edu.ues.occ.ingenieria.prn335_2024.cine.entity.TipoPelicula;
 
 import java.io.Serializable;
 import java.util.List;
@@ -37,7 +38,18 @@ public class PeliculaCarracteristicaBean extends AbstractDataPersist<PeliculaCar
         }
         return List.of();
     }
-    public int countPeliculaCarracteristica(final long idPeicula,int first,int last) {
+    public List<TipoPelicula> findAllTiposPelicula() {
+        try {
+            TypedQuery<TipoPelicula> q = em.createNamedQuery("PeliculaCaracteristica.findAll", TipoPelicula.class);
+            q.setFirstResult(0);
+            q.setMaxResults(Integer.MAX_VALUE);
+            return q.getResultList();
+        }catch (Exception e){
+            Logger.getLogger(getClass().getName()).log(Level.SEVERE,e.getMessage(),e);
+        }
+        return List.of();
+    }
+    public int countPeliculaCarracteristica(final long idPeicula) {
         try {
             TypedQuery<Long> q = em.createNamedQuery("PeliculaCaracteristica.countByIdPelicula", Long.class);
             q.setParameter("idPelicula", idPeicula);

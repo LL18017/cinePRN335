@@ -1,11 +1,15 @@
 package sv.edu.ues.occ.ingenieria.prn335_2024.cine.boundary.jsf;
 
+import jakarta.annotation.PostConstruct;
+import jakarta.el.MethodExpression;
 import jakarta.enterprise.context.Dependent;
+import jakarta.faces.component.UIComponent;
 import jakarta.faces.context.FacesContext;
 import jakarta.inject.Inject;
 import jakarta.inject.Named;
 import org.primefaces.event.SelectEvent;
 import sv.edu.ues.occ.ingenieria.prn335_2024.cine.control.AbstractDataPersist;
+import sv.edu.ues.occ.ingenieria.prn335_2024.cine.control.PeliculaBean;
 import sv.edu.ues.occ.ingenieria.prn335_2024.cine.control.PeliculaCarracteristicaBean;
 import sv.edu.ues.occ.ingenieria.prn335_2024.cine.control.TipoPeliculaBean;
 import sv.edu.ues.occ.ingenieria.prn335_2024.cine.entity.Pelicula;
@@ -13,10 +17,14 @@ import sv.edu.ues.occ.ingenieria.prn335_2024.cine.entity.PeliculaCaracteristica;
 import sv.edu.ues.occ.ingenieria.prn335_2024.cine.entity.TipoPelicula;
 
 import jakarta.faces.application.FacesMessage;
+
+import jakarta.faces.component.UIInput;
 import java.io.Serializable;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 @Named
 @Dependent
@@ -25,6 +33,8 @@ public class FrmPeliculaCarracteristica extends AbstractFrm<PeliculaCaracteristi
     PeliculaCarracteristicaBean pcBean;
    @Inject
    TipoPeliculaBean tpBean;
+   @Inject
+   PeliculaBean pBean;
    @Inject
    FacesContext fc;
 
@@ -36,26 +46,73 @@ public class FrmPeliculaCarracteristica extends AbstractFrm<PeliculaCaracteristi
         return "Pelicula Carracteristica";
     }
 
+    @PostConstruct
     @Override
     public void inicioRegistros() {
         super.inicioRegistros();
         try {
-        this.tipoPeliculaList=null;
+        this.tipoPeliculaList=pcBean.findAllTiposPelicula();
         }catch (Exception e){
             Logger.getLogger(getClass().getName()).log(Level.SEVERE,e.getMessage(),e);
-            enviarMensaje("error al cargar los tipos","error al carar los tipos",FacesMessage.SEVERITY_ERROR);
         }
+    }
+    public void validarDatos(FacesContext fc , UIComponent components, Object valor) {
+//        UIInput input = (UIInput) components;
+//        String expresion =registro.getIdTipoPelicula().getExpresionRegular();
+//        System.out.println("el valor de es "+registro.getIdTipoPelicula().getExpresionRegular());
+//        if (expresion.equals(".") || expresion.isEmpty()) {
+//            return;
+//        }
+//        if (registro != null && registro.getIdPelicula() != null) {
+//            String nuevo = valor.toString();
+//            Pattern patron = Pattern.compile(this.registro.getIdTipoPelicula().getExpresionRegular());
+//            Matcher validator = patron.matcher(nuevo);
+//            if (validator.find()) {
+//                return;
+//            }
+//        }
+//
+//        ((UIInput) components).setValid(false);
+//        enviarMensaje("VALOR NO VALIDO",valor.toString(), FacesMessage.SEVERITY_ERROR);
+    }
+
+    @Override
+    public List<PeliculaCaracteristica> cargar(int first, int max) {
+        try {
+            if (this.idPelicula!=null && this.pcBean!=null){
+
+                System.out.println(idPelicula);
+                return pcBean.findByIdPelicula(this.idPelicula,first,max);
+            }
+        }catch (Exception e){
+            Logger.getLogger(getClass().getName()).log(Level.SEVERE,e.getMessage(),e);
+        }
+        return List.of();
+    }
+
+    @Override
+    public int contar() {
+        try {
+            return pcBean.countPeliculaCarracteristica(idPelicula);
+        }catch (Exception e){
+            Logger.getLogger(getClass().getName()).log(Level.SEVERE,e.getMessage() +"jajaj",e);
+        }
+        return 0;
     }
 
     @Override
     public void instanciarRegistro() {
-        registro=new PeliculaCaracteristica();
-        if (idPelicula!=null){
-            registro.setIdPelicula(new Pelicula(idPelicula));
-        }
-        if (tipoPeliculaList!=null && tipoPeliculaList.isEmpty()){
-            registro.setIdTipoPelicula(tipoPeliculaList.getFirst());
-        }
+        PeliculaCaracteristica pc=new PeliculaCaracteristica();
+
+//        if (idPelicula!=null){
+//            pc.setIdPelicula(new Pelicula(idPelicula));
+//        }
+//        if (tipoPeliculaList!=null && tipoPeliculaList.isEmpty()){
+//            pc.setIdTipoPelicula(tipoPeliculaList.getLast());
+//        }
+
+        registro=pc;
+
     }
 
     @Override
@@ -86,7 +143,6 @@ public class FrmPeliculaCarracteristica extends AbstractFrm<PeliculaCaracteristi
 
     @Override
     public void selecionarFila(SelectEvent<PeliculaCaracteristica> event) {
-
         FacesMessage mensaje=new FacesMessage("pelicula selecionada ", registro.getValor());
         fc.addMessage(null,mensaje);
         this.estado=ESTADO_CRUD.MODIFICAR;
@@ -94,11 +150,12 @@ public class FrmPeliculaCarracteristica extends AbstractFrm<PeliculaCaracteristi
 
     public Integer getIdTipoPeliculaSelecionada(){
         if (registro!=null && registro.getIdPelicula()!=null){
+            enviarMensaje("",registro.getIdTipoPelicula().getNombre(),FacesMessage.SEVERITY_INFO);
             return registro.getIdTipoPelicula().getIdTipoPelicula();
         }
         return null;
     }
-    public void settIdTipoPeliculaSelecionada(final Integer idTipoPelicula){
+    public void setIdTipoPeliculaSelecionada(final Integer idTipoPelicula){
         if (registro!=null && registro.getIdPelicula()!=null && !tipoPeliculaList.isEmpty()){
             this.registro.setIdTipoPelicula(this.tipoPeliculaList.stream().filter(r->r.getIdTipoPelicula().equals(idTipoPelicula)).findFirst().orElse(null));
         }
@@ -124,4 +181,5 @@ public class FrmPeliculaCarracteristica extends AbstractFrm<PeliculaCaracteristi
     public void setIdPelicula(Long idPelicula) {
         this.idPelicula = idPelicula;
     }
+
 }
