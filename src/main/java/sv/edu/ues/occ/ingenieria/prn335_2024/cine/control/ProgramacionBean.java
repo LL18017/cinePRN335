@@ -59,6 +59,4 @@ public class ProgramacionBean extends AbstractDataPersist<Programacion> implemen
         return List.of();
     }
 
-
-
 }
