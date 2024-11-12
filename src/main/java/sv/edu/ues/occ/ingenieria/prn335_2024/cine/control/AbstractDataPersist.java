@@ -117,6 +117,7 @@ public abstract  class AbstractDataPersist<T> {
             if (em == null) {
                 throw new IllegalStateException("Error al acceder al repositorio");
             }
+
                 em.persist(registro);
         } catch (Exception e) {
             throw new IllegalStateException("Error al acceder al repositorio jj", e);

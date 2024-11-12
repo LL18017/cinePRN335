@@ -41,7 +41,7 @@ import java.util.List;
     @NamedQuery(name = "Programacion.findByDesde", query = "SELECT p FROM Programacion p WHERE p.desde = :desde"),
     @NamedQuery(name = "Programacion.findByHasta", query = "SELECT p FROM Programacion p WHERE p.hasta = :hasta"),
     @NamedQuery(name = "Programacion.findProgramacionBySala", query = "SELECT p FROM Programacion p WHERE p.idSala = :sala"),
-    @NamedQuery(name = "Programacion.findProgramacionBySala", query = "SELECT p FROM Programacion p WHERE p.idSala = :sala"),
+    @NamedQuery(name = "Programacion.findAsientoParaReserva", query = "SELECT a FROM Sala s,Asiento a where a.asientoCaracteristicaList = a "),
     @NamedQuery(name = "Programacion.findByComentarios", query = "SELECT p FROM Programacion p WHERE p.comentarios = :comentarios")})
 public class Programacion implements Serializable {
 

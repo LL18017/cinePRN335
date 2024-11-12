@@ -1,6 +1,7 @@
 package sv.edu.ues.occ.ingenieria.prn335_2024.cine.boundary.jsf;
 
 import jakarta.annotation.PostConstruct;
+import jakarta.faces.application.FacesMessage;
 import jakarta.faces.component.UIInput;
 import jakarta.faces.context.FacesContext;
 import jakarta.faces.event.AjaxBehaviorEvent;
@@ -8,21 +9,14 @@ import jakarta.faces.view.ViewScoped;
 import jakarta.inject.Inject;
 import jakarta.inject.Named;
 import org.primefaces.event.SelectEvent;
-import sv.edu.ues.occ.ingenieria.prn335_2024.cine.control.AbstractDataPersist;
-import sv.edu.ues.occ.ingenieria.prn335_2024.cine.control.ProgramacionBean;
-import sv.edu.ues.occ.ingenieria.prn335_2024.cine.control.ReservaBean;
-import sv.edu.ues.occ.ingenieria.prn335_2024.cine.control.TipoReservaBean;
-import sv.edu.ues.occ.ingenieria.prn335_2024.cine.entity.Programacion;
-import sv.edu.ues.occ.ingenieria.prn335_2024.cine.entity.Reserva;
-import sv.edu.ues.occ.ingenieria.prn335_2024.cine.entity.TipoReserva;
+import sv.edu.ues.occ.ingenieria.prn335_2024.cine.control.*;
+import sv.edu.ues.occ.ingenieria.prn335_2024.cine.entity.*;
 
-import javax.swing.event.ChangeEvent;
 import java.io.Serializable;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
 @ViewScoped
@@ -31,22 +25,34 @@ public class FrmReservas extends AbstractFrm<Reserva> implements Serializable {
     @Inject
     ReservaBean reservaBean;
     @Inject
+    ReservaDetalleBean reservaDetalleBean;
+    @Inject
     FacesContext fc;
     @Inject
     TipoReservaBean tipoReservaBean;
     @Inject
     ProgramacionBean programacionBean;
+    @Inject
+    AsientoBean asientoBean;
 
 
     //variables para la pagina
+    //primer tab
     int indiceTab=0;
     TipoReserva tipoReservaSelecionada;
     Date fechaReservaSelecionada;
     int idTipoReservaSelecionada;
+    //segundo tab
     List<TipoReserva> tipoReservasDisponibles;
     List<Programacion> programaciones;
     Programacion programacionSelecionada;
     String idProgramacion;
+    String fechaProgramacion;
+    //tercer tab
+    List<Asiento> asientosDisponibles;
+    List<Asiento> asientosSelecionados;
+    String idAsientoSelecionado;
+    String idAsientoELiminado;
     Date fechaActual;
 
     @Override
@@ -102,20 +108,37 @@ public class FrmReservas extends AbstractFrm<Reserva> implements Serializable {
     public void nextTab() {
         switch (indiceTab) {
             case 0:
+
                 if (tipoReservaSelecionada!=null && fechaReservaSelecionada!=null) {
                     indiceTab++;
                     buscarProgramaciones();
+                }else{
+                    fc.addMessage(null,new FacesMessage(FacesMessage.SEVERITY_WARN,"No se puede seguir ","DEBES SELECIONAR "
+                            +(tipoReservaSelecionada==null?"UN TIPO DE RESERVA":"UNA FECHA")));
                 }
                 break;
                 case 1:
-                if (tipoReservaSelecionada!=null && fechaReservaSelecionada!=null) {
+                if (programacionSelecionada!=null) {
                     indiceTab++;
+                    buscarAsientosByProgramacion();
                 }
-                break; case 2:
-                if (tipoReservaSelecionada!=null && fechaReservaSelecionada!=null) {
+                break;
+                case 2:
+                if (!asientosSelecionados.isEmpty()) {
                     indiceTab++;
                 }
                 break;
+                case 3:
+                    indiceTab=0;
+                    programacionSelecionada=null;
+                    tipoReservaSelecionada=null;
+                    fechaReservaSelecionada=null;
+                    asientosSelecionados.clear();
+                    asientosDisponibles.clear();
+
+                break;
+            default:
+                indiceTab=0;
         }
     }
     public void BackTab() {
@@ -134,6 +157,21 @@ public class FrmReservas extends AbstractFrm<Reserva> implements Serializable {
     public void buscarProgramaciones() {
         programaciones=programacionBean.findProgramacionesByDate(fechaReservaSelecionada);
         programaciones=programaciones.stream().filter(p->(fechaReservaSelecionada.compareTo(p.getDesde())<0 && fechaReservaSelecionada.compareTo(p.getHasta())>0)).collect(Collectors.toList());
+
+    }
+    public void buscarAsientosByProgramacion() {
+        //buscar asientos asientos libres de una sala y programacion
+
+        //buscar todos los asientos que tiene una sala
+        try {
+        asientosDisponibles=asientoBean.findAsientosBySalaandProgramacion(programacionSelecionada.getIdSala(),programacionSelecionada);
+            System.out.println("los asientos displonibles son " +asientosDisponibles.size());
+            asientosDisponibles.forEach(System.out::println);
+        }catch (Exception e) {
+            Logger.getLogger(getClass().getName()).log(Level.SEVERE, e.getMessage(),e);
+            System.out.println("error al cargar los asientos");
+        }
+
 
     }
 
@@ -168,15 +206,102 @@ public class FrmReservas extends AbstractFrm<Reserva> implements Serializable {
         System.out.println("Seleccionaste: " + selectedValue);
     }
     public void onProgramacionChange() {
-        System.out.println("hola");
+
         if (!programaciones.isEmpty()){
         programacionSelecionada = programaciones.stream().filter(p->p.getIdProgramacion().toString().equals(idProgramacion)).findFirst().orElse(null);
+            SimpleDateFormat sdf = new SimpleDateFormat("HH:mm");
+            fechaProgramacion="hora (" +sdf.format(programacionSelecionada.getDesde()) + "-" + sdf.format(programacionSelecionada.getHasta()) + ")";
 
         }
 
 
 
 
+
+    }
+    public void agregarAsiento(){
+          try {
+              Asiento asientoSelecionado=asientosDisponibles.stream().
+                      filter(a->a.getIdAsiento().toString().equals(idAsientoSelecionado)).findFirst().orElse(null);
+              if (asientosSelecionados==null){
+                  asientosSelecionados=new ArrayList<>();
+              }
+              if (asientoSelecionado!=null){
+                  asientosDisponibles.remove(asientoSelecionado);
+                  asientosSelecionados.add(asientoSelecionado);
+              }
+              idAsientoSelecionado="";
+          }catch (Exception e) {
+              Logger.getLogger(getClass().getName()).log(Level.SEVERE, e.getMessage(),e);
+          }
+        }
+    public void eliminarAsiento(){
+          try {
+              Asiento asientoEliminado=asientosSelecionados.stream().
+                      filter(a->a.getIdAsiento().toString().equals(idAsientoELiminado)).findFirst().orElse(null);
+
+              if (asientoEliminado!=null){
+                  asientosSelecionados.remove(asientoEliminado);
+                  asientosDisponibles.add(asientoEliminado);
+                  asientosDisponibles.sort(Comparator.comparingLong(Asiento::getIdAsiento));
+              }
+              idAsientoSelecionado="";
+          }catch (Exception e) {
+              Logger.getLogger(getClass().getName()).log(Level.SEVERE, e.getMessage(),e);
+          }
+        }
+    public String formateoFechaReserva() {
+            if (programacionSelecionada!=null) {
+                return "";
+            }
+            SimpleDateFormat sdf = new SimpleDateFormat("HH:mm");
+
+           try {
+               String formaro ="hora " +sdf.format(programacionSelecionada.getDesde()) + "-" + sdf.format(programacionSelecionada.getHasta()) + ")";
+               System.out.println("prueba");
+               System.out.println(sdf.format(programacionSelecionada.getDesde()) );
+               System.out.println(sdf.format(programacionSelecionada.getHasta()));
+               System.out.println(formaro);
+            return formaro;
+           }catch (Exception e) {
+               Logger.getLogger(getClass().getName()).log(Level.SEVERE, e.getMessage(),e);
+               return "problemas";
+           }
+
+        }
+
+    public void crearReserva(){
+        if (programacionSelecionada!=null && tipoReservaSelecionada!=null && fechaReservaSelecionada!=null) {
+            Reserva reserva=new Reserva();
+            try {
+                reserva.setIdProgramacion(programacionSelecionada);
+                reserva.setIdTipoReserva(tipoReservaSelecionada);
+                reserva.setFechaReserva(fechaReservaSelecionada);
+                reserva.setEstado("CREADO");
+                reservaBean.create(reserva);
+
+                ReservaDetalle reservaDetalle=new ReservaDetalle();
+                reservaDetalle.setIdReserva(reserva);
+                try {
+                    asientosSelecionados.forEach(a->{
+                    reservaDetalle.setIdAsiento(a);
+                    reservaDetalle.setEstado("Creado");
+                        reservaDetalleBean.create(reservaDetalle);
+                    });
+                }catch (Exception e) {
+                    Logger.getLogger(getClass().getName()).log(Level.SEVERE, e.getMessage(),e);
+                    reservaBean.delete(reserva);
+                     fc.addMessage(null,new FacesMessage(FacesMessage.SEVERITY_ERROR,"error al asignar el asiento","falso"));
+
+                }
+                nextTab();
+                fc.addMessage(null,new FacesMessage("se ha credao la reserva"));
+            }catch (Exception e) {
+                Logger.getLogger(getClass().getName()).log(Level.SEVERE, e.getMessage(),e);
+                fc.addMessage(null,new FacesMessage(FacesMessage.SEVERITY_ERROR,"se ha credao la reserva","falso"));
+
+            }
+        }
     }
     //getters y setter
     public int getIndiceTab() {
@@ -260,5 +385,45 @@ public class FrmReservas extends AbstractFrm<Reserva> implements Serializable {
 
     public void setIdProgramacion(String idProgramacion) {
         this.idProgramacion = idProgramacion;
+    }
+
+    public String getFechaProgramacion() {
+        return fechaProgramacion;
+    }
+
+    public void setFechaProgramacion(String fechaProgramacion) {
+        this.fechaProgramacion = fechaProgramacion;
+    }
+
+    public List<Asiento> getAsientosSelecionados() {
+        return asientosSelecionados;
+    }
+
+    public void setAsientosSelecionados(List<Asiento> asientosSelecionados) {
+        this.asientosSelecionados = asientosSelecionados;
+    }
+
+    public List<Asiento> getAsientosDisponibles() {
+        return asientosDisponibles;
+    }
+
+    public void setAsientosDisponibles(List<Asiento> asientosDisponibles) {
+        this.asientosDisponibles = asientosDisponibles;
+    }
+
+    public String getIdAsientoSelecionado() {
+        return idAsientoSelecionado;
+    }
+
+    public void setIdAsientoSelecionado(String idAsientoSelecionado) {
+        this.idAsientoSelecionado = idAsientoSelecionado;
+    }
+
+    public String getIdAsientoELiminado() {
+        return idAsientoELiminado;
+    }
+
+    public void setIdAsientoELiminado(String idAsientoELiminado) {
+        this.idAsientoELiminado = idAsientoELiminado;
     }
 }

@@ -26,6 +26,10 @@ public class PeliculaCarracteristicaBean extends AbstractDataPersist<PeliculaCar
     public EntityManager getEntityManager() {
         return em;
     }
+
+
+
+
     public List<PeliculaCaracteristica> findByIdPelicula(final long idPeicula,int first,int last) {
         try {
             TypedQuery<PeliculaCaracteristica> q = em.createNamedQuery("PeliculaCaracteristica.findByIdPelicula", PeliculaCaracteristica.class);

@@ -4,6 +4,7 @@ import jakarta.ejb.LocalBean;
 import jakarta.ejb.Stateless;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
+import sv.edu.ues.occ.ingenieria.prn335_2024.cine.entity.Asiento;
 import sv.edu.ues.occ.ingenieria.prn335_2024.cine.entity.Programacion;
 import sv.edu.ues.occ.ingenieria.prn335_2024.cine.entity.Sala;
 
@@ -44,6 +45,14 @@ public class ProgramacionBean extends AbstractDataPersist<Programacion> implemen
     public List<Programacion> findProgramacionesByDate(Date fecha) {
             try {
               return em.createNamedQuery("Programacion.findAll",Programacion.class).getResultList();
+            }catch (Exception ex){
+                Logger.getLogger(SalaBean.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        return List.of();
+    }
+    public List<Asiento> findAsientoParaReserva(Date fecha) {
+            try {
+              return em.createNamedQuery("Programacion.findAsientoParaReserva", Asiento.class).getResultList();
             }catch (Exception ex){
                 Logger.getLogger(SalaBean.class.getName()).log(Level.SEVERE, null, ex);
             }
