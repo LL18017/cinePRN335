@@ -12,7 +12,7 @@
     </ui:define>
     <ui:define name="cuerpo">
         <h:panelGrid>
-            <h:panelGroup id="pnlTbla">
+            <h:panelGroup id="pnlTabla">
                 <h:form id="frmTabla">
                     <p:dataTable value="#{frmTipoReserva.modelo}" var="r"
                                  lazy="true"
@@ -46,15 +46,17 @@
                     <p:outputLabel value="Nombre" for="txtNombre"/>
                     <p:inputText id="txtNombre" value="#{frmTipoReserva.registro.nombre}" size="70"/>
 
-                    <p:outputLabel value="Nombre" for="chkActivo"/>
+                    <p:outputLabel value="Activo" for="chkActivo"/>
                     <p:selectBooleanCheckbox id="chkActivo" value="#{frmTipoReserva.registro.activo}" size="70"/>
 
                     <p:outputLabel value="Comentarios" for="txtComentarios"/>
                     <p:inputText id="txtComentarios" value="#{frmTipoReserva.registro.comentarios}" size="70"/>
 
                 </h:panelGrid>
-                <h:panelGrid>
-                    <crud:botonesBottom frm="#{frmTipoAsiento}" actualizar=":frmTabla  :pnlDetalle @form"/>
+                <h:panelGrid columns="#{frmTipoReserva.estado=='CREAR'?'1':'2'}">
+                    <h:panelGrid>
+                        <crud:botonesBottom frm="#{frmTipoReserva}"/>
+                    </h:panelGrid>
                 </h:panelGrid>
             </h:form>
         </h:panelGroup>

@@ -12,30 +12,32 @@
     </ui:define>
     <ui:define name="cuerpo">
         <h:panelGrid>
-            <h:form id="frmTabla">
-                <p:dataTable value="#{frmTipoSala.modelo}" var="r"
-                             lazy="true"
-                             paginator="true"
-                             rows="5"
-                             first="0"
-                             selectionMode="single"
-                             selection="#{frmTipoSala.registro}"
-                             rendered="#{empty frmTipoSala.registro}"
-                >
-                    <p:ajax process="@this" update=":pnlDetalle @form" event="rowSelect"
-                            listener="#{frmTipoSala.selecionarFila}"/>
-                    <p:column headerText="ID"><h:outputText value="#{r.idTipoSala}"/></p:column>
-                    <p:column headerText="NOMBRE"><h:outputText value="#{r.nombre}"/></p:column>
-                    <p:column headerText="ACTIVO"><h:outputText value="#{r.activo?'ACTIVO':'INACTIVO'}"/></p:column>
-                    <p:column headerText="COMENTARIOS"><h:outputText value="#{r.comentarios}"/></p:column>
-                    <p:column headerText="EXPRESION REGULAR"><h:outputText value="#{r.expresionRegular}"/></p:column>
-
-                </p:dataTable>
-                <h:panelGrid columns="2">
-                    <crud:botonesTop frm="#{frmTipoSala}"/>
-                </h:panelGrid>
-                <p:growl id="growl" showDetail="true" sticky="false" life="1500"/>
-            </h:form>
+            <h:panelGroup id="pnlTabla">
+                <h:form id="frmTabla">
+                    <p:dataTable value="#{frmTipoSala.modelo}" var="r"
+                                 lazy="true"
+                                 paginator="true"
+                                 rows="5"
+                                 first="0"
+                                 selectionMode="single"
+                                 selection="#{frmTipoSala.registro}"
+                                 rendered="#{empty frmTipoSala.registro}"
+                    >
+                        <p:ajax process="@this" update=":pnlDetalle @form" event="rowSelect"
+                                listener="#{frmTipoSala.selecionarFila}"/>
+                        <p:column headerText="ID"><h:outputText value="#{r.idTipoSala}"/></p:column>
+                        <p:column headerText="NOMBRE"><h:outputText value="#{r.nombre}"/></p:column>
+                        <p:column headerText="ACTIVO"><h:outputText value="#{r.activo?'ACTIVO':'INACTIVO'}"/></p:column>
+                        <p:column headerText="COMENTARIOS"><h:outputText value="#{r.comentarios}"/></p:column>
+                        <p:column headerText="EXPRESION REGULAR"><h:outputText
+                                value="#{r.expresionRegular}"/></p:column>
+                    </p:dataTable>
+                    <h:panelGrid columns="2">
+                        <crud:botonesTop frm="#{frmTipoSala}"/>
+                    </h:panelGrid>
+                    <p:growl id="growl" showDetail="true" sticky="false" life="1500"/>
+                </h:form>
+            </h:panelGroup>
         </h:panelGrid>
 
         <h:panelGroup id="pnlDetalle">
@@ -47,7 +49,7 @@
                     <p:outputLabel value="Nombre" for="txtNombre"/>
                     <p:inputText id="txtNombre" value="#{frmTipoSala.registro.nombre}" size="70"/>
 
-                    <p:outputLabel value="Nombre" for="chkActivo"/>
+                    <p:outputLabel value="Activo" for="chkActivo"/>
                     <p:selectBooleanCheckbox id="chkActivo" value="#{frmTipoSala.registro.activo}" size="70"/>
 
                     <p:outputLabel value="Comentarios" for="txtComentarios"/>
@@ -57,16 +59,10 @@
                     <p:inputText id="txtExpresionRegular" value="#{frmTipoSala.registro.expresionRegular}" size="70"/>
 
                 </h:panelGrid>
-                <h:panelGrid columns="3">
-                    <p:commandButton value="GUARDAR" rendered="#{frmTipoSala.estado=='CREAR'}"
-                                     update=":frmTabla  :pnlDetalle @form"
-                                     actionListener="#{frmTipoSala.btnGuardarHandler}"/>
-                    <p:commandButton value="MODIFICAR" rendered="#{frmTipoSala.estado=='MODIFICAR'}"
-                                     update=":frmTabla :pnlDetalle @form"
-                                     actionListener="#{frmTipoSala.btnModificarHandler}"/>
-                    <p:commandButton value="ELIMINAR" rendered="#{frmTipoSala.estado=='MODIFICAR'}"
-                                     update=":frmTabla  :pnlDetalle @form"
-                                     actionListener="#{frmTipoSala.btneEliminarHandler}"/>
+                <h:panelGrid columns="#{frmTipoSala.estado=='CREAR'?'1':'2'}">
+                    <h:panelGrid>
+                        <crud:botonesBottom frm="#{frmTipoSala}"/>
+                    </h:panelGrid>
                 </h:panelGrid>
             </h:form>
         </h:panelGroup>

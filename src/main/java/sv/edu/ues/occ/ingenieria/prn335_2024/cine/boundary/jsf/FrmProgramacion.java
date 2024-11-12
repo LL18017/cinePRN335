@@ -9,11 +9,7 @@ import sv.edu.ues.occ.ingenieria.prn335_2024.cine.control.AbstractDataPersist;
 import sv.edu.ues.occ.ingenieria.prn335_2024.cine.control.ProgramacionBean;
 import sv.edu.ues.occ.ingenieria.prn335_2024.cine.entity.Programacion;
 
-<<<<<<< HEAD
-import javax.faces.view.ViewScoped;
-=======
 import jakarta.faces.view.ViewScoped;
->>>>>>> fd8c20d (primer commit)
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;

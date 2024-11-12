@@ -64,8 +64,10 @@
                     <p:outputLabel value="Descripcion" for="txtDescripcion"/>
                     <p:inputText id="txtDescripcion" value="#{frmTipoAsiento.registro.comentarios}" size="70"/>
                 </h:panelGrid>
-                <h:panelGrid>
-                    <crud:botonesBottom frm="#{frmTipoAsiento}" actualizar=":frmTabla  :pnlDetalle @form"/>
+                <h:panelGrid columns="#{frmTipoAsiento.estado=='CREAR'?'1':'2'}">
+                    <h:panelGrid>
+                        <crud:botonesBottom frm="#{frmTipoAsiento}"/>
+                    </h:panelGrid>
                 </h:panelGrid>
             </h:form>
         </h:panelGroup>

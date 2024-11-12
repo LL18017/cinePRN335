@@ -8,7 +8,7 @@
                template="WEB-INF/templates/principal.xhtml">
 
     <f:define name="titulo">
-        #{frmSucursal.titulo}
+        #{frmSucursal.paginaNombre()}
     </f:define>
 
     <f:define name="cuerpo">
@@ -30,7 +30,7 @@
                         <p:column headerText="ACTIVO"><h:outputText value="#{r.activo ? 'ACTIVO' : 'INACTIVO'}"/></p:column>
                         <p:column headerText="COMENTARIOS"><h:outputText value="#{r.comentarios}"/></p:column>
                     </p:dataTable>
-                    <crud:botonesTop frm="#{frmSucursal}" />
+                    <crud:botonesTop frm="#{frmSucursal}"/>
                     <p:growl id="growl" showDetail="true" sticky="false" life="1500"/>
                 </h:form>
             </h:panelGroup>
@@ -57,17 +57,10 @@
                     <h:outputLabel value="Comentarios" for="txtComentarios"/>
                     <h:inputTextarea id="txtComentarios" value="#{frmSucursal.registro.comentarios}" cols="70" rows="3"/>
                 </h:panelGrid>
-
-                <h:panelGrid columns="#{frmSucursal.estado == 'CREAR' ? '1' : '2'}">
-                    <p:commandButton value="GUARDAR" rendered="#{frmSucursal.estado == 'CREAR'}"
-                                     update=":frmTabla :pnlDetalle @form"
-                                     actionListener="#{frmSucursal.btnGuardarHandler}"/>
-                    <p:commandButton value="MODIFICAR" rendered="#{frmSucursal.estado == 'MODIFICAR'}"
-                                     update=":frmTabla :pnlDetalle @form"
-                                     actionListener="#{frmSucursal.btnModificarHandler}"/>
-                    <p:commandButton value="ELIMINAR" rendered="#{frmSucursal.estado == 'MODIFICAR'}"
-                                     update=":frmTabla :pnlDetalle @form"
-                                     actionListener="#{frmSucursal.btneEliminarHandler}"/>
+                <h:panelGrid columns="#{frmSucursal.estado=='CREAR'?'1':'2'}">
+                <h:panelGrid>
+                    <crud:botonesBottom frm="#{frmSucursal}"/>
+                </h:panelGrid>
                 </h:panelGrid>
             </h:form>
         </h:panelGroup>
