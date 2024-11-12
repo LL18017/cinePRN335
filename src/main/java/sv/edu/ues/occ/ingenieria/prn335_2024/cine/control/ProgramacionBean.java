@@ -8,7 +8,10 @@ import sv.edu.ues.occ.ingenieria.prn335_2024.cine.entity.Programacion;
 import sv.edu.ues.occ.ingenieria.prn335_2024.cine.entity.Sala;
 
 import java.io.Serializable;
+<<<<<<< HEAD
 import java.util.Date;
+=======
+>>>>>>> fd8c20d (primer commit)
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -41,6 +44,7 @@ public class ProgramacionBean extends AbstractDataPersist<Programacion> implemen
         return List.of();
     }
 
+<<<<<<< HEAD
     public List<Programacion> findProgramacionesByDate(Date fecha) {
             try {
               return em.createNamedQuery("Programacion.findAll",Programacion.class).getResultList();
@@ -50,6 +54,8 @@ public class ProgramacionBean extends AbstractDataPersist<Programacion> implemen
         return List.of();
     }
 
+=======
+>>>>>>> fd8c20d (primer commit)
 
 
 }

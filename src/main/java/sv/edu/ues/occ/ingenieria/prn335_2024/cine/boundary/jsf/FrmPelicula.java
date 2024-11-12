@@ -11,15 +11,25 @@ import sv.edu.ues.occ.ingenieria.prn335_2024.cine.control.AbstractDataPersist;
 import sv.edu.ues.occ.ingenieria.prn335_2024.cine.control.PeliculaBean;
 import sv.edu.ues.occ.ingenieria.prn335_2024.cine.entity.Pelicula;
 
+<<<<<<< HEAD
 import javax.faces.component.UIComponent;
 import javax.faces.component.UIInput;
+=======
+import jakarta.faces.component.UIComponent;
+import jakarta.faces.component.UIInput;
+>>>>>>> fd8c20d (primer commit)
 import java.io.Serializable;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.regex.Pattern;
 
+<<<<<<< HEAD
 @ViewScoped
 @Named
+=======
+@Named
+@ViewScoped
+>>>>>>> fd8c20d (primer commit)
 public class FrmPelicula extends AbstractFrm<Pelicula> implements Serializable {
     @Inject
     PeliculaBean pBean;
