@@ -26,28 +26,24 @@
     <!-- To access this server from a remote client add a host attribute to the following element, e.g. host="*" -->
     <httpEndpoint id="defaultHttpEndpoint"
                   httpPort="9080"
-                  httpsPort="9443" />
+                  httpsPort="9443"/>
 
     <!-- Automatically expand WAR files and EAR files -->
     <applicationManager autoExpand="true"/>
 
     <!-- Default SSL configuration enables trust for default certificates from the Java runtime -->
-    <ssl id="defaultSSLConfig" trustDefaultCerts="true" />
-
-    <!-- pool de conexiones-->
-
+    <ssl id="defaultSSLConfig" trustDefaultCerts="true"/>
+    <!--pool de conexiones-->
     <dataSource id="CineDataSource"
                 jndiName="jdbc/pgdb"
                 jdbcDriverRef="postgresql-driver"
                 type="javax.sql.ConnectionPoolDataSource"
                 transactional="true">
-
-        <properties
-                serverName="localhost"
-                databaseName="cine_prn335"
-                portNumber="5432"
-                user="postgres"
-                password="abc123"/>
+        <properties serverName="localhost"
+                    databaseName="cine_prn335"
+                    portNumber="5432"
+                    user="postgres"
+                    password="abc123"/>
     </dataSource>
 
 </server>
