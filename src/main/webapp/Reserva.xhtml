@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<f:composition xmlns="http://www.w3.org/1999/xhtml"
+               xmlns:h="jakarta.faces.html"
+               xmlns:f="jakarta.faces.facelets"
+               xmlns:o="http://xmlns.jcp.org/jsf/core"
+               xmlns:p="http://primefaces.org/ui"
+               xmlns:crud="jakarta.faces.composite/crud"
+               template="WEB-INF/templates/principal.xhtml"
+
+>
+
+
+    <f:define name="titulo">
+        <p:outputLabel  styleClass="italic" value="#{frmReservas.paginaNombre()}"/>
+
+    </f:define>
+
+    <f:define name="cuerpo">
+        <p:tabView id="tabDetalle" activeIndex="#{frmReservas.indiceTab}" >
+            <p:ajax process="@this" event="tabChange" listener="#{frmReservas.cambiarTab}" update=":growl"/>
+                <p:tab title="fecha" id="fecha" cache="false" dynamic="true" closable="false">
+                    <h:form>
+                        <p:panel header="Selecionar una fecha">
+                            <h:panelGrid columns="2">
+                                <h:outputLabel value="Tipo Reserva"/>
+                                <p:selectOneListbox value="#{frmReservas.idTipoReservaSelecionada}" columns="2" style="width: 200px;">
+                                    <o:selectItems value="#{frmReservas.tipoReservasDisponibles}" var="tr" itemLabel="#{tr.nombre}"
+                                                   itemValue="#{tr.idTipoReserva}" />
+                                          <p:ajax event="valueChange" listener="#{frmReservas.onTipoReservaChange}" update="text" />
+                                </p:selectOneListbox>
+                                <h:outputLabel value="Selecione un dia"/>
+                                <p:calendar value="#{frmReservas.fechaReservaSelecionada}"
+                                            showOnFocus="true"
+                                            pattern="dd/MM/yyyy"
+                                            minDate="#{frmReservas.fechaActual}">
+                                          <p:ajax event="dateSelect" update="text" />
+                                </p:calendar>
+
+                            </h:panelGrid>
+                        </p:panel>
+                    </h:form>
+                </p:tab>
+                <p:tab title="funcion" id="funcion" cache="false" dynamic="true" closable="false">
+                   <h:form>
+                       <p:panel header="Selecionar una pelicula">
+
+
+                           //setear id
+                           <h:panelGrid columns="2">
+                               <h:outputLabel value="Selecione una pelicula"/>
+                               <p:autoComplete
+                                       id="pelicula"
+                                        value="#{frmReservas.idProgramacion}"
+                                       completeMethod="#{frmReservas.sugerencias}"
+                                       var="item"
+                                       itemValue="#{item.split('_')[0]}"
+                                       itemLabel="#{item.split('_')[1]}"
+                                       dropdown="true"
+                                       forceSelection="false"
+                                       minQueryLength="2"
+                               >
+                                   <p:ajax update="text" event="itemSelect" listener="#{frmReservas.onProgramacionChange}"/>
+                               </p:autoComplete>
+
+                           </h:panelGrid>
+                       </p:panel>
+                   </h:form>
+                </p:tab>
+                <p:tab title="Asiento" id="Asiento" cache="false" dynamic="true" closable="false">
+                    asiento
+                </p:tab> <p:tab title="Confirmar" id="Confirmar" cache="false" dynamic="true" closable="false">
+            confirmar
+                </p:tab>
+
+
+        </p:tabView>
+        <h:panelGrid id="buttons" columns="2">
+            <p:commandButton rendered="#{frmReservas.indiceTab>=1}" value="Back" actionListener="#{frmReservas.BackTab}" update="tabDetalle text" />
+            <p:commandButton value="Next" actionListener="#{frmReservas.nextTab}" update="tabDetalle text buttons" />
+        </h:panelGrid>
+        <p:inputText value="#{frmReservas.programacionSelecionada.idProgramacion}" id="text"/>
+
+    </f:define>
+
+</f:composition>

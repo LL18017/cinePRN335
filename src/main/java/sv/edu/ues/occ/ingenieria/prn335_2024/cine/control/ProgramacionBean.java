@@ -8,6 +8,7 @@ import sv.edu.ues.occ.ingenieria.prn335_2024.cine.entity.Programacion;
 import sv.edu.ues.occ.ingenieria.prn335_2024.cine.entity.Sala;
 
 import java.io.Serializable;
+import java.util.Date;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -37,6 +38,15 @@ public class ProgramacionBean extends AbstractDataPersist<Programacion> implemen
         }
 
 
+        return List.of();
+    }
+
+    public List<Programacion> findProgramacionesByDate(Date fecha) {
+            try {
+              return em.createNamedQuery("Programacion.findAll",Programacion.class).getResultList();
+            }catch (Exception ex){
+                Logger.getLogger(SalaBean.class.getName()).log(Level.SEVERE, null, ex);
+            }
         return List.of();
     }
 

@@ -18,8 +18,8 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.regex.Pattern;
 
-@Named
 @ViewScoped
+@Named
 public class FrmPelicula extends AbstractFrm<Pelicula> implements Serializable {
     @Inject
     PeliculaBean pBean;
