@@ -20,7 +20,7 @@ public class FrmSucursal extends AbstractFrm<Sucursal> implements Serializable {
 
     @Override
     public String paginaNombre() {
-        return "Pelicula";
+        return "Sucursal";
     }
 
     @Inject
