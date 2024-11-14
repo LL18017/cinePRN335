@@ -39,7 +39,7 @@
                         <p:commandButton value="CANCELAR" rendered="#{frmSala.estado ne 'NINGUNO'}"
                                          update=":pnlDetalle @form"
                                          actionListener="#{frmSala.btnCancelarHandler}"/>
-                        <p:commandButton value="NUEVO" update=":pnlDetalle @form"
+                        <p:commandButton value="NUEVO" update="@form"
                                          actionListener="#{frmSala.btnNuevoHandler}"/>
                     </h:panelGrid>
                     <p:growl id="growl" showDetail="true" sticky="false" life="10500"/>
@@ -49,6 +49,7 @@
 
         <h:panelGroup id="pnlDetalle">
             <p:tabView id="tabDetalle" cache="false" dynamic="true" rendered="#{not empty frmSala.registro}">
+                <p:ajax process="@this" event="tabChange" listener="#{frmSala.cambiarTab}"/>
                 <!--            info de la sala-->
                 <p:tab closable="false" title="Geralidades">
                     <h:form rendered="#{not empty frmSala.registro}" id="frmDetalle">
@@ -59,11 +60,17 @@
                             <p:outputLabel value="Nombre" for="txtNombre"/>
                             <p:inputText id="txtNombre" value="#{frmSala.registro.nombre}" size="70"/>
 
-                            <p:outputLabel value="Nombre" for="chkActivo"/>
+                            <p:outputLabel value="Activo" for="chkActivo"/>
                             <p:selectBooleanCheckbox id="chkActivo" value="#{frmSala.registro.activo}" size="70"/>
 
-                            <p:outputLabel value="Observaciones" for="txtObservaciones"/>
-                            <p:inputText id="txtObservaciones" value="#{frmSala.registro.observaciones}" size="70"/>
+
+                            <p:outputLabel value="Sucursales" for="somSucursales"/>
+                            <p:selectOneMenu for="somSucursales" value="#{frmSala.idSucursalSelecionado}" >
+                                <f:selectItems value="#{frmSala.sucursales}" var="su" itemLabel="#{su.nombre}" itemValue="#{su.idSucursal}"/>
+                            </p:selectOneMenu>
+
+                            <p:outputLabel value="comentarios" for="txtComentarios"/>
+                            <p:inputTextarea id="taComentarios" value="#{frmSala.registro.idSucursal.comentarios}"/>
 
                         </h:panelGrid>
                         <h:panelGrid columns="3">
@@ -77,57 +84,63 @@
                     </h:form>
                 </p:tab>
 
-                <!--            info de la sucursal-->
-                <p:tab closable="false" title="info sucursal" rendered="#{frmSala.estado !='CREAR'}">
-                    <p:outputLabel value="#{frmSala.registro.idSucursal.nombre}"/>
+                <!--            info de la caracteristicas-->
+                <p:tab closable="false" title="Caracteristicas"  rendered="#{frmSala.estado !='CREAR'}">
+                    <p:outputLabel value="Carracteristicas de : #{frmSala.registro.idSucursal.nombre}"/>
 
                     <h:form rendered="#{not empty frmSala.registro}" id="frmDetalleSucursal">
-                        <h:panelGrid columns="2">
-                            <p:outputLabel value="ID" for="txtidSucursal"/>
-                            <p:inputText id="txtidSucursal" value="#{frmSala.registro.idSucursal.idSucursal}" readonly="true"
-                                         disabled="true"/>
+                        <crud:botonesTop frm="#{frmSala.frmSalaCaracteristica}" actualizar="frmDetalleSucursal frmDetalleSucursal:oplDetalleSC"/>
+                        <h:panelGrid id="pnlGModeloCaracteristocas" columns="2" rendered="#{empty frmSala.frmSalaCaracteristica.registro}">
+                            <p:dataTable value="#{frmSala.frmSalaCaracteristica.modelo}" var="sc"
+                                         lazy="true"
+                                         paginator="true"
+                                         rows="5"
+                                         first="0"
+                                         selectionMode="single"
+                                         selection="#{frmSalaCaracteristica.registro}"
+                                         rendered="#{empty frmSalaCaracteristica.registro}"
+                            >
+                                <p:ajax process="@this" update="@form" event="rowSelect"
+                                        listener="#{frmSala.frmSalaCaracteristica.selecionarFila}"/>
+                                <p:column headerText="ID"><h:outputText value="#{sc.idSalaCaracteristica}"/></p:column>
+                                <p:column headerText="CARRACTERISTICA"><h:outputText value="#{sc.idTipoSala.nombre}"/></p:column>
+                                <p:column headerText="VALOR"><h:outputText value="#{sc.valor}"/></p:column>
 
 
-                            <p:outputLabel value="Nombre" for="txtNombreSucursal"/>
-                            <h:panelGroup>
-                                <p:selectOneMenu id="selectOneMenuSucursal" value="#{frmSala.sucursalId}">
-                                    <f:selectItems itemValue="0" itemLabel="selecione una sucursal"/>
-                                    <f:selectItems value="#{frmSala.sucursales}" var="sucursal"
-                                                   itemLabel="#{sucursal.nombre}"
-                                                   itemValue="#{sucursal.idSucursal}"/>
-                                    <p:ajax
-                                            listener="#{frmSala.sucursalSelecionada}"
-                                            process="selectOneMenuSucursal"
-                                            update="frmDetalleSucursal growl"
-                                    /> <!-- Actualiza el componente de mensajes -->
-                                </p:selectOneMenu>
+                            </p:dataTable>
 
+                            <!--                detalle de sala-->
+                        </h:panelGrid>
+                        <h:panelGrid rendered="#{frmSala.frmSalaCaracteristica.estado!='NINGUNO' }" id="oplDetalleSC">
+                            <h:form id="frmDetalleSC">
+                                <h:panelGrid columns="2">
+                                    <p:outputLabel value="ID" for="txtid"/>
+                                    <p:inputText id="txtidPC"
+                                                 value="#{frmSala.frmSalaCaracteristica.registro.idSalaCaracteristica}"
+                                                 readonly="true" disabled="true"/>
 
-                                <!--                        <p:inputText id="txtNombreSucursal" value="#{frmSala.registro.idSucursal.nombre}" size="70" />-->
-                                <p:growl id="growl2" showDetail="true"/>
+                                    <p:outputLabel value="TipoSala" for="lstTipoSAla"/>
+                                    <p:selectOneMenu id="lstTipoSala"
+                                                     value="#{frmSala.frmSalaCaracteristica.idTipoSala}">
+                                        <f:selectItems value="#{frmSala.frmSalaCaracteristica.tipoSalaList}"
+                                                       var="ts" itemLabel="#{ts.nombre}"
+                                                       itemValue="#{ts.idTipoSala}"/>
+                                    </p:selectOneMenu>
 
-                                <p:commandButton value="+" actionListener="#{frmSala.sucursalSelecionada}"/>
-                            </h:panelGroup>
-
-
-                            <p:outputLabel value="Longitud" for="longitudSucursal"/>
-                            <p:inputText id="chkActivoSlongitudSucursalucursal" value="#{frmSala.registro.idSucursal.longitud}"
-                                         size="70"/>
-
-                            <p:outputLabel value="Latitud" for="LatitudSucursal"/>
-                            <p:inputText id="longitudSucursal" value="#{frmSala.registro.idSucursal.latitud}" size="70"/>
-
-                            <p:outputLabel value="Activo" for="chkActivoSucursal"/>
-                            <p:selectBooleanCheckbox id="chkActivoSucursal" value="#{frmSala.registro.idSucursal.activo}"
+                                    <p:outputLabel value="Valor" for="txtArValor"/>
+                                    <p:inputTextarea id="txtArValor"
+                                                     value="#{frmSala.frmSalaCaracteristica.registro.valor}"
                                                      size="70"/>
 
-                            <p:outputLabel value="Comentarios" for="txtComentariosSucursal"/>
-                            <p:inputText id="txtComentariosSucursal" value="#{frmSala.registro.observaciones}" size="70"/>
-
+                                </h:panelGrid>
+                            </h:form>
                         </h:panelGrid>
-                        <h:panelGrid columns="#{frmSala.estado=='CREAR'?'1':'2'}">
+
+
+
+                        <h:panelGrid columns="#{frmSala.frmSalaCaracteristica.estado=='CREAR'?'1':'2'}">
                             <h:panelGrid>
-                                <crud:botonesBottom frm="#{frmSala}"/>
+                                <crud:botonesBottom frm="#{frmSala.frmSalaCaracteristica}"/>
                             </h:panelGrid>
                         </h:panelGrid>
                     </h:form>
@@ -136,7 +149,7 @@
                     <p:outputLabel value="Peliculas disponibles en #{frmSala.registro.nombre}"/>
 
                 </p:tab>
-                //calendar
+
                 <p:tab closable="false" title="info programaciones">
                     <p:outputLabel value="Peliculas disponibles en #{frmSala.registro.nombre}"/>
                     <h:form>

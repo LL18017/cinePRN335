@@ -11,8 +11,7 @@
 
 
     <f:define name="titulo">
-        <h:outputText  styleClass="italic" value="#{frmReservas.paginaNombre()}"/>
-
+        #{frmReservas.paginaNombre()}
     </f:define>
 
     <f:define name="cuerpo">
@@ -58,23 +57,29 @@
                                        forceSelection="false"
                                        minQueryLength="2"
                                >
-                                   <p:ajax update="frmSelecion" event="itemSelect" listener="#{frmReservas.onProgramacionChange}" process="@this"/>
+<!--                                   <p:ajax update="frmSelecion" event="itemSelect" listener="#{frmReservas.onProgramacionChange}" process="@this"/>-->
+                                   <p:ajax update="frmSelecion:panelPrueba" event="itemSelect" listener="#{frmReservas.onProgramacionChange}" process="@this"/>
                                </p:autoComplete>
-                         <h:panelGrid columns="1" rendered="#{frmReservas.programacionSelecionada!=null}" id="pnlPeliculaDetalle">
-                             <br/>
-                             <h:outputText value="NOMBRE"/>
-                             <h:outputText value="${frmReservas.programacionSelecionada.idPelicula.nombre}" />
-                             <br />
-                             <h:outputText value="SINOPSIS"/>
-                             <h:outputText value="${frmReservas.programacionSelecionada.idPelicula.sinopsis}" />
-                             <br />
-                             <h:outputText value="CARRACTERISTICAS"/>
-                             <f:repeat value="#{frmReservas.programacionSelecionada.idPelicula.peliculaCaracteristicaList}" var="c">
-                                 <h:outputText value=" * #{c.idTipoPelicula.nombre} : #{c.valor}"/>
-                                 <br/>
-                             </f:repeat>
 
-                         </h:panelGrid>
+                               <p:outputPanel id="panelPrueba">
+                                   <p:outputLabel value="frmReservas.programacionSelecionada.idPelicula.nombre}"/>
+                               </p:outputPanel>
+
+                             <h:panelGrid columns="1" rendered="#{frmReservas.programacionSelecionada!=null}" id="pnlPeliculaDetalle">
+                                 <br/>
+                                 <h:outputText value="NOMBRE"/>
+                                 <h:outputText value="#{frmReservas.programacionSelecionada.idPelicula.nombre}" />
+                                 <br />
+                                 <h:outputText value="SINOPSIS"/>
+                                 <h:outputText value="#{frmReservas.programacionSelecionada.idPelicula.sinopsis}" />
+                                 <br />
+                                 <h:outputText value="CARRACTERISTICAS"/>
+                                 <f:repeat value="#{frmReservas.programacionSelecionada.idPelicula.peliculaCaracteristicaList}" var="c">
+                                     <h:outputText value=" * #{c.idTipoPelicula.nombre} : #{c.valor}"/>
+                                     <br/>
+                                 </f:repeat>
+
+                             </h:panelGrid>
                            </h:panelGrid>
                        </p:panel>
                    </h:form>

@@ -56,6 +56,8 @@ public abstract class AbstractFrm<T> implements Serializable {
       inicioRegistros();
    }
    public void  inicioRegistros(){
+
+      System.out.println("hola 2");
       this.modelo=new LazyDataModel<T>() {
 
          //se indica cuantas filas tiene el entity atravas del metod count
