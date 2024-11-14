@@ -49,8 +49,8 @@
                     password="123456"/>
     </dataSource>
     <!-- PrimeFaces library definition -->
-    <library id="global">
+ <!-- <library id="global">
         <fileset dir="{wlp.install.dir}/lib/global" includes="primefaces-14.0.5.jar"/>
-    </library>
+    </library>-->
 
 </server>
