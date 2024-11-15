@@ -5,6 +5,7 @@ import jakarta.ejb.Stateless;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import sv.edu.ues.occ.ingenieria.prn335_2024.cine.entity.Pelicula;
+import sv.edu.ues.occ.ingenieria.prn335_2024.cine.entity.PeliculaCaracteristica;
 import sv.edu.ues.occ.ingenieria.prn335_2024.cine.entity.Programacion;
 import sv.edu.ues.occ.ingenieria.prn335_2024.cine.entity.Sala;
 
@@ -51,4 +52,16 @@ public class PeliculaBean extends AbstractDataPersist<Pelicula> implements Seria
             return 0;
         }
     }
+
+    public List<PeliculaCaracteristica> getCaracteristicasByPelicula(Pelicula pelicula) {
+        try {
+            return em.createNamedQuery("Caracteristica.findByPelicula", PeliculaCaracteristica.class)
+                    .setParameter("peliculaId", pelicula.getIdPelicula())
+                    .getResultList();
+        } catch (Exception ex) {
+            Logger.getLogger(PeliculaBean.class.getName()).log(Level.SEVERE, "Error al obtener características", ex);
+            return List.of();
+        }
+    }
+
 }
