@@ -155,6 +155,7 @@ public class FrmReservas extends AbstractFrm<Reserva> implements Serializable {
         buscarProgramaciones();
     }
     public void buscarProgramaciones() {
+        System.out.println(fechaReservaSelecionada.toString());
         programaciones=programacionBean.findProgramacionesByDate(fechaReservaSelecionada);
 //        programaciones=programaciones.stream().filter(p->(fechaReservaSelecionada.compareTo(p.getDesde())<0 && fechaReservaSelecionada.compareTo(p.getHasta())>0)).collect(Collectors.toList());
 

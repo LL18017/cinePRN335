@@ -80,6 +80,8 @@
                                             listener="#{frmPelicula.frmPeliculaCarractreistica.selecionarFila}"/>
                                     <p:column headerText="ID"><h:outputText
                                             value="#{rc.idPeliculaCaracteristica}"/></p:column>
+                                    <p:column headerText="ID"><h:outputText
+                                            value="#{rc.idTipoPelicula.nombre}"/></p:column>
                                     <p:column headerText="VALOR"><h:outputText value="#{rc.valor}"/></p:column>
 
                                 </p:dataTable>
@@ -107,6 +109,10 @@
                                     <p:ajax event="change" update=":growl txtValorPC" process="@this"/>
                                 </p:selectOneMenu>
 
+<!--                                <p:outputLabel value="Valor" for="txtVa"/>-->
+<!--                                <p:inputText id="txtVa"-->
+<!--                                             value="#{frmPelicula.frmPeliculaCarractreistica.registro.idTipoPelicula.idTipoPelicula}"-->
+<!--                                             size="70"/>-->
                                 <p:outputLabel value="Valor" for="txtValor"/>
                                 <p:inputText id="txtValorPC"
                                              validator="#{frmPelicula.frmPeliculaCarractreistica.validarDatos}"

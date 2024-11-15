@@ -3,8 +3,10 @@ package sv.edu.ues.occ.ingenieria.prn335_2024.cine.boundary.jsf;
 import jakarta.annotation.PostConstruct;
 import jakarta.enterprise.context.Dependent;
 import jakarta.faces.application.FacesMessage;
+import jakarta.faces.component.UIComponent;
 import jakarta.faces.context.FacesContext;
 import jakarta.faces.event.ActionEvent;
+import jakarta.faces.validator.ValidatorException;
 import jakarta.faces.view.ViewScoped;
 import jakarta.inject.Inject;
 import jakarta.inject.Named;
@@ -15,13 +17,15 @@ import sv.edu.ues.occ.ingenieria.prn335_2024.cine.entity.Sala;
 import sv.edu.ues.occ.ingenieria.prn335_2024.cine.entity.SalaCaracteristica;
 import sv.edu.ues.occ.ingenieria.prn335_2024.cine.entity.TipoSala;
 
+//import javax.faces.validator.ValidatorException;
 import java.io.Serializable;
+import java.sql.SQLOutput;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 @Named
-@ViewScoped
+@Dependent
 public class FrmSalaCaracteristica extends AbstractFrm<SalaCaracteristica> implements Serializable {
 
 
@@ -30,18 +34,18 @@ public class FrmSalaCaracteristica extends AbstractFrm<SalaCaracteristica> imple
     @Inject
     SalaCaracteristicaBean salaCaracteristicaBean;
 
-
-
     List<TipoSala> tipoSalaList;
     Integer idTipoSala;
     Sala idSalaSelecionada;
+    String expresionTipoSala;
 
     @Override
     public void instanciarRegistro() {
         registro = new SalaCaracteristica();
-
+        registro.setValor("ingrese valor");
     }
 
+    @PostConstruct
     @Override
     public void inicioRegistros() {
         super.inicioRegistros();
@@ -88,8 +92,8 @@ public class FrmSalaCaracteristica extends AbstractFrm<SalaCaracteristica> imple
         if(filaSelelcted!=null){
             FacesMessage mensaje=new FacesMessage("caracteristica selecionada ", registro.getValor());
             fc.addMessage(null, mensaje);
-            this.registro = filaSelelcted;
             this.estado=ESTADO_CRUD.MODIFICAR;
+            idTipoSala=registro.getIdTipoSala().getIdTipoSala();
 
         }else {
             fc.addMessage(null,  new FacesMessage(FacesMessage.SEVERITY_ERROR, "no se ha encontrado ", " "));
@@ -98,9 +102,21 @@ public class FrmSalaCaracteristica extends AbstractFrm<SalaCaracteristica> imple
 
     }
     public void selecionarTipoSala(){
-        System.out.println("selecionado "+idTipoSala);
-        fc.addMessage("se ha selecionado" ,new FacesMessage(null,"selecionado "+String.valueOf(idTipoSala)));
+        String ex=tipoSalaList.stream().filter(ts->ts.getIdTipoSala().equals(idTipoSala)).findFirst().orElse(null).getExpresionRegular();
+        expresionTipoSala=ex;
     }
+
+    public void validarTexto(FacesContext context, UIComponent component, Object value) throws ValidatorException {
+        String inputText = (String) value;
+
+        if (inputText != null && !inputText.matches(expresionTipoSala) && !expresionTipoSala.equals(".")) {
+            FacesMessage msg = new FacesMessage("El texto no es válido.", "El texto debe ser uno de los valores permitidos: "+expresionTipoSala);
+            msg.setSeverity(FacesMessage.SEVERITY_ERROR);
+            throw new ValidatorException(msg);
+        }
+    }
+
+
 
     @Override
     public String paginaNombre() {
@@ -140,6 +156,15 @@ public class FrmSalaCaracteristica extends AbstractFrm<SalaCaracteristica> imple
     public void setIdSalaSelecionada(Sala idSala) {
         this.idSalaSelecionada = idSala;
     }
+
+    public String getExpresionTipoSala() {
+        return expresionTipoSala;
+    }
+
+    public void setExpresionTipoSala(String expresionTipoSala) {
+        this.expresionTipoSala = expresionTipoSala;
+    }
+
     @Override
     public void btnGuardarHandler(ActionEvent e) {
         registro.setIdSala(idSalaSelecionada);
@@ -157,6 +182,8 @@ public class FrmSalaCaracteristica extends AbstractFrm<SalaCaracteristica> imple
 
     @Override
     public void btnModificarHandler(ActionEvent ex) {
+
+        System.out.println("modificando");
         registro.setIdSala(idSalaSelecionada);
        try {
            if (!tipoSalaList.isEmpty()){
@@ -168,4 +195,5 @@ public class FrmSalaCaracteristica extends AbstractFrm<SalaCaracteristica> imple
            Logger.getLogger(getClass().getName()).log(Level.SEVERE, ec.getMessage(), ec);
        }
     }
+
 }
