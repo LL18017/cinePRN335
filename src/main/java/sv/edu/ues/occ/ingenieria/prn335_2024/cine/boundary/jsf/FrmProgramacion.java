@@ -24,6 +24,7 @@ import sv.edu.ues.occ.ingenieria.prn335_2024.cine.entity.Sala;
 import java.io.Serializable;
 import java.text.SimpleDateFormat;
 import java.time.ZoneId;
+import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.Date;
 import java.time.LocalDateTime;
@@ -82,15 +83,6 @@ public class FrmProgramacion extends AbstractFrm<Programacion> implements Serial
             });
         }
     }
-
-
-
-
-
-
-
-
-
 
     public List<Programacion> findProgramacionBySala() {
         try {
@@ -237,7 +229,25 @@ public class FrmProgramacion extends AbstractFrm<Programacion> implements Serial
 
         if (event.getId() == null) {
 
-            eventModel.addEvent(event);
+
+
+            try {
+                // logica para query
+                Pelicula peliculaSelecionada = peliculasDisponibles.stream().filter(p->p.getIdPelicula().toString().equals(idPeliculaProgramar)).findFirst().orElse(null);
+                Sala salaSelecionada = getSalaSelecionada();
+                if (salaSelecionada != null && peliculaSelecionada != null) {
+                    Programacion pro= new Programacion();
+                    pro.setIdPelicula(peliculaSelecionada);
+                    pro.setIdSala(salaSelecionada);
+                    System.out.println(event.getStartDate()+":0[UTP]");
+                    System.out.println(event.getEndDate());
+                }
+                eventModel.addEvent(event);
+                enviarMensaje(FacesMessage.SEVERITY_INFO,"se ha guardado la programacion");
+            }catch (Exception e){
+                Logger.getLogger(getClass().getName()).log(Level.SEVERE, e.getMessage(), e);
+                enviarMensaje(FacesMessage.SEVERITY_ERROR, "error al crear programacio");
+            }
         } else {
             eventModel.updateEvent(event);
         }

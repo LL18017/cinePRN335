@@ -10,6 +10,7 @@ import jakarta.faces.validator.ValidatorException;
 import jakarta.faces.view.ViewScoped;
 import jakarta.inject.Inject;
 import jakarta.inject.Named;
+import jakarta.servlet.http.PushBuilder;
 import org.primefaces.event.SelectEvent;
 import sv.edu.ues.occ.ingenieria.prn335_2024.cine.control.AbstractDataPersist;
 import sv.edu.ues.occ.ingenieria.prn335_2024.cine.control.SalaCaracteristicaBean;
@@ -20,7 +21,10 @@ import sv.edu.ues.occ.ingenieria.prn335_2024.cine.entity.TipoSala;
 //import javax.faces.validator.ValidatorException;
 import java.io.Serializable;
 import java.sql.SQLOutput;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Objects;
+import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -35,6 +39,7 @@ public class FrmSalaCaracteristica extends AbstractFrm<SalaCaracteristica> imple
     SalaCaracteristicaBean salaCaracteristicaBean;
 
     List<TipoSala> tipoSalaList;
+    TipoSala tipoSala;
     Integer idTipoSala;
     Sala idSalaSelecionada;
     String expresionTipoSala;
@@ -42,7 +47,7 @@ public class FrmSalaCaracteristica extends AbstractFrm<SalaCaracteristica> imple
     @Override
     public void instanciarRegistro() {
         registro = new SalaCaracteristica();
-        registro.setValor("ingrese valor");
+        estado=ESTADO_CRUD.CREAR;
     }
 
     @PostConstruct
@@ -87,14 +92,18 @@ public class FrmSalaCaracteristica extends AbstractFrm<SalaCaracteristica> imple
     @Override
     public void selecionarFila(SelectEvent<SalaCaracteristica> event) {
         //Seleccionar fila
-        System.out.println("selceionagj");
-        SalaCaracteristica filaSelelcted = event.getObject();
-        System.out.println(registro);
-        if(filaSelelcted!=null){
-            FacesMessage mensaje=new FacesMessage("caracteristica selecionada ", registro.getValor());
+        if(registro!=null){
+            FacesMessage mensaje=new FacesMessage("caracteristica selecionada ", registro.getIdTipoSala().getNombre());
             fc.addMessage(null, mensaje);
             this.estado=ESTADO_CRUD.MODIFICAR;
-            idTipoSala=registro.getIdTipoSala().getIdTipoSala();
+            tipoSala=registro.getIdTipoSala();
+            expresionTipoSala=tipoSala.getExpresionRegular();
+
+
+            // Eliminar de forma segura
+            tipoSalaList.removeIf(e -> Objects.equals(e.getIdTipoSala(), tipoSala.getIdTipoSala()));
+            // Agregar al principio de la lista
+            tipoSalaList.addFirst(tipoSala);
 
         }else {
             fc.addMessage(null,  new FacesMessage(FacesMessage.SEVERITY_ERROR, "no se ha encontrado ", " "));
@@ -103,13 +112,20 @@ public class FrmSalaCaracteristica extends AbstractFrm<SalaCaracteristica> imple
 
     }
     public void selecionarTipoSala(){
-        String ex=tipoSalaList.stream().filter(ts->ts.getIdTipoSala().equals(idTipoSala)).findFirst().orElse(null).getExpresionRegular();
-        expresionTipoSala=ex;
+        if (idTipoSala!=null){
+
+        TipoSala ex=tipoSalaList.stream().filter(ts->ts.getIdTipoSala().toString().equals(idTipoSala.toString())).findFirst().orElse(null);
+        if (ex!=null) {
+            expresionTipoSala=ex.getExpresionRegular();
+            return;
+        };
+        }
+        expresionTipoSala=expresionTipoSala==null? ".":getTipoSala().getExpresionRegular();
     }
 
     public void validarTexto(FacesContext context, UIComponent component, Object value) throws ValidatorException {
         String inputText = (String) value;
-
+        System.out.println(expresionTipoSala);
         if (inputText != null && !inputText.matches(expresionTipoSala) && !expresionTipoSala.equals(".")) {
             FacesMessage msg = new FacesMessage("El texto no es válido.", "El texto debe ser uno de los valores permitidos: "+expresionTipoSala);
             msg.setSeverity(FacesMessage.SEVERITY_ERROR);
@@ -117,7 +133,9 @@ public class FrmSalaCaracteristica extends AbstractFrm<SalaCaracteristica> imple
         }
     }
 
-
+//    public List<TipoSala> ordenarList(TipoSala ts ,List<TipoSala> list){
+//        Set<TipoSala> set=new HashSet<>();
+//    }
 
     @Override
     public String paginaNombre() {
@@ -134,13 +152,6 @@ public class FrmSalaCaracteristica extends AbstractFrm<SalaCaracteristica> imple
         return  salaCaracteristicaBean.findByIdSala(idSalaSelecionada,first,max);
     }
 
-    public Integer getIdTipoSala() {
-        return idTipoSala;
-    }
-
-    public void setIdTipoSala(Integer idTipoSala) {
-        this.idTipoSala = idTipoSala;
-    }
 
     public List<TipoSala> getTipoSalaList() {
         return tipoSalaList;
@@ -166,15 +177,61 @@ public class FrmSalaCaracteristica extends AbstractFrm<SalaCaracteristica> imple
         this.expresionTipoSala = expresionTipoSala;
     }
 
+    public Integer getIdTipoSala() {
+        return idTipoSala;
+    }
+
+    public void setIdTipoSala(Integer idTipoSala) {
+        this.idTipoSala = idTipoSala;
+    }
+
+    public TipoSala getTipoSala() {
+        return tipoSala;
+    }
+
+    public void setTipoSala(TipoSala tipoSala) {
+        this.tipoSala = tipoSala;
+    }
+
     @Override
     public void btnGuardarHandler(ActionEvent e) {
-        registro.setIdSala(idSalaSelecionada);
-        try {
-            TipoSala tipoSalaSelecionada = tipoSalaList.stream().filter(ts-> ts.getIdTipoSala().toString().equals(String.valueOf(idTipoSala))).findFirst().orElse(null);
-            registro.setIdTipoSala(tipoSalaSelecionada);
-            super.btnGuardarHandler(e);
 
-        }catch (Exception ec){
+//               TipoSala tp= tipoSalaList.stream().filter(ts->ts.getIdTipoSala().equals(idTipoSala)).findFirst().orElseGet(null);
+//
+//        System.out.println("el tipo sala es: "+tp.getExpresionRegular());
+//
+//        registro.setIdSala(idSalaSelecionada);
+//        try {
+//            TipoSala tipoSalaSelecionada = tipoSalaList.stream().filter(ts-> ts.getIdTipoSala().toString().equals(String.valueOf(tipoSala))).findFirst().orElse(null);
+//            registro.setIdTipoSala(tipoSalaSelecionada);
+//            super.btnGuardarHandler(e);
+//
+//        }catch (Exception ec){
+//            Logger.getLogger(getClass().getName()).log(Level.SEVERE, ec.getMessage(), ec);
+//        }
+//
+
+        try {
+            if (!tipoSalaList.isEmpty()) {
+                TipoSala tp = tipoSalaList.stream()
+                        .filter(ts -> ts.getIdTipoSala().equals(idTipoSala))
+                        .findFirst()
+                        .orElse(null);
+                if (tp != null) {
+                    // Asignar idTipoSala en el registro
+                    registro.setIdSala(idSalaSelecionada);
+                    registro.setIdSala(idSalaSelecionada);
+                    registro.setIdTipoSala(tp);
+
+                    super.btnGuardarHandler(e);  // Llamada al método de la clase base
+                } else {
+                    Logger.getLogger(getClass().getName()).log(Level.SEVERE, "TipoSala no encontrado.");
+                }
+            } else {
+                Logger.getLogger(getClass().getName()).log(Level.SEVERE, "La lista tipoSalaList está vacía.");
+            }
+        } catch (Exception ec) {
+            // Manejo de excepciones
             Logger.getLogger(getClass().getName()).log(Level.SEVERE, ec.getMessage(), ec);
         }
 
@@ -183,18 +240,29 @@ public class FrmSalaCaracteristica extends AbstractFrm<SalaCaracteristica> imple
 
     @Override
     public void btnModificarHandler(ActionEvent ex) {
+        try {
+            if (!tipoSalaList.isEmpty()) {
+                TipoSala tp = tipoSalaList.stream()
+                        .filter(ts -> ts.getIdTipoSala().equals(idTipoSala))
+                        .findFirst()
+                        .orElse(null);
+                if (tp != null) {
+                    // Asignar idTipoSala en el registro
+                    registro.setIdSala(idSalaSelecionada);
+                    registro.setIdTipoSala(tp);
 
-        System.out.println("modificando");
-        registro.setIdSala(idSalaSelecionada);
-       try {
-           if (!tipoSalaList.isEmpty()){
-               TipoSala tipoSalaSelecionada = tipoSalaList.stream().filter(ts-> ts.getIdTipoSala().toString().equals(String.valueOf(idTipoSala))).findFirst().orElse(null);
-               registro.setIdTipoSala(tipoSalaSelecionada);
-            super.btnModificarHandler(ex);
-           }
-       }catch (Exception ec){
-           Logger.getLogger(getClass().getName()).log(Level.SEVERE, ec.getMessage(), ec);
-       }
+                    super.btnModificarHandler(ex);  // Llamada al método de la clase base
+                } else {
+                    Logger.getLogger(getClass().getName()).log(Level.SEVERE, "TipoSala no encontrado.");
+                }
+            } else {
+                Logger.getLogger(getClass().getName()).log(Level.SEVERE, "La lista tipoSalaList está vacía.");
+            }
+        } catch (Exception ec) {
+            // Manejo de excepciones
+            Logger.getLogger(getClass().getName()).log(Level.SEVERE, ec.getMessage(), ec);
+        }
     }
+
 
 }

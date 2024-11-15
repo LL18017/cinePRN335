@@ -141,13 +141,11 @@ public class FrmSala extends AbstractFrm<Sala> implements Serializable {
     public void selecionarFila(SelectEvent<Sala> event) {
         Sala filaSelelcted = event.getObject();
         if(filaSelelcted!=null){
+            estado=ESTADO_CRUD.MODIFICAR;
             FacesMessage mensaje=new FacesMessage("Sala selecionada ", registro.getNombre());
             fc.addMessage(null, mensaje);
             this.registro = filaSelelcted;
-            this.estado=ESTADO_CRUD.MODIFICAR;
             frmSalaCaracteristica.idSalaSelecionada=registro;
-//            frmSalaCaracteristica.idTipoSala
-
            cargarDatosIniciales();
 
         }else {
@@ -333,29 +331,13 @@ public class FrmSala extends AbstractFrm<Sala> implements Serializable {
 
     @Override
     public void btnNuevoHandler(ActionEvent actionEvent) {
-
-        super.btnNuevoHandler(actionEvent);
         frmSalaCaracteristica.estado=ESTADO_CRUD.NINGUNO;
         frmSalaCaracteristica.registro=null;
+        super.btnNuevoHandler(actionEvent);
     }
 
-    @Override
-    public void btnGuardarHandler(ActionEvent e) {
-        System.out.println("probaiugsañfhgpeiayfgliesacgipwzesgcpizy");
-        try {
-                registro.setIdSucursal(sucursalSelecionada);
-                super.btnGuardarHandler(e);
-                System.out.println("error al obtener sala");
-            }catch (Exception ex) {
-            Logger.getLogger(getClass().getName()).log(Level.SEVERE, ex.getMessage(),ex);
-            }
-        }
 
 
-    @Override
-    public void btneEliminarHandler(ActionEvent ex) {
-        super.btneEliminarHandler(ex);
-    }
     public void metodoPruebas(){
         System.out.println("probando");
 

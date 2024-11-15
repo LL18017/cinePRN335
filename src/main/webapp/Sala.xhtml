@@ -25,7 +25,7 @@
                                  selection="#{frmSala.registro}"
                                  rendered="#{empty frmSala.registro}"
                     >
-                        <p:ajax process="@this" update=":pnlDetalle @form" event="rowSelect"
+                        <p:ajax process="@this" update=":pnlDetalle frmTabla  @form" event="rowSelect"
                                 listener="#{frmSala.selecionarFila}"/>
                         <p:column headerText="ID"><h:outputText value="#{r.idSala}"/></p:column>
                         <p:column headerText="NOMBRE"><h:outputText value="#{r.nombre}"/></p:column>
@@ -70,11 +70,11 @@
                             <p:inputTextarea id="taComentarios" value="#{frmSala.registro.idSucursal.comentarios}"/>
 
                         </h:panelGrid>
-                        <h:panelGrid columns="3">
-                           <crud:botonesBottom frm="#{frmSala}" actualizar=":frmTabla  :pnlDetalle @form"/>
+                        <h:panelGrid columns="#{frmTipoProducto.estado=='CREAR'?'1':'2'}">
+                                <crud:botonesBottom frm="#{frmSala}" actualizar=""/>
+                            <p:growl id="growl2" showDetail="true" sticky="false" life="10500"/>
                         </h:panelGrid>
-                                             <p:commandButton value="GUARDAR"
-                                             actionListener="#{frmSala.btnCancelarHandler}"/>
+
                     </h:form>
                 </p:tab>
                 <!--            info de la caracteristicas-->
@@ -91,7 +91,7 @@
                                              selection="#{frmSala.frmSalaCaracteristica.registro}"
                                              rendered="#{frmSala.frmSalaCaracteristica.registro eq null}"
                                 >
-                                    <p:ajax process="@this" update="pnlDetalleSC @form" event="rowSelect"
+                                    <p:ajax process="@this" update="pnlDetalleSC @form :growl" event="rowSelect"
                                             listener="#{frmSala.frmSalaCaracteristica.selecionarFila}"/>
                                     <p:column headerText="ID"><h:outputText value="#{sc.idSalaCaracteristica}"/></p:column>
                                     <p:column headerText="CARRACTERISTICA"><h:outputText value="#{sc.idTipoSala.nombre}"/></p:column>
@@ -120,7 +120,7 @@
 
                                 <p:outputLabel value="TipoSala" for="lstTipoSAla"/>
                                 <p:selectOneMenu value="#{frmSala.frmSalaCaracteristica.idTipoSala}">
-<!--                                    <f:selectItem itemLabel="Selecione una caracteristica" itemValue="${fr}" noSelectionOption="#{frmSala.frmSalaCaracteristica.estado eq 'CREAR'}"/>-->
+                                    <f:selectItem itemLabel="SELECIONE UNA OPCION"  noSelectionOption="#{true}" itemValue="1"/>
                                     <f:selectItems value="#{frmSala.frmSalaCaracteristica.tipoSalaList}" var="ts" itemLabel="#{ts.nombre}" itemValue="#{ts.idTipoSala}"/>
                                     <p:ajax event="change"  listener="#{frmSala.frmSalaCaracteristica.selecionarTipoSala}" update="pnlValorValues"/>
                                 </p:selectOneMenu>
@@ -176,7 +176,7 @@
                             <h:form id="form">
                                 <!-- Schedule de PrimeFaces -->
                                 <p:schedule id="schedule"
-                                            value="#{frmProgramacion.eventModel}"
+                                            value="#{frmSala.frmProgramacion.eventModel}"
                                             view="month"
                                             widgetVar="scheduleWidget"
                                             timeZone="UTC"
@@ -186,11 +186,12 @@
                                             style="width: 100%; height: 600px;">
 
                                     <p:ajax event="eventSelect"
-                                            listener="#{frmProgramacion.pruebas}"
+                                            listener="#{frmSala.frmProgramacion.pruebas}"
                                             update="programarDialog"
                                             oncomplete="PF('eventDialog').show();" />
                                     <p:ajax event="dateSelect"
-                                            listener="#{frmProgramacion.onDateSelect}"
+                                            listener="#{frmSala
+                                            .frmProgramacion.onDateSelect}"
                                             update="programarDialog"
                                             oncomplete="PF('eventDialog').show();" />
 
@@ -267,4 +268,4 @@
             </p:tabView>
         </h:panelGroup>
     </ui:define>
-</ui:composition>
+    </ui:composition>
