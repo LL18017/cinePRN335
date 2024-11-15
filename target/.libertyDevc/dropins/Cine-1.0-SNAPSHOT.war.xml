@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<archive>
+    <dir sourceOnDisk="${io.openliberty.tools.projectRoot}/src/main/webapp" targetInArchive="/"/>
+    <dir sourceOnDisk="${io.openliberty.tools.projectRoot}/target/classes" targetInArchive="/WEB-INF/classes"/>
+    <file sourceOnDisk="${io.openliberty.tools.projectRoot}/target/tmp/META-INF/MANIFEST.MF" targetInArchive="/META-INF/MANIFEST.MF"/>
+</archive>
