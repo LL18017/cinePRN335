@@ -87,8 +87,9 @@ public class FrmSalaCaracteristica extends AbstractFrm<SalaCaracteristica> imple
     @Override
     public void selecionarFila(SelectEvent<SalaCaracteristica> event) {
         //Seleccionar fila
-
+        System.out.println("selceionagj");
         SalaCaracteristica filaSelelcted = event.getObject();
+        System.out.println(registro);
         if(filaSelelcted!=null){
             FacesMessage mensaje=new FacesMessage("caracteristica selecionada ", registro.getValor());
             fc.addMessage(null, mensaje);

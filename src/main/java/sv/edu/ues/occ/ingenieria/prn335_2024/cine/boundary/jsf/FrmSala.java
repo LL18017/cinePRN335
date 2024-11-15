@@ -80,7 +80,7 @@ public class FrmSala extends AbstractFrm<Sala> implements Serializable {
             cargarDatosIniciales();
             if(event.getTab().getTitle().equals("Caracteristicas")){
                 frmSalaCaracteristica.setIdSalaSelecionada(registro);
-//                frmSalaCaracteristica.setIdTipoSala(registro.);
+
                 frmSalaCaracteristica.selecionarTipoSala();
                 System.out.println("se envio datos");
             }
