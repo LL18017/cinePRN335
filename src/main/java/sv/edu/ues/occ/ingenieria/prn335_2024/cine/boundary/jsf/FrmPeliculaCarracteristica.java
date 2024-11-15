@@ -1,7 +1,6 @@
 package sv.edu.ues.occ.ingenieria.prn335_2024.cine.boundary.jsf;
 
 import jakarta.annotation.PostConstruct;
-import jakarta.el.MethodExpression;
 import jakarta.enterprise.context.Dependent;
 import jakarta.faces.component.UIComponent;
 import jakarta.faces.context.FacesContext;
@@ -12,33 +11,29 @@ import sv.edu.ues.occ.ingenieria.prn335_2024.cine.control.AbstractDataPersist;
 import sv.edu.ues.occ.ingenieria.prn335_2024.cine.control.PeliculaBean;
 import sv.edu.ues.occ.ingenieria.prn335_2024.cine.control.PeliculaCarracteristicaBean;
 import sv.edu.ues.occ.ingenieria.prn335_2024.cine.control.TipoPeliculaBean;
-import sv.edu.ues.occ.ingenieria.prn335_2024.cine.entity.Pelicula;
 import sv.edu.ues.occ.ingenieria.prn335_2024.cine.entity.PeliculaCaracteristica;
 import sv.edu.ues.occ.ingenieria.prn335_2024.cine.entity.TipoPelicula;
 
 import jakarta.faces.application.FacesMessage;
 
-import jakarta.faces.component.UIInput;
 import java.io.Serializable;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 @Named
 @Dependent
 public class FrmPeliculaCarracteristica extends AbstractFrm<PeliculaCaracteristica> implements Serializable {
-   @Inject
+    @Inject
     PeliculaCarracteristicaBean pcBean;
-   @Inject
-   TipoPeliculaBean tpBean;
-   @Inject
-   PeliculaBean pBean;
-   @Inject
-   FacesContext fc;
+    @Inject
+    TipoPeliculaBean tpBean;
+    @Inject
+    PeliculaBean pBean;
+    @Inject
+    FacesContext fc;
 
-   List<TipoPelicula> tipoPeliculaList;
+    List<TipoPelicula> tipoPeliculaList;
     Long idPelicula;
 
     @Override
@@ -51,7 +46,7 @@ public class FrmPeliculaCarracteristica extends AbstractFrm<PeliculaCaracteristi
     public void inicioRegistros() {
         super.inicioRegistros();
         try {
-        this.tipoPeliculaList=pcBean.findAllTiposPelicula();
+            this.tipoPeliculaList=pcBean.findAllTiposPelicula();
         }catch (Exception e){
             Logger.getLogger(getClass().getName()).log(Level.SEVERE,e.getMessage(),e);
         }
@@ -183,3 +178,4 @@ public class FrmPeliculaCarracteristica extends AbstractFrm<PeliculaCaracteristi
     }
 
 }
+

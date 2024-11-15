@@ -8,10 +8,8 @@ import sv.edu.ues.occ.ingenieria.prn335_2024.cine.control.AbstractDataPersist;
 import sv.edu.ues.occ.ingenieria.prn335_2024.cine.control.ReservaBean;
 import sv.edu.ues.occ.ingenieria.prn335_2024.cine.entity.Reserva;
 
-import javax.faces.view.ViewScoped;
 import java.io.Serializable;
 
-@ViewScoped
 @Named
 public class FrmReserva extends AbstractFrm<Reserva> implements Serializable {
     @Inject
