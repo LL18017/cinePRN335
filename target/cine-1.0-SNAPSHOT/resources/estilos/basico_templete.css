@@ -1,0 +1,17 @@
+body{
+    background-image: url("#{resource['imagenes/cine.jpg']}");
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+    color: white;
+    /*background-attachment: fixed;*/
+    /*background-repeat: no-repeat;*/
+    /*background-size: cover;*/
+    /*margin: 0 auto;*/
+
+}
+h1{
+    text-align: center;
+    color: #ffff;
+}

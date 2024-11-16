@@ -1,0 +1,166 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="jakarta.faces.html"
+                xmlns:ui="jakarta.faces.facelets"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:crud="jakarta.faces.composite/crud"
+                xmlns:f="http://java.sun.com/jsf/core"
+                template="WEB-INF/templates/principal.xhtml"
+>
+
+    <ui:define name="titulo">
+        #{frmSala.paginaNombre()}
+    </ui:define>
+    <ui:define name="cuerpo">
+        <h:panelGrid>
+            <h:panelGroup id="pnlTabla">
+                <h:form id="frmTabla">
+                    <p:dataTable value="#{frmSala.modelo}" var="r"
+                                 lazy="true"
+                                 paginator="true"
+                                 rows="5"
+                                 first="0"
+                                 selectionMode="single"
+                                 selection="#{frmSala.registro}"
+                                 rendered="#{empty frmSala.registro}"
+                    >
+                        <p:ajax process="@this" update=":pnlDetalle @form" event="rowSelect"
+                                listener="#{frmSala.selecionarFila}"/>
+                        <p:column headerText="ID"><h:outputText value="#{r.idSala}"/></p:column>
+                        <p:column headerText="NOMBRE"><h:outputText value="#{r.nombre}"/></p:column>
+                        <p:column headerText="SUCURSAL"><h:outputText value="#{r.idSucursal.nombre}"/></p:column>
+                        <p:column headerText="ACTIVO"><h:outputText value="#{r.activo?'ACTIVO':'INACTIVO'}"/></p:column>
+                        <p:column headerText="OBSERVACIONES"><h:outputText value="#{r.observaciones}"/></p:column>
+
+
+                    </p:dataTable>
+                    <h:panelGrid columns="2">
+                        <p:commandButton value="CANCELAR" rendered="#{frmSala.estado ne 'NINGUNO'}"
+                                         update=":pnlDetalle @form"
+                                         actionListener="#{frmSala.btnCancelarHandler}"/>
+                        <p:commandButton value="NUEVO" update="@form"
+                                         actionListener="#{frmSala.btnNuevoHandler}"/>
+                    </h:panelGrid>
+                    <p:growl id="growl" showDetail="true" sticky="false" life="10500"/>
+                </h:form>
+            </h:panelGroup>
+        </h:panelGrid>
+
+        <h:panelGroup id="pnlDetalle">
+            <p:tabView id="tabDetalle" cache="false" dynamic="true" rendered="#{not empty frmSala.registro}">
+                <p:ajax process="@this" event="tabChange" listener="#{frmSala.cambiarTab}"/>
+                <!--            info de la sala-->
+                <p:tab closable="false" title="Geralidades">
+                    <h:form rendered="#{not empty frmSala.registro}" id="frmDetalle">
+                        <h:panelGrid columns="2">
+                            <p:outputLabel value="ID" for="txtid"/>
+                            <p:inputText id="txtid" value="#{frmSala.registro.idSala}" readonly="true" disabled="true"/>
+
+                            <p:outputLabel value="Nombre" for="txtNombre"/>
+                            <p:inputText id="txtNombre" value="#{frmSala.registro.nombre}" size="70"/>
+
+                            <p:outputLabel value="Activo" for="chkActivo"/>
+                            <p:selectBooleanCheckbox id="chkActivo" value="#{frmSala.registro.activo}" size="70"/>
+
+
+                            <p:outputLabel value="Sucursales" for="somSucursales"/>
+                            <p:selectOneMenu for="somSucursales" value="#{frmSala.idSucursalSelecionado}" >
+                                <f:selectItems value="#{frmSala.sucursales}" var="su" itemLabel="#{su.nombre}" itemValue="#{su.idSucursal}"/>
+                            </p:selectOneMenu>
+
+                            <p:outputLabel value="comentarios" for="txtComentarios"/>
+                            <p:inputTextarea id="taComentarios" value="#{frmSala.registro.idSucursal.comentarios}"/>
+
+                        </h:panelGrid>
+                        <h:panelGrid columns="3">
+                            <p:commandButton value="GUARDAR" rendered="#{frmSala.estado=='CREAR'}"
+                                             update=":frmTabla  :pnlDetalle @form" actionListener="#{frmSala.btnGuardarHandler}"/>
+                            <p:commandButton value="MODIFICAR" rendered="#{frmSala.estado=='MODIFICAR'}"
+                                             update=":frmTabla :pnlDetalle @form" actionListener="#{frmSala.btnModificarHandler}"/>
+                            <p:commandButton value="ELIMINAR" rendered="#{frmSala.estado=='MODIFICAR'}"
+                                             update=":frmTabla  :pnlDetalle @form" actionListener="#{frmSala.btneEliminarHandler}"/>
+                        </h:panelGrid>
+                    </h:form>
+                </p:tab>
+
+                <!--            info de la caracteristicas-->
+                <p:tab closable="false" title="Caracteristicas"  rendered="#{frmSala.estado !='CREAR'}">
+                    <p:outputLabel value="Carracteristicas de : #{frmSala.registro.idSucursal.nombre}"/>
+
+                    <h:form rendered="#{not empty frmSala.registro}" id="frmDetalleSucursal">
+                        <crud:botonesTop frm="#{frmSala.frmSalaCaracteristica}" actualizar="frmDetalleSucursal frmDetalleSucursal:oplDetalleSC"/>
+                        <h:panelGrid id="pnlGModeloCaracteristocas" columns="2" rendered="#{empty frmSala.frmSalaCaracteristica.registro}">
+                            <p:dataTable value="#{frmSala.frmSalaCaracteristica.modelo}" var="sc"
+                                         lazy="true"
+                                         paginator="true"
+                                         rows="5"
+                                         first="0"
+                                         selectionMode="single"
+                                         selection="#{frmSalaCaracteristica.registro}"
+                                         rendered="#{empty frmSalaCaracteristica.registro}"
+                            >
+                                <p:ajax process="@this" update="@form" event="rowSelect"
+                                        listener="#{frmSala.frmSalaCaracteristica.selecionarFila}"/>
+                                <p:column headerText="ID"><h:outputText value="#{sc.idSalaCaracteristica}"/></p:column>
+                                <p:column headerText="CARRACTERISTICA"><h:outputText value="#{sc.idTipoSala.nombre}"/></p:column>
+                                <p:column headerText="VALOR"><h:outputText value="#{sc.valor}"/></p:column>
+
+
+                            </p:dataTable>
+
+                            <!--                detalle de sala-->
+                        </h:panelGrid>
+                        <h:panelGrid rendered="#{frmSala.frmSalaCaracteristica.estado!='NINGUNO' }" id="oplDetalleSC">
+                            <h:form id="frmDetalleSC">
+                                <h:panelGrid columns="2">
+                                    <p:outputLabel value="ID" for="txtid"/>
+                                    <p:inputText id="txtidPC"
+                                                 value="#{frmSala.frmSalaCaracteristica.registro.idSalaCaracteristica}"
+                                                 readonly="true" disabled="true"/>
+
+                                    <p:outputLabel value="TipoSala" for="lstTipoSAla"/>
+                                    <p:selectOneMenu id="lstTipoSala"
+                                                     value="#{frmSala.frmSalaCaracteristica.idTipoSala}">
+                                        <f:selectItems value="#{frmSala.frmSalaCaracteristica.tipoSalaList}"
+                                                       var="ts" itemLabel="#{ts.nombre}"
+                                                       itemValue="#{ts.idTipoSala}"/>
+                                    </p:selectOneMenu>
+
+                                    <p:outputLabel value="Valor" for="txtArValor"/>
+                                    <p:inputTextarea id="txtArValor"
+                                                     value="#{frmSala.frmSalaCaracteristica.registro.valor}"
+                                                     size="70"/>
+
+                                </h:panelGrid>
+                            </h:form>
+                        </h:panelGrid>
+
+
+
+                        <h:panelGrid columns="#{frmSala.frmSalaCaracteristica.estado=='CREAR'?'1':'2'}">
+                            <h:panelGrid>
+                                <crud:botonesBottom frm="#{frmSala.frmSalaCaracteristica}"/>
+                            </h:panelGrid>
+                        </h:panelGrid>
+                    </h:form>
+                </p:tab>
+                <p:tab closable="false" title="Peliculas" rendered="#{frmSala.estado!='CREAR'}">
+                    <p:outputLabel value="Peliculas disponibles en #{frmSala.registro.nombre}"/>
+
+                </p:tab>
+
+                <p:tab closable="false" title="info programaciones">
+                    <p:outputLabel value="Peliculas disponibles en #{frmSala.registro.nombre}"/>
+                    <h:form>
+                        <p:dataTable value="#{frmSala.registro.programacionList}" var="r"
+                        >
+                            <p:column headerText="desde"><h:outputText value="#{r.desde}"/></p:column>
+                            <p:column headerText="hasta"><h:outputText value="#{r.hasta}"/></p:column>
+                        </p:dataTable>
+                    </h:form>
+                </p:tab>
+            </p:tabView>
+        </h:panelGroup>
+    </ui:define>
+</ui:composition>

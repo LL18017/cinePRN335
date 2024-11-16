@@ -1,18 +1,20 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <liberty-plugin-config>
-    <installDirectory>/usr/local/openLiberty/wlp10_24_0_0_8</installDirectory>
+    <installDirectory>/usr/local/openliberty/wlp10_24_0_0_8</installDirectory>
     <refresh>false</refresh>
-    <serverDirectory>/usr/local/openLiberty/wlp10_24_0_0_8/usr/servers/prn335_2024</serverDirectory>
-    <userDirectory>/usr/local/openLiberty/wlp10_24_0_0_8/usr</userDirectory>
-    <serverOutputDirectory>/usr/local/openLiberty/wlp10_24_0_0_8/usr/servers/prn335_2024</serverOutputDirectory>
+    <serverDirectory>/usr/local/openliberty/wlp10_24_0_0_8/usr/servers/prn335_2024</serverDirectory>
+    <userDirectory>/usr/local/openliberty/wlp10_24_0_0_8/usr</userDirectory>
+    <serverOutputDirectory>/usr/local/openliberty/wlp10_24_0_0_8/usr/servers/prn335_2024</serverOutputDirectory>
     <serverName>prn335_2024</serverName>
     <projectType>war</projectType>
-    <configDirectory>/home/mj99lopez/proyestosUes/CinePRN335/src/main/liberty/config</configDirectory>
-    <configFile>/home/mj99lopez/proyestosUes/CinePRN335/src/main/liberty/config/server.xml</configFile>
+    <projectCompileDependency>jakarta.mvc:jakarta.mvc-api:2.1.0</projectCompileDependency>
+    <projectCompileDependency>org.postgresql:postgresql:42.6.0</projectCompileDependency>
+    <projectCompileDependency>org.checkerframework:checker-qual:3.31.0</projectCompileDependency>
+    <configDirectory>/home/andrea/Imágenes/cinePRN335-master/src/main/liberty/config</configDirectory>
     <appsDirectory>dropins</appsDirectory>
     <looseApplication>true</looseApplication>
     <stripVersion>false</stripVersion>
     <installAppPackages>project</installAppPackages>
-    <applicationFilename>Cine-1.0-SNAPSHOT.war.xml</applicationFilename>
-    <installAppsConfigDropins>/usr/local/openLiberty/wlp10_24_0_0_8/usr/servers/prn335_2024/configDropins/defaults/install_apps_configuration_1491924271.xml</installAppsConfigDropins>
+    <applicationFilename>cine-1.0-SNAPSHOT.war.xml</applicationFilename>
+    <installAppsConfigDropins>/usr/local/openliberty/wlp10_24_0_0_8/usr/servers/prn335_2024/configDropins/defaults/install_apps_configuration_1491924271.xml</installAppsConfigDropins>
 </liberty-plugin-config>

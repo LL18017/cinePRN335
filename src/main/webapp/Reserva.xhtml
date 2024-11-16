@@ -62,13 +62,13 @@
                                </p:autoComplete>
 
                                <p:outputPanel id="panelPrueba">
-                                   <p:outputLabel value="frmReservas.programacionSelecionada.idPelicula.nombre}"/>
+                                   <p:outputLabel value="#{frmReservas.programacionSelecionada.idPelicula.nombre}"/>
                                </p:outputPanel>
 
                              <h:panelGrid columns="1" rendered="#{frmReservas.programacionSelecionada!=null}" id="pnlPeliculaDetalle">
                                  <br/>
                                  <h:outputText value="NOMBRE"/>
-                                 <h:outputText value="#{frmReservas.programacionSelecionada.idPelicula.nombre}" />
+                                 <h:outputText value="#{frmReservas.programacionSelecionada.idPelicula.nombre}"/>
                                  <br />
                                  <h:outputText value="SINOPSIS"/>
                                  <h:outputText value="#{frmReservas.programacionSelecionada.idPelicula.sinopsis}" />
@@ -144,7 +144,6 @@
             <p:commandButton rendered="#{frmReservas.indiceTab>=1}" value="Back" actionListener="#{frmReservas.BackTab}" update="tabDetalle text buttons" />
             <p:commandButton rendered="#{frmReservas.indiceTab!=3}" value="Next" actionListener="#{frmReservas.nextTab}" update="growl tabDetalle text buttons" />
         </h:panelGrid>
-        <p:inputText value="#{frmReservas.idAsientoSelecionado}" id="text"/>
 
     </f:define>
 
