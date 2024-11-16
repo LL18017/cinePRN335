@@ -25,7 +25,7 @@
                     >
                         <p:ajax process="@this" update=":pnlDetalle @form" event="rowSelect"
                                 listener="#{frmTipoReserva.selecionarFila}"/>
-                        <p:column headerText="ID"><h:outputText value="#{r.idTipoReserva}"/></p:column>
+                        <p:column headerText="#{frm}"><h:outputText value="#{r.idTipoReserva}"/></p:column>
                         <p:column headerText="NOMBRE"><h:outputText value="#{r.nombre}"/></p:column>
                         <p:column headerText="ACTIVO"><h:outputText value="#{r.activo?'ACTIVO':'INACTIVO'}"/></p:column>
                         <p:column headerText="COMENTARIOS"><h:outputText value="#{r.comentarios}"/></p:column>

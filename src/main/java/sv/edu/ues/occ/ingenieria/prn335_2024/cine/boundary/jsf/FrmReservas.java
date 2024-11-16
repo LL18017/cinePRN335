@@ -107,6 +107,7 @@ public class FrmReservas extends AbstractFrm<Reserva> implements Serializable {
     //funcionalidad
     public void nextTab() {
         switch (indiceTab) {
+           
             case 0:
 
                 if (tipoReservaSelecionada!=null && fechaReservaSelecionada!=null) {
