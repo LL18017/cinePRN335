@@ -59,7 +59,7 @@ public class FrmReserva extends AbstractFrm<Reserva> implements Serializable {
 
     @Override
     public String paginaNombre() {
-        return "Reserva XD  ";
+        return "Reserva  ";
     }
 
     //funcionalidad

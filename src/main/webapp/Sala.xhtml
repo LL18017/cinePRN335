@@ -73,7 +73,7 @@
 
                         </h:panelGrid>
                         <h:panelGrid columns="#{frmSala.estado=='CREAR'?'1':'2'}">
-                                <crud:botonesBottom frm="#{frmSala}" actualizar=""/>
+                            <crud:botonesBottom frm="#{frmSala}" actualizar=""/>
                         </h:panelGrid>
 
                     </h:form>
@@ -99,9 +99,9 @@
                                     <p:column headerText="VALOR"><h:outputText value="#{sc.valor}"/></p:column>
                                 </p:dataTable>
 
-                                    <h:panelGrid columns="2">
-                                        <crud:botonesTop frm="#{frmSala.frmSalaCaracteristica}" actualizar="pnlTablaSC pnlDetalleSC growl"/>
-                                    </h:panelGrid>
+                                <h:panelGrid columns="2">
+                                    <crud:botonesTop frm="#{frmSala.frmSalaCaracteristica}" actualizar="pnlTablaSC pnlDetalleSC growl"/>
+                                </h:panelGrid>
 
 
                             </h:form>
@@ -150,21 +150,64 @@
                 </p:tab>
 
 
+                <p:tab closable="false" title="Asientos" rendered="#{frmSala.estado != 'CREAR'}" id="IdTabAsi">
 
+                    <h:panelGroup id="pnlDetalleAsiento">
+                        <h2><p:outputLabel value="Asientos de #{frmSala.registro.nombre}" /></h2>
+                        <h:form id="frmDetalleAsiento" rendered="#{not empty frmSala.registro}">
+                            <crud:botonesTop frm="#{frmSala.frmAsiento}"
+                                             actualizar="frmDetalleAsiento oplDetalleAC:oplDetalleAC" />
+                            <h:panelGrid id="pnlGModeloAsientos" columns="2" rendered="#{empty frmSala.frmAsiento.registro}">
+                                <p:dataTable value="#{frmSala.frmAsiento.modelo}" var="asiento"
+                                             lazy="true"
+                                             paginator="true"
+                                             rows="5"
+                                             selectionMode="single"
+                                             rendered="#{empty frmSala.frmAsiento.registro}"
+                                             selection="#{frmSala.frmAsiento.registro}">
 
-                <p:tab closable="false" title="Peliculas" rendered="#{frmSala.estado!='CREAR'}">
-                    <p:outputLabel value="Peliculas disponibles en #{frmSala.registro.nombre}"/>
+                                    <p:ajax process="@this" update="@form  oplDetalleAC:frmDetalleSCA"  event="rowSelect"
+                                            listener="#{frmSala.frmAsiento.selecionarFila}"/>
+                                    <p:column headerText="ID"><h:outputText value="#{asiento.idAsiento}"/></p:column>
+                                    <p:column headerText="Nombre"><h:outputText value="#{asiento.nombre}"/></p:column>
+                                </p:dataTable>
+                            </h:panelGrid>
+                        </h:form>
+                    </h:panelGroup>
 
+                    <h:panelGrid id="oplDetalleAC" style="text-align: left">
+                        <h:panelGrid rendered="#{ frmSala.frmAsiento.estado =='NINGUNO' }">
+                            <h:form id="frmDetalleSCA" rendered="#{not empty frmSala.frmAsiento.registro}" >
+                                <h:panelGrid columns="2">
+                                    <p:outputLabel value="ID" for="txtIdAsiento"/>
+                                    <p:inputText id="txtIdAsiento" value="#{frmSala.frmAsiento.registro.idSala}" readonly="true" disabled="true"/>
+
+                                    <p:outputLabel value="Nombre" for="txtNombreAsiento"/>
+                                    <p:inputText id="txtNombreAsiento" value="#{frmSala.frmAsiento.registro.nombre}"/>
+                                </h:panelGrid>
+                            </h:form>
+                        </h:panelGrid>
+                    </h:panelGrid>
+
+                    <h:panelGrid columns="#{frmSala.frmAsiento.estado=='CREAR'?'1':'2'}">
+                        <h:panelGrid>
+                            <crud:botonesBottom frm="#{frmSala.frmAsiento}"/>
+                        </h:panelGrid>
+                    </h:panelGrid>
+
+                    <h:panelGroup id="CaracteristicasTiposA" style="text-align: left">
+                        <h4><h:outputLabel value="Caracteristicas del Asiento"/></h4>
+                        <h:form id="frmCaracteristicasTiposA" rendered="#{ frmSala.frmAsiento.estado =='NINGUNO'}">
+                            <h:panelGrid>
+                                <h:selectOneMenu value="#{frmSala.frmAsiento.frmAsientoCaracteristica.idTipoAsiento}">
+                                    <f:selectItems value="#{frmSala.frmAsiento.asientoCaracteristicaList}"
+                                                   var="ta" itemLabel="#{ta.valor} :#{ta.idTipoAsiento.nombre}"
+                                                   itemValue="#{ta.idTipoAsiento.idTipoAsiento}"/>
+                                </h:selectOneMenu>
+                            </h:panelGrid>
+                        </h:form>
+                    </h:panelGroup>
                 </p:tab>
-
-
-
-
-
-
-
-
-
 
 
 
@@ -227,11 +270,11 @@
 
                                         <h:panelGrid columns="2" id="pnlFechasProgrmacion">
 
-                                        <h:outputLabel id="inicioSelecionProgramacion" value="Inicio:" />
-                                        <p:calendar value="#{frmSala.frmProgramacion.desde}" showTime="true" pattern="dd/MM/yyyy HH:mm" />
+                                            <h:outputLabel id="inicioSelecionProgramacion" value="Inicio:" />
+                                            <p:calendar value="#{frmSala.frmProgramacion.desde}" showTime="true" pattern="dd/MM/yyyy HH:mm" />
 
-                                        <h:outputLabel id="finSelecionProgramacion" value="Fin:" />
-                                        <p:calendar value="#{frmSala.frmProgramacion.hasta}" showTime="true" pattern="dd/MM/yyyy HH:mm" />
+                                            <h:outputLabel id="finSelecionProgramacion" value="Fin:" />
+                                            <p:calendar value="#{frmSala.frmProgramacion.hasta}" showTime="true" pattern="dd/MM/yyyy HH:mm" />
                                         </h:panelGrid>
 
 
@@ -241,17 +284,17 @@
                                     <h:panelGroup>
                                         <p:commandButton
                                                 value="#{abstrasctpffrm['abstrasctpffrm.create']}"
-                                                         actionListener="#{frmSala.frmProgramacion.addEvent}"
-                                                         update="schedule :growl"
-                                                         oncomplete="PF('eventDialog').hide();" />
+                                                actionListener="#{frmSala.frmProgramacion.addEvent}"
+                                                update="schedule :growl"
+                                                oncomplete="PF('eventDialog').hide();" />
 
                                         <p:commandButton
                                                 value="#{abstrasctpffrm['abstrasctpffrm.cancel']}"
-                                                         onclick="PF('eventDialog').hide();"
-                                                         type="button"
-                                                         update="schedule @form"
-                                                        actionListener="${frmSala.frmProgramacion.cancelarProgramacion}"
-                                            />
+                                                onclick="PF('eventDialog').hide();"
+                                                type="button"
+                                                update="schedule @form"
+                                                actionListener="${frmSala.frmProgramacion.cancelarProgramacion}"
+                                        />
 
                                     </h:panelGroup>
                                 </p:dialog>
@@ -265,7 +308,7 @@
                     <h:panelGroup id="pnlProgramacionS">
                         <h:form rendered="#{not empty frmSala.frmSalaCaracteristica.registro}" id="frmDetalleSP">
                             <h:panelGrid columns="2">
-<!--                                        EDITABLES-->
+                                <!--                                        EDITABLES-->
                             </h:panelGrid>
                             <h:panelGrid columns="#{frmTipoProducto.estado=='CREAR'?'1':'2'}">
                                 <h:panelGrid>
@@ -280,4 +323,4 @@
             </p:tabView>
         </h:panelGroup>
     </ui:define>
-    </ui:composition>
+</ui:composition>

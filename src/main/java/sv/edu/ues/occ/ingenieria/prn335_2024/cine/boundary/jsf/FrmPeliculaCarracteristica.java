@@ -260,7 +260,7 @@ public class FrmPeliculaCarracteristica extends AbstractFrm<PeliculaCaracteristi
     @Override
     public void btnGuardarHandler(ActionEvent e) {
         if (tipoPeliculaSelecionada==null){
-        tipoPeliculaSelecionada= tipoPeliculaList.getFirst();
+            tipoPeliculaSelecionada= tipoPeliculaList.getFirst();
         }
         PeliculaCaracteristica pc=new PeliculaCaracteristica();
 

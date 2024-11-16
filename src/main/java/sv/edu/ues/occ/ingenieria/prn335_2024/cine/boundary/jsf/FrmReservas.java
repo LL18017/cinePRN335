@@ -38,7 +38,7 @@ public class FrmReservas extends AbstractFrm<Reserva> implements Serializable {
 
     //variables para la pagina
     //primer tab
-    int indiceTab=0;
+    int indiceTab = 0;
     TipoReserva tipoReservaSelecionada;
     Date fechaReservaSelecionada;
     int idTipoReservaSelecionada;
@@ -57,15 +57,15 @@ public class FrmReservas extends AbstractFrm<Reserva> implements Serializable {
 
     @Override
     public void instanciarRegistro() {
-        registro=new Reserva();
+        registro = new Reserva();
     }
 
     @PostConstruct
     @Override
     public void init() {
         super.init();
-        tipoReservasDisponibles=tipoReservaBean.findAll();
-        System.out.println("la cantidad de reservas son" +tipoReservasDisponibles.size());
+        tipoReservasDisponibles = tipoReservaBean.findAll();
+        System.out.println("la cantidad de reservas son" + tipoReservasDisponibles.size());
     }
 
     @Override
@@ -88,196 +88,245 @@ public class FrmReservas extends AbstractFrm<Reserva> implements Serializable {
 
     @Override
     public Reserva getObjectById(String id) {
-        if (id != null && modelo!=null && modelo.getWrappedData()!=null) {
-            return modelo.getWrappedData().stream().filter(r->id.equals(r.getIdReserva().toString())).findFirst().orElse(null);
+        if (id != null && modelo != null && modelo.getWrappedData() != null) {
+            return modelo.getWrappedData().stream().filter(r -> id.equals(r.getIdReserva().toString())).findFirst().orElse(null);
         }
         return null;
     }
 
     @Override
     public void selecionarFila(SelectEvent<Reserva> event) {
-
     }
 
     @Override
     public String paginaNombre() {
-        return "Reserva XD  ";
+        return "Reserva";
     }
+
+    private boolean esFechaReservaValida() {
+        // Obtener fecha actual truncada al inicio del día
+        Date fechaActual = truncarFecha(getFechaActual());
+
+        // Verificar si la fecha seleccionada no es nula
+        if (fechaReservaSelecionada != null) {
+            // Truncar también la fecha seleccionada
+            Date fechaSeleccionada = truncarFecha(fechaReservaSelecionada);
+
+            // Validar que la fecha seleccionada no sea menor a la fecha actual
+            if (fechaSeleccionada.before(fechaActual)) {
+                FacesContext.getCurrentInstance().addMessage(null,
+                        new FacesMessage(FacesMessage.SEVERITY_ERROR,
+                                "Fecha inválida",
+                                "La fecha seleccionada no puede ser menor a la fecha actual."));
+                return false;
+            }
+        } else {
+            // Mensaje si no se selecciona ninguna fecha
+            FacesContext.getCurrentInstance().addMessage(null,
+                    new FacesMessage(FacesMessage.SEVERITY_ERROR,
+                            "Fecha requerida",
+                            "Debe seleccionar una fecha de reserva."));
+            return false;
+        }
+        return true;
+    }
+
+
+    private Date truncarFecha(Date fecha) {
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(fecha);
+        calendar.set(Calendar.HOUR_OF_DAY, 0);
+        calendar.set(Calendar.MINUTE, 0);
+        calendar.set(Calendar.SECOND, 0);
+        calendar.set(Calendar.MILLISECOND, 0);
+        return calendar.getTime();
+    }
+
+
+
+
 
     //funcionalidad
     public void nextTab() {
+        if (!esFechaReservaValida()) {
+            // Si la fecha no es válida, salir del método
+            return;
+        }
         switch (indiceTab) {
-           
             case 0:
-
-                if (tipoReservaSelecionada!=null && fechaReservaSelecionada!=null) {
+                if (tipoReservaSelecionada != null && fechaReservaSelecionada != null) {
                     indiceTab++;
                     buscarProgramaciones();
-                }else{
-                    fc.addMessage(null,new FacesMessage(FacesMessage.SEVERITY_WARN,"No se puede seguir ","DEBES SELECIONAR "
-                            +(tipoReservaSelecionada==null?"UN TIPO DE RESERVA":"UNA FECHA")));
+                } else {
+                    fc.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_WARN, "No se puede seguir ", "DEBES SELECIONAR "
+                            + (tipoReservaSelecionada == null ? "UN TIPO DE RESERVA" : "UNA FECHA")));
                 }
+
                 break;
-                case 1:
-                if (programacionSelecionada!=null) {
+            case 1:
+                if (programacionSelecionada != null) {
                     indiceTab++;
                     buscarAsientosByProgramacion();
                 }
                 break;
-                case 2:
+            case 2:
                 if (!asientosSelecionados.isEmpty()) {
                     indiceTab++;
                 }
                 break;
-                case 3:
-                    indiceTab=0;
-                    programacionSelecionada=null;
-                    tipoReservaSelecionada=null;
-                    fechaReservaSelecionada=null;
-                    asientosSelecionados.clear();
-                    asientosDisponibles.clear();
+            case 3:
+                indiceTab = 0;
+                programacionSelecionada = null;
+                tipoReservaSelecionada = null;
+                fechaReservaSelecionada = null;
+                asientosSelecionados.clear();
+                asientosDisponibles.clear();
 
                 break;
             default:
-                indiceTab=0;
+                indiceTab = 0;
         }
     }
+
     public void BackTab() {
-       if (indiceTab>0){
-           indiceTab--;
-       }
-    }
-    public void onTipoReservaChange( ) {
-        if (idTipoReservaSelecionada!=0 && !tipoReservasDisponibles.isEmpty()){
-        tipoReservaSelecionada = tipoReservasDisponibles.stream().filter(r->r.getIdTipoReserva().equals(idTipoReservaSelecionada)).findFirst().orElse(null);
+        if (indiceTab > 0) {
+            indiceTab--;
         }
     }
-    public void cambiarTab(){
+
+    public void onTipoReservaChange() {
+        if (idTipoReservaSelecionada != 0 && !tipoReservasDisponibles.isEmpty()) {
+            tipoReservaSelecionada = tipoReservasDisponibles.stream().filter(r -> r.getIdTipoReserva().equals(idTipoReservaSelecionada)).findFirst().orElse(null);
+        }
+    }
+
+    public void cambiarTab() {
         buscarProgramaciones();
     }
+
+    //    es creado por hdz
     public void buscarProgramaciones() {
-        System.out.println(fechaReservaSelecionada.toString());
-        programaciones=programacionBean.findProgramacionesByDate(fechaReservaSelecionada);
-//        programaciones=programaciones.stream().filter(p->(fechaReservaSelecionada.compareTo(p.getDesde())<0 && fechaReservaSelecionada.compareTo(p.getHasta())>0)).collect(Collectors.toList());
+        // Llamar directamente al método que devuelve las programaciones filtradas
+        programaciones = programacionBean.findProgramacionesByDate(fechaReservaSelecionada);
+        System.out.println("Programaciones encontradas para la fecha " + fechaReservaSelecionada + ":");
+        programaciones.forEach(p -> System.out.println("Desde: " + p.getDesde() + ", Hasta: " + p.getHasta()));
 
     }
+
+//        public void buscarProgramaciones() {
+//        programaciones=programacionBean.findProgramacionesByDate(fechaReservaSelecionada);
+//        programaciones=programaciones.stream().filter(p->(fechaReservaSelecionada.compareTo(p.getDesde())>0 && fechaReservaSelecionada.compareTo(p.getHasta())<0)).collect(Collectors.toList());
+//
+//    }
+
     public void buscarAsientosByProgramacion() {
+        //buscar asientos asientos libres de una sala y programacion
+
+        //buscar todos los asientos que tiene una sala
         try {
-        asientosDisponibles=asientoBean.findAsientosBySalaandProgramacion(programacionSelecionada.getIdSala(),programacionSelecionada);
-            System.out.println("los asientos displonibles son " +asientosDisponibles.size());
+            asientosDisponibles = asientoBean.findAsientosBySalaandProgramacion(programacionSelecionada.getIdSala(), programacionSelecionada);
+            System.out.println("los asientos displonibles son " + asientosDisponibles.size());
             asientosDisponibles.forEach(System.out::println);
-        }catch (Exception e) {
-            Logger.getLogger(getClass().getName()).log(Level.SEVERE, e.getMessage(),e);
+        } catch (Exception e) {
+            Logger.getLogger(getClass().getName()).log(Level.SEVERE, e.getMessage(), e);
             System.out.println("error al cargar los asientos");
         }
-
-
     }
 
-    public List<String> sugerencias(String clave){
-        List<String> sugerencias=new ArrayList<>();
-        if (!programaciones.isEmpty()){
+    //    esto es de hdzzz
+    public List<String> sugerencias(String clave) {
+        List<String> sugerencias = new ArrayList<>();
+        if (!programaciones.isEmpty()) {
             SimpleDateFormat sdf = new SimpleDateFormat("HH:mm");
-            programaciones.forEach(p->{
-
+            programaciones.forEach(p -> {
                 sugerencias.add(
                         p.getIdProgramacion() + "_" +
                                 p.getIdPelicula().getNombre() + "," +
                                 p.getIdSala().getNombre() + " (" +
                                 sdf.format(p.getDesde()) + "-" + sdf.format(p.getHasta()) + ")");
-                            });
-
-            List<String> results = new ArrayList<>();
-            // Filtrar las sugerencias que coincidan con el texto ingresado
-            for (String option : sugerencias) {
-                if (option.toLowerCase().contains(clave.toLowerCase())) {
-                    results.add(option);
-                }
-            }
-            return results;
+            });
+            return sugerencias.stream()
+                    .filter(option -> option.toLowerCase().contains(clave.toLowerCase()))
+                    .collect(Collectors.toList());
         }
         return List.of();
     }
+
 
     public void onItemSelect(AjaxBehaviorEvent event) {
         // Obtener el valor del input automáticamente
         String selectedValue = (String) ((UIInput) event.getSource()).getValue();
         System.out.println("Seleccionaste: " + selectedValue);
     }
-    public void onProgramacionChange() {
 
-        if (!programaciones.isEmpty()){
-        programacionSelecionada = programaciones.stream().filter(p->p.getIdProgramacion().toString().equals(idProgramacion)).findFirst().orElse(null);
+    //    esto es de hdz
+    public void onProgramacionChange(SelectEvent event) {
+        String idString = (String) event.getObject();
+        Long id = Long.parseLong(idString.split("_")[0]);
+        programacionSelecionada = programaciones.stream()
+                .filter(p -> p.getIdProgramacion().equals(id))
+                .findFirst() .orElse(null);
+        if (programacionSelecionada != null) {
             SimpleDateFormat sdf = new SimpleDateFormat("HH:mm");
-            fechaProgramacion="hora (" +sdf.format(programacionSelecionada.getDesde()) + "-" + sdf.format(programacionSelecionada.getHasta()) + ")";
-            PeliculaCaracteristica tp=programacionSelecionada.getIdPelicula().getPeliculaCaracteristicaList().stream().filter(p->p.getIdTipoPelicula().
-                    getNombre().equals("DURACION")).findFirst().orElse(null);
-
-        }
-        if (idProgramacion!=null){
-            System.out.println("nadasd");
-
-        }
-
-
-
-
-
+            fechaProgramacion = "hora (" + sdf.format(programacionSelecionada.getDesde()) + "-" + sdf.format(programacionSelecionada.getHasta()) + ")"; }
     }
-    public void agregarAsiento(){
-          try {
-              Asiento asientoSelecionado=asientosDisponibles.stream().
-                      filter(a->a.getIdAsiento().toString().equals(idAsientoSelecionado)).findFirst().orElse(null);
-              if (asientosSelecionados==null){
-                  asientosSelecionados=new ArrayList<>();
-              }
-              if (asientoSelecionado!=null){
-                  asientosDisponibles.remove(asientoSelecionado);
-                  asientosSelecionados.add(asientoSelecionado);
-              }
-              idAsientoSelecionado="";
-          }catch (Exception e) {
-              Logger.getLogger(getClass().getName()).log(Level.SEVERE, e.getMessage(),e);
-          }
-        }
-    public void eliminarAsiento(){
-          try {
-              Asiento asientoEliminado=asientosSelecionados.stream().
-                      filter(a->a.getIdAsiento().toString().equals(idAsientoELiminado)).findFirst().orElse(null);
 
-              if (asientoEliminado!=null){
-                  asientosSelecionados.remove(asientoEliminado);
-                  asientosDisponibles.add(asientoEliminado);
-                  asientosDisponibles.sort(Comparator.comparingLong(Asiento::getIdAsiento));
-              }
-              idAsientoSelecionado="";
-          }catch (Exception e) {
-              Logger.getLogger(getClass().getName()).log(Level.SEVERE, e.getMessage(),e);
-          }
-        }
-    public String formateoFechaReserva() {
-            if (programacionSelecionada!=null) {
-                return "";
+
+    public void agregarAsiento() {
+        try {
+            Asiento asientoSelecionado = asientosDisponibles.stream().
+                    filter(a -> a.getIdAsiento().toString().equals(idAsientoSelecionado)).findFirst().orElse(null);
+            if (asientosSelecionados == null) {
+                asientosSelecionados = new ArrayList<>();
             }
-            SimpleDateFormat sdf = new SimpleDateFormat("HH:mm");
-
-           try {
-               String formaro ="hora " +sdf.format(programacionSelecionada.getDesde()) + "-" + sdf.format(programacionSelecionada.getHasta()) + ")";
-               System.out.println("prueba");
-               System.out.println(sdf.format(programacionSelecionada.getDesde()) );
-               System.out.println(sdf.format(programacionSelecionada.getHasta()));
-               System.out.println(formaro);
-            return formaro;
-           }catch (Exception e) {
-               Logger.getLogger(getClass().getName()).log(Level.SEVERE, e.getMessage(),e);
-               return "problemas";
-           }
-
+            if (asientoSelecionado != null) {
+                asientosDisponibles.remove(asientoSelecionado);
+                asientosSelecionados.add(asientoSelecionado);
+            }
+            idAsientoSelecionado = "";
+        } catch (Exception e) {
+            Logger.getLogger(getClass().getName()).log(Level.SEVERE, e.getMessage(), e);
         }
+    }
 
-    public void crearReserva(){
-        if (programacionSelecionada!=null && tipoReservaSelecionada!=null && fechaReservaSelecionada!=null) {
-            Reserva reserva=new Reserva();
+    public void eliminarAsiento() {
+        try {
+            Asiento asientoEliminado = asientosSelecionados.stream().
+                    filter(a -> a.getIdAsiento().toString().equals(idAsientoELiminado)).findFirst().orElse(null);
+
+            if (asientoEliminado != null) {
+                asientosSelecionados.remove(asientoEliminado);
+                asientosDisponibles.add(asientoEliminado);
+                asientosDisponibles.sort(Comparator.comparingLong(Asiento::getIdAsiento));
+            }
+            idAsientoSelecionado = "";
+        } catch (Exception e) {
+            Logger.getLogger(getClass().getName()).log(Level.SEVERE, e.getMessage(), e);
+        }
+    }
+
+    public String formateoFechaReserva() {
+        if (programacionSelecionada != null) {
+            return "";
+        }
+        SimpleDateFormat sdf = new SimpleDateFormat("HH:mm");
+
+        try {
+            String formaro = "hora " + sdf.format(programacionSelecionada.getDesde()) + "-" + sdf.format(programacionSelecionada.getHasta()) + ")";
+            System.out.println("prueba");
+            System.out.println(sdf.format(programacionSelecionada.getDesde()));
+            System.out.println(sdf.format(programacionSelecionada.getHasta()));
+            System.out.println(formaro);
+            return formaro;
+        } catch (Exception e) {
+            Logger.getLogger(getClass().getName()).log(Level.SEVERE, e.getMessage(), e);
+            return "problemas";
+        }
+    }
+
+    public void crearReserva() {
+        if (programacionSelecionada != null && tipoReservaSelecionada != null && fechaReservaSelecionada != null) {
+            Reserva reserva = new Reserva();
             try {
                 reserva.setIdProgramacion(programacionSelecionada);
                 reserva.setIdTipoReserva(tipoReservaSelecionada);
@@ -285,30 +334,43 @@ public class FrmReservas extends AbstractFrm<Reserva> implements Serializable {
                 reserva.setEstado("CREADO");
                 reservaBean.create(reserva);
 
-                ReservaDetalle reservaDetalle=new ReservaDetalle();
+                ReservaDetalle reservaDetalle = new ReservaDetalle();
                 reservaDetalle.setIdReserva(reserva);
                 try {
-                    asientosSelecionados.forEach(a->{
-                    reservaDetalle.setIdAsiento(a);
-                    reservaDetalle.setEstado("Creado");
+                    asientosSelecionados.forEach(a -> {
+                        reservaDetalle.setIdAsiento(a);
+                        reservaDetalle.setEstado("Creado");
                         reservaDetalleBean.create(reservaDetalle);
                     });
-                }catch (Exception e) {
-                    Logger.getLogger(getClass().getName()).log(Level.SEVERE, e.getMessage(),e);
+                } catch (Exception e) {
+                    Logger.getLogger(getClass().getName()).log(Level.SEVERE, e.getMessage(), e);
                     reservaBean.delete(reserva);
-                     fc.addMessage(null,new FacesMessage(FacesMessage.SEVERITY_ERROR,"error al asignar el asiento","falso"));
+                    fc.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "error al asignar el asiento", "falso"));
 
                 }
                 nextTab();
-                fc.addMessage(null,new FacesMessage("se ha credao la reserva"));
-            }catch (Exception e) {
-                Logger.getLogger(getClass().getName()).log(Level.SEVERE, e.getMessage(),e);
-                fc.addMessage(null,new FacesMessage(FacesMessage.SEVERITY_ERROR,"se ha credao la reserva","falso"));
+                fc.addMessage(null, new FacesMessage("se ha credao la reserva"));
+            } catch (Exception e) {
+                Logger.getLogger(getClass().getName()).log(Level.SEVERE, e.getMessage(), e);
+                fc.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "se ha credao la reserva", "falso"));
 
             }
         }
     }
+
     //getters y setter
+
+    public Date getFechaActual() {
+        // Crea una nueva instancia de Date y setea solo la fecha (sin hora)
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(new Date());
+        cal.set(Calendar.HOUR_OF_DAY, 0);
+        cal.set(Calendar.MINUTE, 0);
+        cal.set(Calendar.SECOND, 0);
+        cal.set(Calendar.MILLISECOND, 0);
+        return cal.getTime(); // Devuelve solo la fecha sin la hora
+    }
+
     public int getIndiceTab() {
         return indiceTab;
     }
@@ -349,16 +411,6 @@ public class FrmReservas extends AbstractFrm<Reserva> implements Serializable {
         this.reservaBean = reservaBean;
     }
 
-    public Date getFechaActual() {
-        // Crea una nueva instancia de Date y setea solo la fecha (sin hora)
-        Calendar cal = Calendar.getInstance();
-        cal.setTime(new Date());
-        cal.set(Calendar.HOUR_OF_DAY, 0);
-        cal.set(Calendar.MINUTE, 0);
-        cal.set(Calendar.SECOND, 0);
-        cal.set(Calendar.MILLISECOND, 0);
-        return cal.getTime(); // Devuelve solo la fecha sin la hora
-    }
 
     public Date getFechaReservaSelecionada() {
         return fechaReservaSelecionada;
@@ -431,4 +483,5 @@ public class FrmReservas extends AbstractFrm<Reserva> implements Serializable {
     public void setIdAsientoELiminado(String idAsientoELiminado) {
         this.idAsientoELiminado = idAsientoELiminado;
     }
+
 }

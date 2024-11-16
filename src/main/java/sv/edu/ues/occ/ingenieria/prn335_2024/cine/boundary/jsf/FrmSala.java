@@ -41,32 +41,36 @@ public class FrmSala extends AbstractFrm<Sala> implements Serializable {
     @Inject
     AsientoBean asientoBean;
     @Inject
+    FrmAsiento frmAsiento;
+    @Inject
     SalaCaracteristicaBean SalaCBean;
     @Inject
     FrmSalaCaracteristica frmSalaCaracteristica;
     @Inject
     SalaCaracteristicaBean salaCaracteristicaBean;
     @Inject
-    FrmProgramacion  frmProgramacion;
     FacesContext fc;
+    @Inject
+    FrmProgramacion  frmProgramacion;
+
 
     List<Sucursal> sucursales;
     Sucursal sucursalSelecionada;
     String idSucursalSelecionado;
+
+
+    List<Programacion> programaciones;
+    List<Asiento> asientos;
+    private int sucursalId;
     List<TipoSala> tipoSalasDisponibles;
     List<Asiento> asientosDisponibles;
     List<Asiento> asientosSelecionados;
-    List<Programacion> programaciones;
-
-    private int sucursalId;
     Date fechaReservaSelecionada;
     Programacion programacionSelecionada;
     String idProgramacion;
     String fechaProgramacion;
     String idAsientoSelecionado;
     String idAsientoELiminado;
-
-    //  Long idSucursalSelecionada;
 
 
     public void cargarSucursales() {
@@ -76,7 +80,7 @@ public class FrmSala extends AbstractFrm<Sala> implements Serializable {
     public void cambiarTab(TabChangeEvent event){
         System.out.println("cambiando tab");
         try {
-        //obtener sucursales
+            //obtener sucursales
             cargarSucursales();
             cargarDatosIniciales();
             if(event.getTab().getTitle().equals("Caracteristicas")){
@@ -143,17 +147,23 @@ public class FrmSala extends AbstractFrm<Sala> implements Serializable {
     public void selecionarFila(SelectEvent<Sala> event) {
         Sala filaSelelcted = event.getObject();
         if(filaSelelcted!=null){
-            estado=ESTADO_CRUD.MODIFICAR;
             FacesMessage mensaje=new FacesMessage("Sala selecionada ", registro.getNombre());
             fc.addMessage(null, mensaje);
             this.registro = filaSelelcted;
+            this.estado=ESTADO_CRUD.MODIFICAR;
+            cargarSucursales();
+            frmSalaCaracteristica.estado=ESTADO_CRUD.MODIFICAR;
+            frmSalaCaracteristica.setIdSalaSelecionada(registro);
+            frmAsiento.estado=ESTADO_CRUD.MODIFICAR;
+            frmAsiento.setIdSalaSelecionada(registro);
             frmSalaCaracteristica.idSalaSelecionada=registro;
-           cargarDatosIniciales();
+            cargarDatosIniciales();
 
         }else {
             fc.addMessage(null,  new FacesMessage(FacesMessage.SEVERITY_ERROR, "no se ha encontrado ", " "));
         }
     }
+
 
     public void cargarDatosIniciales(){
         cargarSucursales();
@@ -161,12 +171,11 @@ public class FrmSala extends AbstractFrm<Sala> implements Serializable {
         frmSalaCaracteristica.setIdSalaSelecionada(registro);
         frmProgramacion.setSalaSelecionada(registro);
     }
+
     @Override
     public String paginaNombre() {
         return "Sala";
     }
-
-    //Programacion --------------------------------------------------------------
 
     public void selecionarTipoSala(){
         sucursalSelecionada=sucursales.stream().filter(s->s.getIdSucursal().toString().equals(idSucursalSelecionado)).findFirst().orElse(null);
@@ -263,11 +272,9 @@ public class FrmSala extends AbstractFrm<Sala> implements Serializable {
         }
     }
 
-    public void CambiarTab(ValueChangeEvent e){
-
-    }
 
 
+    //SalaCaracteristica -------------------------------------------------------
 
     //SalaCaracteristica -------------------------------------------------------
 
@@ -325,6 +332,16 @@ public class FrmSala extends AbstractFrm<Sala> implements Serializable {
     }
 
 
+    public FrmAsiento getFrmAsiento() {
+        return frmAsiento;
+    }
+
+    public void setFrmAsiento(FrmAsiento frmAsiento) {
+        this.frmAsiento = frmAsiento;
+    }
+
+
+
     @Override
     public void btnCancelarHandler(ActionEvent actionEvent) {
         frmSalaCaracteristica.estado=ESTADO_CRUD.NINGUNO;
@@ -345,4 +362,8 @@ public class FrmSala extends AbstractFrm<Sala> implements Serializable {
         System.out.println("probando");
 
     }
+
+
+
+
 }

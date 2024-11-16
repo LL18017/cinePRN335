@@ -43,8 +43,8 @@ public class ProgramacionBean extends AbstractDataPersist<Programacion> implemen
 
                 return em.createNamedQuery("Programacion.findProgramacionBySalaRangoTiempo", Programacion.class).
                         setParameter("sala", sala)
-                .setParameter("fechaInicio",inicio)
-                .setParameter("fechaFin",fin)
+                        .setParameter("fechaInicio",inicio)
+                        .setParameter("fechaFin",fin)
                         .getResultList();
             }catch (Exception ex){
                 Logger.getLogger(SalaBean.class.getName()).log(Level.SEVERE, null, ex);
@@ -55,20 +55,26 @@ public class ProgramacionBean extends AbstractDataPersist<Programacion> implemen
         return List.of();
     }
 
-    public List<Programacion> findProgramacionesByDate(Date fecha) {
-            try {
-              return em.createNamedQuery("Programacion.findAll",Programacion.class).getResultList();
-            }catch (Exception ex){
-                Logger.getLogger(SalaBean.class.getName()).log(Level.SEVERE, null, ex);
-            }
-        return List.of();
+
+    // es creado por hdz
+    public List<Programacion> findProgramacionesByDate(Date fechaReserva) {
+        // La consulta JPQL para seleccionar solo las programaciones activas en la fecha especificada
+        TypedQuery<Programacion> query = em.createQuery(
+                "SELECT p FROM Programacion p WHERE FUNCTION('DATE', p.desde) = :fecha", Programacion.class);
+        query.setParameter("fecha", fechaReserva);
+        return query.getResultList();
     }
+
+
+
+
+
     public List<Asiento> findAsientoParaReserva(Date fecha) {
-            try {
-              return em.createNamedQuery("Programacion.findAsientoParaReserva", Asiento.class).getResultList();
-            }catch (Exception ex){
-                Logger.getLogger(SalaBean.class.getName()).log(Level.SEVERE, null, ex);
-            }
+        try {
+            return em.createNamedQuery("Programacion.findAsientoParaReserva", Asiento.class).getResultList();
+        }catch (Exception ex){
+            Logger.getLogger(SalaBean.class.getName()).log(Level.SEVERE, null, ex);
+        }
         return List.of();
     }
     public boolean verificarColision(Date desde, Date hasta, Sala sala) {
@@ -97,5 +103,6 @@ public class ProgramacionBean extends AbstractDataPersist<Programacion> implemen
 
         return false; // Asumimos colisión si ocurre un error
     }
+
 
 }

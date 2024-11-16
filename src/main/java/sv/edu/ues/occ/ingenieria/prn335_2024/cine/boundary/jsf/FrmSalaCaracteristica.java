@@ -114,11 +114,11 @@ public class FrmSalaCaracteristica extends AbstractFrm<SalaCaracteristica> imple
     public void selecionarTipoSala(){
         if (idTipoSala!=null){
 
-        TipoSala ex=tipoSalaList.stream().filter(ts->ts.getIdTipoSala().toString().equals(idTipoSala.toString())).findFirst().orElse(null);
-        if (ex!=null) {
-            expresionTipoSala=ex.getExpresionRegular();
-            return;
-        };
+            TipoSala ex=tipoSalaList.stream().filter(ts->ts.getIdTipoSala().toString().equals(idTipoSala.toString())).findFirst().orElse(null);
+            if (ex!=null) {
+                expresionTipoSala=ex.getExpresionRegular();
+                return;
+            };
         }
         expresionTipoSala=expresionTipoSala==null? ".":getTipoSala().getExpresionRegular();
     }
