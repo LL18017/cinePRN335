@@ -5,10 +5,7 @@ import jakarta.ejb.Stateless;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import jakarta.persistence.TypedQuery;
-import sv.edu.ues.occ.ingenieria.prn335_2024.cine.entity.Asiento;
-import sv.edu.ues.occ.ingenieria.prn335_2024.cine.entity.Programacion;
-import sv.edu.ues.occ.ingenieria.prn335_2024.cine.entity.Sala;
-import sv.edu.ues.occ.ingenieria.prn335_2024.cine.entity.SalaCaracteristica;
+import sv.edu.ues.occ.ingenieria.prn335_2024.cine.entity.*;
 
 import java.io.Serializable;
 import java.util.List;
@@ -29,6 +26,8 @@ public class AsientoBean extends AbstractDataPersist<Asiento> implements Seriali
         return em;
     }
 
+
+
     public List<Asiento> findAsientosBySalaandProgramacion(Sala sala, Programacion programacion) {
             try {
                return em.createNamedQuery("Asiento.findAsientosBySalaandProgramacion", Asiento.class).
@@ -38,10 +37,11 @@ public class AsientoBean extends AbstractDataPersist<Asiento> implements Seriali
             }
         return List.of();
     }
-    public List<Asiento> findIdAsientoBySala(final long idSala, int first, int last) {
+
+    public List<Asiento> findIdAsientoBySala(final Sala idSala, int first, int last) {
         try {
             TypedQuery<Asiento> q = em.createNamedQuery("Asiento.findIdAsientoBySala", Asiento.class);
-            q.setParameter("idSala", idSala);
+            q.setParameter("idSala", idSala.getIdSala());
             q.setFirstResult(first);
             q.setMaxResults(last);
             return q.getResultList();
@@ -51,15 +51,28 @@ public class AsientoBean extends AbstractDataPersist<Asiento> implements Seriali
         return List.of();
     }
 
-    public int countAsientos(final long idSala) {
+    public int countAsientos(final Sala idSala) {
         try {
             TypedQuery<Long> q = em.createNamedQuery("Asiento.countByIdAsiento", Long.class);
-            q.setParameter("idAsiento", idSala);
+            q.setParameter("idSala", idSala.getIdSala());
             return q.getSingleResult().intValue();
         } catch (Exception e) {
             Logger.getLogger(getClass().getName()).log(Level.SEVERE, e.getMessage(), e);
         }
         return 0;
     }
+
+    public List<AsientoCaracteristica> findAllAsientoCaracteristica() {
+        try {
+            TypedQuery<AsientoCaracteristica> q = em.createNamedQuery("Asiento.findAllAsientoCaracteristica", AsientoCaracteristica.class);
+            q.setFirstResult(0);
+            q.setMaxResults(Integer.MAX_VALUE);
+            return q.getResultList();
+        }catch (Exception e){
+            Logger.getLogger(getClass().getName()).log(Level.SEVERE,e.getMessage(),e);
+        }
+        return List.of();
+    }
+
 
 }

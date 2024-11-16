@@ -32,10 +32,12 @@ import java.util.List;
 @XmlRootElement
 @NamedQueries({
     @NamedQuery(name = "Asiento.findAll", query = "SELECT a FROM Asiento a"),
+    @NamedQuery(name = "Asiento.findAllAsientoCaracteristica", query = "SELECT ac FROM AsientoCaracteristica ac"),
     @NamedQuery(name = "Asiento.findByIdAsiento", query = "SELECT a FROM Asiento a WHERE a.idAsiento = :idAsiento"),
     @NamedQuery(name = "Asiento.findByNombre", query = "SELECT a FROM Asiento a WHERE a.nombre = :nombre"),
+    @NamedQuery(name = "Asiento.MatchCaracterAndTipoWithSala", query = "SELECT ac.valor, ta.nombre FROM AsientoCaracteristica ac JOIN ac.idTipoAsiento ta WHERE ac.idAsiento.idAsiento = :asiento"),
     @NamedQuery(name = "Asiento.findIdAsientoBySala", query = "SELECT a FROM Asiento a WHERE a.idSala.idSala = :idSala"),
-    @NamedQuery(name = "Asiento.countByIdAsiento", query = "SELECT COUNT (s.idAsiento) FROM Asiento s WHERE s.idAsiento = :idAsiento"),
+    @NamedQuery(name = "Asiento.countByIdAsiento", query = "SELECT COUNT (s) FROM Asiento s WHERE s.idSala.idSala = :idSala"),
         @NamedQuery(name = "Asiento.findAsientosBySalaandProgramacion",
             query = "SELECT a FROM Asiento a WHERE a.idSala = :idSala AND a.idAsiento NOT IN (SELECT rd.idAsiento.idAsiento FROM ReservaDetalle rd JOIN rd.idReserva r JOIN r.idProgramacion p WHERE p = :idProgramacion )"),
     @NamedQuery(name = "Asiento.findByActivo", query = "SELECT a FROM Asiento a WHERE a.activo = :activo")})
@@ -59,6 +61,7 @@ public class Asiento implements Serializable {
     private Sala idSala;
     @OneToMany(mappedBy = "idAsiento", fetch = FetchType.LAZY)
     private List<AsientoCaracteristica> asientoCaracteristicaList;
+
 
     public Asiento() {
     }

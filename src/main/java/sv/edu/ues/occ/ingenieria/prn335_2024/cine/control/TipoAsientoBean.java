@@ -7,6 +7,8 @@ import jakarta.persistence.PersistenceContext;
 import sv.edu.ues.occ.ingenieria.prn335_2024.cine.entity.TipoAsiento;
 
 import java.io.Serializable;
+import java.util.List;
+
 @Stateless
 @LocalBean
 public class TipoAsientoBean extends AbstractDataPersist<TipoAsiento> implements Serializable {
@@ -20,5 +22,14 @@ public class TipoAsientoBean extends AbstractDataPersist<TipoAsiento> implements
     @Override
     public EntityManager getEntityManager() {
         return em;
+    }
+
+    public List<TipoAsiento> findAllTipoAsiento() {
+        try {
+            return em.createNamedQuery("TipoAsiento.findAll", TipoAsiento.class).getResultList();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return List.of();
     }
 }
