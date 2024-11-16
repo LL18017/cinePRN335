@@ -6,7 +6,7 @@ import org.primefaces.event.SelectEvent;
 import sv.edu.ues.occ.ingenieria.prn335_2024.cine.control.AbstractDataPersist;
 import sv.edu.ues.occ.ingenieria.prn335_2024.cine.entity.Asiento;
 
-import javax.faces.view.ViewScoped;
+import jakarta.faces.view.ViewScoped;
 import java.io.Serializable;
 @Named
 @ViewScoped
