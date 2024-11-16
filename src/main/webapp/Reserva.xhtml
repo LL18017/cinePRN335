@@ -98,9 +98,9 @@
                                 </p:selectOneListbox>
                             </h:panelGroup>
                              <h:panelGrid columns="1" id="btnCambiosSOB">
-                                 <p:commandButton value="agregar" disabled="#{empty frmReservas.idAsientoSelecionado}" actionListener="#{frmReservas.agregarAsiento}"
+                                 <p:commandButton value="→  #{abstrasctpffrm['abstrasctpffrm.reserve']}" disabled="#{empty frmReservas.idAsientoSelecionado}" actionListener="#{frmReservas.agregarAsiento}"
                                                   update="asientoDisponiblesSOB btnCambiosSOB asientoSelecionadosSOB text"/>
-                                 <p:commandButton value="eliminar" disabled="#{empty frmReservas.idAsientoELiminado}" actionListener="#{frmReservas.eliminarAsiento}"
+                                 <p:commandButton value="←  #{abstrasctpffrm['abstrasctpffrm.delete']}" disabled="#{empty frmReservas.idAsientoELiminado}" actionListener="#{frmReservas.eliminarAsiento}"
                                                   update="asientoDisponiblesSOB btnCambiosSOB asientoSelecionadosSOB text"/>
                          </h:panelGrid>
                              <h:panelGroup>
@@ -133,7 +133,7 @@
                                   <br />
                               </f:repeat>
                           </h:panelGrid>
-                          <p:commandButton value="Confirmar reserva" actionListener="#{frmReservas.crearReserva}" update=":growl tabDetalle buttons"/>
+                          <p:commandButton value="#{abstrasctpffrm['abstrasctpffrm.confirmreservation']}" actionListener="#{frmReservas.crearReserva}" update=":growl tabDetalle buttons"/>
                       </p:panel>
                   </h:form>
                 </p:tab>
@@ -141,8 +141,8 @@
 
         </p:tabView>
         <h:panelGrid id="buttons" columns="2">
-            <p:commandButton rendered="#{frmReservas.indiceTab>=1}" value="Back" actionListener="#{frmReservas.BackTab}" update="tabDetalle text buttons" />
-            <p:commandButton rendered="#{frmReservas.indiceTab!=3}" value="Next" actionListener="#{frmReservas.nextTab}" update="growl tabDetalle text buttons" />
+            <p:commandButton rendered="#{frmReservas.indiceTab>=1}" value="#{abstrasctpffrm['abstrasctpffrm.back']}" actionListener="#{frmReservas.BackTab}" update="tabDetalle text buttons" />
+            <p:commandButton rendered="#{frmReservas.indiceTab!=3}" value="#{abstrasctpffrm['abstrasctpffrm.next']}" actionListener="#{frmReservas.nextTab}" update="growl tabDetalle text buttons" />
         </h:panelGrid>
 
     </f:define>
