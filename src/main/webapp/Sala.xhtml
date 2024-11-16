@@ -45,10 +45,12 @@
 
         <h:panelGroup id="pnlDetalle">
             <p:tabView id="tabDetalle" cache="false" dynamic="true" rendered="#{not empty frmSala.registro}">
-                <p:ajax process="@this" event="tabChange" listener="#{frmSala.cambiarTab}" update="pnlDetalle:tbSapnlTablaClaC"/>
+                <p:ajax process="@this" event="tabChange" listener="#{frmSala.cambiarTab}" update="pnlDetalle:tbSapnlTablaClaC pnlDetalle:tbSapnlTablaP"/>
                 <!--            info de la sala-->
                 <p:tab closable="false" title="Geralidades">
                     <h:form rendered="#{not empty frmSala.registro}" id="frmDetalle">
+
+
                         <h:panelGrid columns="2">
                             <p:outputLabel value="ID" for="txtid"/>
                             <p:inputText id="txtid" value="#{frmSala.registro.idSala}" readonly="true" disabled="true"/>
@@ -70,9 +72,8 @@
                             <p:inputTextarea id="taComentarios" value="#{frmSala.registro.idSucursal.comentarios}"/>
 
                         </h:panelGrid>
-                        <h:panelGrid columns="#{frmTipoProducto.estado=='CREAR'?'1':'2'}">
+                        <h:panelGrid columns="#{frmSala.estado=='CREAR'?'1':'2'}">
                                 <crud:botonesBottom frm="#{frmSala}" actualizar=""/>
-                            <p:growl id="growl2" showDetail="true" sticky="false" life="10500"/>
                         </h:panelGrid>
 
                     </h:form>
@@ -169,7 +170,7 @@
 
 
 
-                <p:tab closable="false" title="programaciones">
+                <p:tab closable="false" title="programaciones" id="tbSapnlTablaP">
                     <p:outputLabel value="Programacion para #{frmSala.registro.nombre}"/>
                     <h:panelGrid>
                         <h:panelGroup id="pnlTablaSP">
@@ -186,7 +187,7 @@
                                             style="width: 100%; height: 600px;">
 
                                     <p:ajax event="eventSelect"
-                                            listener="#{frmSala.frmProgramacion.pruebas}"
+                                            listener="#{frmSala.frmProgramacion.onEventSelect}"
                                             update="programarDialog"
                                             oncomplete="PF('eventDialog').show();" />
                                     <p:ajax event="dateSelect"
@@ -206,8 +207,8 @@
                                           header="Evento"
                                           modal="true"
                                           resizable="false"
-                                          closable="true">
-                                    <h:panelGrid columns="2" cellpadding="5">
+                                          closable="false">
+                                    <h:panelGrid columns="1" cellpadding="8">
                                         <h:outputLabel value="Título:" />
                                         <p:autoComplete
                                                 id="acPelicula"
@@ -217,30 +218,41 @@
                                                 itemValue="#{item.split('_')[0]}"
                                                 itemLabel="#{item.split('_')[1]}"
                                                 dropdown="true"
-                                                forceSelection="false"
+                                                forceSelection="true"
                                                 minQueryLength="2"
                                         >
-                                            <p:ajax update="frmSelecion:panelPrueba" event="itemSelect" listener="#{frmReservas.onProgramacionChange}" process="@this"/>
+                                            <p:ajax update="inicioSelecionProgramacion pnlFechasProgrmacion" event="itemSelect"
+                                                    listener="#{frmSala.frmProgramacion.cambioPelicula}" process="@this"/>
                                         </p:autoComplete>
 
-                                        <h:outputLabel value="Inicio:" />
-                                        <p:calendar value="#{frmSala.frmProgramacion.event.startDate}" showTime="true" pattern="dd/MM/yyyy HH:mm" />
+                                        <h:panelGrid columns="2" id="pnlFechasProgrmacion">
 
-                                        <h:outputLabel value="Fin:" />
-                                        <p:calendar value="#{frmSala.frmProgramacion.event.endDate}" showTime="true" pattern="dd/MM/yyyy HH:mm" />
+                                        <h:outputLabel id="inicioSelecionProgramacion" value="Inicio:" />
+                                        <p:calendar value="#{frmSala.frmProgramacion.desde}" showTime="true" pattern="dd/MM/yyyy HH:mm" />
+
+                                        <h:outputLabel id="finSelecionProgramacion" value="Fin:" />
+                                        <p:calendar value="#{frmSala.frmProgramacion.hasta}" showTime="true" pattern="dd/MM/yyyy HH:mm" />
+                                        </h:panelGrid>
+
 
 
                                     </h:panelGrid>
 
                                     <h:panelGroup>
-                                        <p:commandButton value="Guardar"
+                                        <p:commandButton
+                                                value="#{abstrasctpffrm['abstrasctpffrm.create']}"
                                                          actionListener="#{frmSala.frmProgramacion.addEvent}"
                                                          update="schedule :growl"
                                                          oncomplete="PF('eventDialog').hide();" />
 
-                                        <p:commandButton value="Cancelar"
+                                        <p:commandButton
+                                                value="#{abstrasctpffrm['abstrasctpffrm.cancel']}"
                                                          onclick="PF('eventDialog').hide();"
-                                                         type="button" />
+                                                         type="button"
+                                                         update="schedule @form"
+                                                        actionListener="${frmSala.frmProgramacion.cancelarProgramacion}"
+                                            />
+
                                     </h:panelGroup>
                                 </p:dialog>
                             </h:form>

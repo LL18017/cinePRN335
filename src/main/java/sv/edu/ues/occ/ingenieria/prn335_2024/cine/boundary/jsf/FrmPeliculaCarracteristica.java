@@ -2,8 +2,12 @@ package sv.edu.ues.occ.ingenieria.prn335_2024.cine.boundary.jsf;
 
 import jakarta.annotation.PostConstruct;
 import jakarta.enterprise.context.Dependent;
+import jakarta.faces.application.FacesMessage;
 import jakarta.faces.component.UIComponent;
+import jakarta.faces.component.UIInput;
 import jakarta.faces.context.FacesContext;
+import jakarta.faces.event.ActionEvent;
+import jakarta.faces.validator.ValidatorException;
 import jakarta.inject.Inject;
 import jakarta.inject.Named;
 import org.primefaces.event.SelectEvent;
@@ -11,15 +15,17 @@ import sv.edu.ues.occ.ingenieria.prn335_2024.cine.control.AbstractDataPersist;
 import sv.edu.ues.occ.ingenieria.prn335_2024.cine.control.PeliculaBean;
 import sv.edu.ues.occ.ingenieria.prn335_2024.cine.control.PeliculaCarracteristicaBean;
 import sv.edu.ues.occ.ingenieria.prn335_2024.cine.control.TipoPeliculaBean;
+import sv.edu.ues.occ.ingenieria.prn335_2024.cine.entity.Pelicula;
 import sv.edu.ues.occ.ingenieria.prn335_2024.cine.entity.PeliculaCaracteristica;
 import sv.edu.ues.occ.ingenieria.prn335_2024.cine.entity.TipoPelicula;
-
-import jakarta.faces.application.FacesMessage;
 
 import java.io.Serializable;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+import java.util.regex.PatternSyntaxException;
 
 @Named
 @Dependent
@@ -35,6 +41,12 @@ public class FrmPeliculaCarracteristica extends AbstractFrm<PeliculaCaracteristi
 
     List<TipoPelicula> tipoPeliculaList;
     Long idPelicula;
+    Integer idTipoPeliculaSelecionada;
+    String expresionTipoPelicula;
+
+
+    TipoPelicula tipoPeliculaSelecionada;
+    Pelicula peliculaSelecionada;
 
     @Override
     public String paginaNombre() {
@@ -51,25 +63,55 @@ public class FrmPeliculaCarracteristica extends AbstractFrm<PeliculaCaracteristi
             Logger.getLogger(getClass().getName()).log(Level.SEVERE,e.getMessage(),e);
         }
     }
-    public void validarDatos(FacesContext fc , UIComponent components, Object valor) {
-//        UIInput input = (UIInput) components;
-//        String expresion =registro.getIdTipoPelicula().getExpresionRegular();
-//        System.out.println("el valor de es "+registro.getIdTipoPelicula().getExpresionRegular());
-//        if (expresion.equals(".") || expresion.isEmpty()) {
-//            return;
-//        }
-//        if (registro != null && registro.getIdPelicula() != null) {
-//            String nuevo = valor.toString();
-//            Pattern patron = Pattern.compile(this.registro.getIdTipoPelicula().getExpresionRegular());
-//            Matcher validator = patron.matcher(nuevo);
-//            if (validator.find()) {
-//                return;
-//            }
-//        }
-//
-//        ((UIInput) components).setValid(false);
-//        enviarMensaje("VALOR NO VALIDO",valor.toString(), FacesMessage.SEVERITY_ERROR);
+
+
+    public void validarValor(FacesContext fc, UIComponent component, Object value){
+        String inputText = (String) value;
+        System.out.println(expresionTipoPelicula);
+        if (inputText != null && !inputText.matches(expresionTipoPelicula) && !expresionTipoPelicula.equals(".")) {
+            FacesMessage msg = new FacesMessage("El texto no es válido.", "El texto debe ser uno de los valores permitidos: "+expresionTipoPelicula);
+            msg.setSeverity(FacesMessage.SEVERITY_ERROR);
+            throw new ValidatorException(msg);
+        }
     }
+
+
+    public String obtenerSugerenciaFormato() {
+        if (registro != null && registro.getIdTipoPelicula() != null) {
+            TipoPelicula tipoSeleccionado = registro.getIdTipoPelicula();
+            String sugerencia = "";
+
+            // Obtener el comentario del tipo de película si existe
+            if (tipoSeleccionado.getComentarios() != null && !tipoSeleccionado.getComentarios().isEmpty()) {
+                sugerencia = tipoSeleccionado.getComentarios();
+            } else {
+                // Si no hay comentario, construir una sugerencia basada en la expresión regular
+                String expresion = tipoSeleccionado.getExpresionRegular();
+                if (expresion != null && !expresion.isEmpty()) {
+                    sugerencia = "Formato requerido para " + tipoSeleccionado.getNombre() + ": ";
+
+                    // Ejemplos comunes de expresiones regulares y sus descripciones
+                    if (expresion.equals("[A-Z]")) {
+                        sugerencia += "Una letra mayúscula";
+                    } else if (expresion.equals("[0-9]+")) {
+                        sugerencia += "Solo números";
+                    } else if (expresion.equals("[A-Za-z]+")) {
+                        sugerencia += "Solo letras";
+                    } else if (expresion.equals("\\d{4}")) {
+                        sugerencia += "4 dígitos (ejemplo: 2024)";
+                    } else if (expresion.equals("^[A-Z]{1,5}$")) {
+                        sugerencia += "Entre 1 y 5 letras mayúsculas";
+                    } else {
+                        // Si no coincide con ningún patrón común, mostrar la expresión regular
+                        sugerencia += expresion;
+                    }
+                }
+            }
+            return sugerencia;
+        }
+        return "Seleccione un tipo de película";
+    }
+
 
     @Override
     public List<PeliculaCaracteristica> cargar(int first, int max) {
@@ -138,27 +180,41 @@ public class FrmPeliculaCarracteristica extends AbstractFrm<PeliculaCaracteristi
 
     @Override
     public void selecionarFila(SelectEvent<PeliculaCaracteristica> event) {
+
         FacesMessage mensaje=new FacesMessage("pelicula selecionada ", registro.getValor());
         fc.addMessage(null,mensaje);
         this.estado=ESTADO_CRUD.MODIFICAR;
+
+        if (registro!=null){
+            expresionTipoPelicula=registro.getIdTipoPelicula().getExpresionRegular();
+        }
     }
 
-    public Integer getIdTipoPeliculaSelecionada(){
-        if (registro!=null && registro.getIdPelicula()!=null){
-            enviarMensaje("",registro.getIdTipoPelicula().getNombre(),FacesMessage.SEVERITY_INFO);
-            return registro.getIdTipoPelicula().getIdTipoPelicula();
-        }
-        return null;
+    public Integer getIdTipoPeliculaSelecionada() {
+        return idTipoPeliculaSelecionada;
     }
-    public void setIdTipoPeliculaSelecionada(final Integer idTipoPelicula){
-        if (registro!=null && registro.getIdPelicula()!=null && !tipoPeliculaList.isEmpty()){
-            this.registro.setIdTipoPelicula(this.tipoPeliculaList.stream().filter(r->r.getIdTipoPelicula().equals(idTipoPelicula)).findFirst().orElse(null));
-        }
+
+    public void setIdTipoPeliculaSelecionada(Integer idTipoPeliculaSelecionada) {
+        this.idTipoPeliculaSelecionada = idTipoPeliculaSelecionada;
     }
 
     public void enviarMensaje(String mensaje, String detalle, FacesMessage.Severity level) {
         FacesMessage ms=new FacesMessage(level,detalle,mensaje);
         fc.addMessage(null,ms);
+    }
+
+    public void SelecionarTipoPelicula(){
+        TipoPelicula tp =tipoPeliculaList.stream().filter(p->p.getIdTipoPelicula().equals(idTipoPeliculaSelecionada)).findFirst().orElse(null);
+
+        if (tp==null && peliculaSelecionada!=null){
+            System.out.println("no se encontro tipo pelicula");
+            return;
+        }
+        System.out.println("tipo pelicula: "+tp.getNombre());
+        System.out.println(peliculaSelecionada.getNombre());
+        tipoPeliculaSelecionada=tp;
+        expresionTipoPelicula=tp.getExpresionRegular();
+
     }
 
     public List<TipoPelicula> getTipoPeliculaList() {
@@ -177,5 +233,42 @@ public class FrmPeliculaCarracteristica extends AbstractFrm<PeliculaCaracteristi
         this.idPelicula = idPelicula;
     }
 
-}
+    public Pelicula getPeliculaSelecionada() {
+        return peliculaSelecionada;
+    }
 
+    public void setPeliculaSelecionada(Pelicula peliculaSelecionada) {
+        this.peliculaSelecionada = peliculaSelecionada;
+    }
+
+    public TipoPelicula getTipoPeliculaSelecionada() {
+        return tipoPeliculaSelecionada;
+    }
+
+    public void setTipoPeliculaSelecionada(TipoPelicula tipoPeliculaSelecionada) {
+        this.tipoPeliculaSelecionada = tipoPeliculaSelecionada;
+    }
+
+    public String getExpresionTipoPelicula() {
+        return expresionTipoPelicula;
+    }
+
+    public void setExpresionTipoPelicula(String expresionTipoPelicula) {
+        this.expresionTipoPelicula = expresionTipoPelicula;
+    }
+
+    @Override
+    public void btnGuardarHandler(ActionEvent e) {
+        if (tipoPeliculaSelecionada==null){
+        tipoPeliculaSelecionada= tipoPeliculaList.getFirst();
+        }
+        PeliculaCaracteristica pc=new PeliculaCaracteristica();
+
+        pc.setIdTipoPelicula(tipoPeliculaSelecionada);
+        pc.setIdPelicula(peliculaSelecionada);
+        pc.setValor(registro.getValor());
+
+        registro=pc;
+        super.btnGuardarHandler(e);
+    }
+}

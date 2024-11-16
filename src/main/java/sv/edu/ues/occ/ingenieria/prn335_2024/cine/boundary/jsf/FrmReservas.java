@@ -161,9 +161,6 @@ public class FrmReservas extends AbstractFrm<Reserva> implements Serializable {
 
     }
     public void buscarAsientosByProgramacion() {
-        //buscar asientos asientos libres de una sala y programacion
-
-        //buscar todos los asientos que tiene una sala
         try {
         asientosDisponibles=asientoBean.findAsientosBySalaandProgramacion(programacionSelecionada.getIdSala(),programacionSelecionada);
             System.out.println("los asientos displonibles son " +asientosDisponibles.size());
@@ -212,6 +209,12 @@ public class FrmReservas extends AbstractFrm<Reserva> implements Serializable {
         programacionSelecionada = programaciones.stream().filter(p->p.getIdProgramacion().toString().equals(idProgramacion)).findFirst().orElse(null);
             SimpleDateFormat sdf = new SimpleDateFormat("HH:mm");
             fechaProgramacion="hora (" +sdf.format(programacionSelecionada.getDesde()) + "-" + sdf.format(programacionSelecionada.getHasta()) + ")";
+            PeliculaCaracteristica tp=programacionSelecionada.getIdPelicula().getPeliculaCaracteristicaList().stream().filter(p->p.getIdTipoPelicula().
+                    getNombre().equals("DURACION")).findFirst().orElse(null);
+
+        }
+        if (idProgramacion!=null){
+            System.out.println("nadasd");
 
         }
 

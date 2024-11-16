@@ -65,6 +65,7 @@ public class FrmSala extends AbstractFrm<Sala> implements Serializable {
     String fechaProgramacion;
     String idAsientoSelecionado;
     String idAsientoELiminado;
+
     //  Long idSucursalSelecionada;
 
 
@@ -86,7 +87,8 @@ public class FrmSala extends AbstractFrm<Sala> implements Serializable {
             }
             if(event.getTab().getTitle().equals("programaciones")){
                 frmProgramacion.setSalaSelecionada(registro);
-                System.out.println("se envio datos");
+                frmProgramacion.inicioRegistros();
+                System.out.println("se envio datos para programaciones");
             }
         }catch (Exception e){
             Logger.getLogger(FrmSala.class.getName()).log(Level.SEVERE, null, e);
@@ -312,6 +314,7 @@ public class FrmSala extends AbstractFrm<Sala> implements Serializable {
     public FrmProgramacion getFrmProgramacion() {
         return frmProgramacion;
     }
+
 
     public void setFrmProgramacion(FrmProgramacion frmProgramacion) {
         this.frmProgramacion = frmProgramacion;

@@ -27,7 +27,7 @@
                             selection="#{frmPelicula.registro}"
                             rendered="#{empty frmPelicula.registro}"
                >
-                  <p:ajax process="@this" update=":pnlDetalle @form" event="rowSelect"
+                  <p:ajax process="@this" update=":pnlDetalle frmTabla @form" event="rowSelect"
                           listener="#{frmPelicula.selecionarFila}"/>
                   <p:column headerText="ID"><h:outputText value="#{r.idPelicula}"/></p:column>
                   <p:column headerText="NOMBRE"><h:outputText value="#{r.nombre}"/></p:column>
@@ -44,7 +44,9 @@
          <p:tabView id="tabDetalle" rendered="#{not empty frmPelicula.registro}">
             <!--            generalidades-->
             <p:tab title="Generalidades" id="generalidades" cache="false" dynamic="true" closable="false">
-               <h:form id="frmDetalle">
+               <h:form id="frmDetalle" rendered="#{not empty frmPelicula.registro}">
+
+
                   <h:panelGrid columns="2">
                      <p:outputLabel value="ID" for="txtid"/>
                      <p:inputText id="txtid" value="#{frmPelicula.registro.idPelicula}" readonly="true"
@@ -56,14 +58,18 @@
                      <p:outputLabel value="Sinopsis" for="txtSinopsis"/>
                      <p:inputText id="txtSinopsis" value="#{frmPelicula.registro.sinopsis}" size="70"/>
                   </h:panelGrid>
+                  <h:panelGrid columns="#{frmSala.estado=='CREAR'?'1':'2'}">
                   <crud:botonesBottom frm="#{frmPelicula}" actualizar=":frmTabla  :pnlDetalle @form"/>
+                  </h:panelGrid>
                </h:form>
             </p:tab>
+
             <p:ajax process="@this" event="tabChange" listener="#{frmPelicula.cambiarTab}" update=":growl"/>
             <!--            Tipos-->
-            <p:tab title="Caracteristicas" id="Tipos" disabled="#{frmPelicula.estado!='MODIFICAR'}">
+            <p:tab title="Caracteristicas" id="Tipos" disabled="#{frmPelicula.estado eq 'CREAR'}">
                <h:panelGrid columns="2">
                   <h:panelGroup id="pnlTablaC">
+
                      <h:form id="frmTablaC">
                         <p:dataTable value="#{frmPelicula.frmPeliculaCarractreistica.modelo}" var="rc"
                                      lazy="true"
@@ -74,8 +80,9 @@
                                      selection="#{frmPelicula.frmPeliculaCarractreistica.registro}"
                                      rendered="#{frmPelicula.frmPeliculaCarractreistica.estado=='NINGUNO'}"
                         >
+
                            <p:ajax process="@this"
-                                   update=":growl tabDetalle:pnlTablaC tabDetalle:pnlDetalleC Tipos"
+                                   update=":growl @form pnlDetalleC"
                                    event="rowSelect"
                                    listener="#{frmPelicula.frmPeliculaCarractreistica.selecionarFila}"/>
 
@@ -85,15 +92,15 @@
 
                         </p:dataTable>
                         <crud:botonesTop frm="#{frmPelicula.frmPeliculaCarractreistica}"
-                                         actualizar=" :growl tabDetalle:pnlTablaC tabDetalle:pnlDetalleC Tipos"/>
+                                         actualizar=" :growl pnlTablaC pnlDetalleC"/>
 
                      </h:form>
                   </h:panelGroup>
 
                </h:panelGrid>
 
-               <h:panelGroup id="pnlDetalleC" rendered="#{frmPelicula.frmPeliculaCarractreistica.estado!='NINGUNO'}">
-                  <h:form id="frmDetalleC">
+               <h:panelGroup id="pnlDetalleC">
+                  <h:form id="frmDetalleC" rendered="#{not empty frmPelicula.frmPeliculaCarractreistica.registro}">
                      <h:panelGrid columns="2">
                         <p:outputLabel value="ID" for="txtid"/>
                         <p:inputText id="txtidPC"
@@ -106,15 +113,20 @@
                            <o:selectItems value="#{frmPelicula.frmPeliculaCarractreistica.tipoPeliculaList}"
                                           var="tp" itemLabel="#{tp.nombre}"
                                           itemValue="#{tp.idTipoPelicula}"/>
-                           <p:ajax event="change" update=":growl txtValorPC" process="@this"/>
+                           <p:ajax event="change" update=":growl pnlValorValues" process="@this" listener="#{frmPelicula.frmPeliculaCarractreistica.SelecionarTipoPelicula}"/>
                         </p:selectOneMenu>
 
                         <p:outputLabel value="Valor" for="txtValor"/>
-                        <p:inputText id="txtValorPC"
-                                     validator="#{frmPelicula.frmPeliculaCarractreistica.validarDatos}"
-                                     value="#{frmPelicula.frmPeliculaCarractreistica.registro.valor}"
-                                     size="70"/>
 
+                        <h:panelGroup id="pnlValorValues">
+                           <p:inputTextarea id="txtArValor"
+                                            validator="#{frmPelicula.frmPeliculaCarractreistica.validarValor}"
+                                            value="#{frmPelicula.frmPeliculaCarractreistica.registro.valor}"
+                                            size="70"/>
+                           <p:tooltip for="txtArValor" id="tpExTipoSala" value="#{frmPelicula.frmPeliculaCarractreistica.expresionTipoPelicula}"
+                                      position="right" showEvent="mouseover"
+                           />
+                        </h:panelGroup>
                      </h:panelGrid>
 
                         <crud:botonesBottom frm="#{frmPelicula.frmPeliculaCarractreistica}"

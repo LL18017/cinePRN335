@@ -196,20 +196,6 @@ public class FrmSalaCaracteristica extends AbstractFrm<SalaCaracteristica> imple
     @Override
     public void btnGuardarHandler(ActionEvent e) {
 
-//               TipoSala tp= tipoSalaList.stream().filter(ts->ts.getIdTipoSala().equals(idTipoSala)).findFirst().orElseGet(null);
-//
-//        System.out.println("el tipo sala es: "+tp.getExpresionRegular());
-//
-//        registro.setIdSala(idSalaSelecionada);
-//        try {
-//            TipoSala tipoSalaSelecionada = tipoSalaList.stream().filter(ts-> ts.getIdTipoSala().toString().equals(String.valueOf(tipoSala))).findFirst().orElse(null);
-//            registro.setIdTipoSala(tipoSalaSelecionada);
-//            super.btnGuardarHandler(e);
-//
-//        }catch (Exception ec){
-//            Logger.getLogger(getClass().getName()).log(Level.SEVERE, ec.getMessage(), ec);
-//        }
-//
 
         try {
             if (!tipoSalaList.isEmpty()) {

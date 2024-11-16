@@ -2,6 +2,7 @@ package sv.edu.ues.occ.ingenieria.prn335_2024.cine.boundary.jsf;
 
 import jakarta.faces.application.FacesMessage;
 import jakarta.faces.context.FacesContext;
+import jakarta.faces.event.ActionEvent;
 import jakarta.faces.view.ViewScoped;
 import jakarta.inject.Inject;
 import jakarta.inject.Named;
@@ -80,7 +81,15 @@ public class FrmPelicula extends AbstractFrm<Pelicula> implements Serializable {
     public String paginaNombre() {
         return "Pelicula";
     }
+    public void cambiarTab(TabChangeEvent event){
 
+        if(event.getTab().getTitle().equals("Caracteristicas")){
+            System.out.println("enviando");
+            frmPeliculaCarractreistica.setIdPelicula(registro.getIdPelicula());
+            frmPeliculaCarractreistica.inicioRegistros();
+            frmPeliculaCarractreistica.setPeliculaSelecionada(registro);
+        }
+    }
 
 
     public FrmPeliculaCarracteristica getFrmPeliculaCarractreistica() {
@@ -91,4 +100,11 @@ public class FrmPelicula extends AbstractFrm<Pelicula> implements Serializable {
         this.frmPeliculaCarractreistica = frmPeliculaCarractreistica;
     }
 
+
+    @Override
+    public void btnCancelarHandler(ActionEvent actionEvent) {
+        frmPeliculaCarractreistica.estado=ESTADO_CRUD.NINGUNO;
+        frmPeliculaCarractreistica.registro=null;
+        super.btnCancelarHandler(actionEvent);
+    }
 }
