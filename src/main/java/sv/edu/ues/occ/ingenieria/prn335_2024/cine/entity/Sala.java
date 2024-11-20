@@ -31,13 +31,13 @@ import java.util.List;
 @Table(name = "sala")
 @XmlRootElement
 @NamedQueries({
-    @NamedQuery(name = "Sala.findAll", query = "SELECT s FROM Sala s"),
-    @NamedQuery(name = "Sala.findSalBySucursal", query = "SELECT s FROM Sala s WHERE s.idSucursal = :sucursal"),
-    @NamedQuery(name = "Sala.findByIdSala", query = "SELECT s FROM Sala s WHERE s.idSala = :idSala"),
-    @NamedQuery(name = "Sala.findByNombre", query = "SELECT s FROM Sala s WHERE s.nombre = :nombre"),
-    @NamedQuery(name = "Sala.findByActivo", query = "SELECT s FROM Sala s WHERE s.activo = :activo"),
-    @NamedQuery(name = "Sala.findallProgramacionesByIdSala", query = "SELECT p FROM Programacion p  Where p.idSala.idSala= :SalaSelecionada"),
-    @NamedQuery(name = "Sala.findByObservaciones", query = "SELECT s FROM Sala s WHERE s.observaciones = :observaciones")})
+        @NamedQuery(name = "Sala.findAll", query = "SELECT s FROM Sala s"),
+        @NamedQuery(name = "Sala.findSalBySucursal", query = "SELECT s FROM Sala s WHERE s.idSucursal = :sucursal"),
+        @NamedQuery(name = "Sala.findByIdSala", query = "SELECT s FROM Sala s WHERE s.idSala = :idSala"),
+        @NamedQuery(name = "Sala.findByNombre", query = "SELECT s FROM Sala s WHERE s.nombre = :nombre"),
+        @NamedQuery(name = "Sala.findByActivo", query = "SELECT s FROM Sala s WHERE s.activo = :activo"),
+        @NamedQuery(name = "Sala.findallProgramacionesByIdSala", query = "SELECT p FROM Programacion p  Where p.idSala.idSala= :SalaSelecionada"),
+        @NamedQuery(name = "Sala.findByObservaciones", query = "SELECT s FROM Sala s WHERE s.observaciones = :observaciones")})
 public class Sala implements Serializable {
 
     private static final long serialVersionUID = 1L;

@@ -46,4 +46,9 @@ public class SucursalBean extends AbstractDataPersist<Sucursal> implements Seria
 
         return List.of();
     }
+
+    @Override
+    public String orderParameterQuery() {
+        return "idSucursal";
+    }
 }

@@ -1,67 +1,61 @@
 package sv.edu.ues.occ.ingenieria.prn335_2024.cine.boundary.jsf;
 
-import jakarta.enterprise.context.SessionScoped;
 import jakarta.faces.application.FacesMessage;
 import jakarta.faces.context.FacesContext;
 import jakarta.faces.event.ActionEvent;
 import jakarta.faces.view.ViewScoped;
 import jakarta.inject.Inject;
 import jakarta.inject.Named;
-import org.primefaces.event.NodeSelectEvent;
 import org.primefaces.event.SelectEvent;
-import org.primefaces.model.*;
-import org.w3c.dom.events.Event;
-import sv.edu.ues.occ.ingenieria.prn335_2024.cine.control.AbstractDataPersist;
-import sv.edu.ues.occ.ingenieria.prn335_2024.cine.control.ProgramacionBean;
-import sv.edu.ues.occ.ingenieria.prn335_2024.cine.control.SalaBean;
-import sv.edu.ues.occ.ingenieria.prn335_2024.cine.control.SucursalBean;
-import sv.edu.ues.occ.ingenieria.prn335_2024.cine.control.utils.TreeNodeBuilder;
-import sv.edu.ues.occ.ingenieria.prn335_2024.cine.entity.Programacion;
+import org.primefaces.event.TabChangeEvent;
+import sv.edu.ues.occ.ingenieria.prn335_2024.cine.control.*;
 import sv.edu.ues.occ.ingenieria.prn335_2024.cine.entity.Sala;
 import sv.edu.ues.occ.ingenieria.prn335_2024.cine.entity.Sucursal;
-import sv.edu.ues.occ.ingenieria.prn335_2024.cine.entity.TipoAsiento;
 
-import jakarta.faces.event.ValueChangeEvent;
-import java.io.Serializable;
-import java.util.Date;
 import java.util.List;
-import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
+
 
 @Named
 @ViewScoped
-public class FrmSala extends AbstractFrm<Sala> implements Serializable {
-
+public class FrmSala extends AbstractFrm<Sala> {
     @Inject
-    SalaBean sbean;
+    SalaBean salaBean;
+    @Inject
+    SucursalBean sucursalBean;
+    @Inject
+    ProgramacionBean programacionBean;
+    @Inject
+    SalaCaracteristicaBean salaCaracteristicaBean;
     @Inject
     FacesContext fc;
     @Inject
-    SucursalBean suBean;
+    FrmSalaCaracteristica frmSalaCaracteristica;
     @Inject
-    ProgramacionBean programacionBean;
-    private TreeNode root;
-    private TreeNode selectedNode;
-    Sucursal sucursalSelected;
-    List<Sucursal> sucursales;
-    List<Programacion> programaciones;
-    Date fecha;
+    FrmProgramacion frmProgramacion;
+    @Inject
+    FrmAsiento frmAsiento;
 
-    LazyDataModel modeloPeliculas;
 
-    //registro
-    private int sucursalId;
 
-    @Override
-    public String paginaNombre() {
-        return "Sala";
-    }
+    //propiedades de sala
+
+    Sucursal sucursalSelecionada;
+    Integer idSucursalSelecionada;
+    List<Sucursal> sucursalesDisponibles;
+
     @Override
     public void instanciarRegistro() {
-        this.registro=new Sala();
+            registro = new Sala();
+            registro.setIdSucursal(new Sucursal());
+            registro.setActivo(true);
+    }
+
+    @Override
+    public void inicioRegistros() {
+        super.inicioRegistros();
+        cargarSucursales();
     }
 
     @Override
@@ -71,161 +65,138 @@ public class FrmSala extends AbstractFrm<Sala> implements Serializable {
 
     @Override
     public AbstractDataPersist<Sala> getAbstractDataPersist() {
-        return sbean;
+        return salaBean;
     }
-
-
 
     @Override
     public String getIdByObject(Sala object) {
-        if (object.getIdSala() != null) {
+        if (object != null) {
             return object.getIdSala().toString();
         }
-        return null;
+        return "";
     }
 
     @Override
     public Sala getObjectById(String id) {
-        if (id != null && this.modelo!=null && this.modelo.getWrappedData()!=null) {
-            return modelo.getWrappedData().stream().
-                    filter(r->r.getIdSala().toString().equals(id)).findFirst().
-                    orElseGet(()->{
-         fc.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "no se ha encontrado ", " "));
-                return null;
-            });
+        if (id != null && modelo != null && modelo.getWrappedData() != null) {
+            return modelo.getWrappedData().stream()
+                    .filter(s -> s.getIdSala().toString().equals(id))
+                    .findFirst().orElse(null);
         }
         return null;
     }
 
     @Override
     public void selecionarFila(SelectEvent<Sala> event) {
-//        Logger.getLogger(getClass().getName()).log(Level.INFO,"NO");
 
-        Sala selectedSala = event.getObject();
-        if (selectedSala!=null) {
-         fc.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Selecionado ", selectedSala.getNombre()));
-        }else {
-         fc.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "no se ha encontrado ", " "));
-        }
-
-        this.registro=selectedSala;
+        enviarMensaje(FacesMessage.SEVERITY_INFO,"se ha selecionado: "+registro.getNombre());
         estado=ESTADO_CRUD.MODIFICAR;
-        getAllSucursales();
-        getProgramacionBYSala();
-    }
-
-
-    //otros
-    public void getAllSucursales(){
-        setSucursales(suBean.findAll());
-    }
-    public void sucursalSelecionada() {
-
-        Sucursal sucursalSElecionada=getSucursales().get(getSucursalId()-1);
-          if (getSucursalId()>0){
-              fc.addMessage(null, new FacesMessage(
-                      "Seleccionado", "se ha selecionado la sucursal: "+sucursalSElecionada));
-              this.registro.setIdSucursal(getSucursales().get(getSucursalId()-1));
-          }
-          getProgramacionBYSala();
-    }
-
-    public void getProgramacionBYSala(){
-        List<Programacion> programacionesBySala = this.programacionBean.getProgramacionByIdSala(registro);
-
-        setProgramaciones(programacionesBySala);
-        fc.addMessage(null, new FacesMessage("se han encontrado: ", String.valueOf(programacionesBySala.size())));
     }
 
     @Override
-    public void inicioRegistros() {
-        root= new TreeNodeBuilder<Sucursal,Sala>(suBean.getSucursalAnsSalas()).getRoot();
-        System.out.println(root.getChildCount());
-
-    }
-//    public void onNodeSelect(NodeSelectEvent event) {
-//        // Verificar si el nodo seleccionado es padre o hijo
-//        String nombre=(selectedNode.getData() instanceof Sucursal)?((Sucursal)selectedNode.getData()).getNombre():((Sala)selectedNode.getData()).getNombre();
-//        if (selectedNode != null) {
-//            nombre==null?"no hay":nombre;
-//            fc.addMessage(null,new FacesMessage("El nodo: ",nombre));
-//        }
-//    }
-
-
-
-
-
-
-    // Inicializar el árbol raíz
-
-    //getter y settter
-
-    public void hello(){
-        fc.addMessage(null,new FacesMessage("Hola Mundo"));
+    public String paginaNombre() {
+        return "Sala";
     }
 
-    public Sucursal getSucursalSelected() {
-        return sucursalSelected;
+    //funcionaliddaes de Sala
+
+    public void cambiarTab(TabChangeEvent e){
+        String titulo = e.getTab().getTitle();
+        if (titulo.equals("generalidades")){
+            inicioRegistros();
+        } else if (titulo.equals("Caracteristicas")) {
+            frmSalaCaracteristica.registro=null;
+            frmSalaCaracteristica.estado=ESTADO_CRUD.NINGUNO;
+            frmSalaCaracteristica.setSalaSelecionada(registro);
+            frmSalaCaracteristica.inicioRegistros();
+        }else if (titulo.equals("Asientos")) {
+            frmAsiento.registro=null;
+            frmAsiento.estado=ESTADO_CRUD.NINGUNO;
+            frmAsiento.setSalaSelecionada(registro);
+            frmAsiento.inicioRegistros();
+        } else if (titulo.equals("programaciones")) {
+            frmProgramacion.registro=null;
+            frmProgramacion.estado=ESTADO_CRUD.NINGUNO;
+            frmProgramacion.setSalaSelecionada(registro);
+            frmProgramacion.inicioRegistros();
+        }
+
+
     }
 
-    public void setSucursalSelected(Sucursal sucursalSelected) {
-        this.sucursalSelected = sucursalSelected;
+    public void cargarSucursales(){
+        try {
+            sucursalesDisponibles=sucursalBean.findAll();
+        }catch (Exception e) {
+            Logger.getLogger(getClass().getName()).log(Level.SEVERE,e.getMessage(),e);
+            enviarMensaje(FacesMessage.SEVERITY_ERROR,"Error al cargar datos de sucursal");
+        }
     }
 
-    public List<Sucursal> getSucursales() {
-        return sucursales;
+    public void pruebas(){
+        enviarMensaje(FacesMessage.SEVERITY_INFO,"selecionado "+sucursalSelecionada.getNombre());
+
     }
 
-    public void setSucursales(List<Sucursal> sucursales) {
-        this.sucursales = sucursales;
+
+
+    public Integer getIdSucursalSelecionada() {
+        return idSucursalSelecionada;
     }
 
-    public int getSucursalId() {
-        return sucursalId;
+    public void setIdSucursalSelecionada(Integer idSucursalSelecionada) {
+        this.idSucursalSelecionada = idSucursalSelecionada;
+        sucursalSelecionada=sucursalesDisponibles.stream().filter(s->s.getIdSucursal().equals(idSucursalSelecionada)).findFirst().orElse(null);
+        registro.setIdSucursal(sucursalSelecionada);
     }
 
-    public void setSucursalId(int sucursalId) {
-        this.sucursalId = sucursalId;
+    public Sucursal getSucursalSelecionada() {
+        return sucursalSelecionada;
     }
 
-    public Date getFecha() {
-        return fecha;
+    public void setSucursalSelecionada(Sucursal sucursalSelecionada) {
+        this.sucursalSelecionada = sucursalSelecionada;
     }
 
-    public void setFecha(Date fecha) {
-        this.fecha = fecha;
+    public List<Sucursal> getSucursalesDisponibles() {
+        return sucursalesDisponibles;
     }
 
-    public List<Programacion> getProgramaciones() {
-        return programaciones;
+    public void setSucursalesDisponibles(List<Sucursal> sucursalesDisponibles) {
+        this.sucursalesDisponibles = sucursalesDisponibles;
     }
 
-    public void setProgramaciones(List<Programacion> programaciones) {
-        this.programaciones = programaciones;
+    public FrmSalaCaracteristica getFrmSalaCaracteristica() {
+        return frmSalaCaracteristica;
     }
 
-    public LazyDataModel getModeloPeliculas() {
-        return modeloPeliculas;
+    public void setFrmSalaCaracteristica(FrmSalaCaracteristica frmSalaCaracteristica) {
+        this.frmSalaCaracteristica = frmSalaCaracteristica;
     }
 
-    public void setModeloProgramacion(LazyDataModel modeloPeliculas) {
-        this.modeloPeliculas = modeloPeliculas;
+    public FrmAsiento getFrmAsiento() {
+        return frmAsiento;
     }
 
-    public TreeNode getRoot() {
-        return root;
+    public void setFrmAsiento(FrmAsiento frmAsiento) {
+        this.frmAsiento = frmAsiento;
     }
 
-    public void setRoot(TreeNode root) {
-        this.root = root;
+    public FrmProgramacion getFrmProgramacion() {
+        return frmProgramacion;
     }
 
-    public TreeNode getSelectedNode() {
-        return selectedNode;
+    public void setFrmProgramacion(FrmProgramacion frmProgramacion) {
+        this.frmProgramacion = frmProgramacion;
     }
 
-    public void setSelectedNode(TreeNode selectedNode) {
-        this.selectedNode = selectedNode;
+    @Override
+    public void btnCancelarHandler(ActionEvent actionEvent) {
+        frmSalaCaracteristica.registro=null;
+        frmSalaCaracteristica.estado=ESTADO_CRUD.NINGUNO;
+        frmAsiento.registro=null;
+        frmAsiento.estado=ESTADO_CRUD.NINGUNO;
+        super.btnCancelarHandler(actionEvent);
     }
+
 }

@@ -22,4 +22,9 @@ public class FacturaBean extends AbstractDataPersist<Factura> implements Seriali
     public EntityManager getEntityManager() {
         return null;
     }
+
+    @Override
+    public String orderParameterQuery() {
+        return "idFactura";
+    }
 }

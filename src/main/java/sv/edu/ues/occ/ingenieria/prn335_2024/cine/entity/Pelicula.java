@@ -31,7 +31,6 @@ import java.util.List;
 @NamedQueries({
     @NamedQuery(name = "Pelicula.findAll", query = "SELECT p FROM Pelicula p"),
     @NamedQuery(name = "Pelicula.countAll", query = "SELECT Count(p) FROM Pelicula p"),
-    @NamedQuery(name = "Pelicula.findByIdPelicula", query = "SELECT p FROM Pelicula p WHERE p.idPelicula = :idPelicula"),
     @NamedQuery(name = "Pelicula.findByNombre", query = "SELECT p FROM Pelicula p WHERE p.nombre = :nombre"),
     @NamedQuery(name = "Pelicula.findBySinopsis", query = "SELECT p FROM Pelicula p WHERE p.sinopsis = :sinopsis")})
 public class Pelicula implements Serializable {
@@ -126,5 +125,6 @@ public class Pelicula implements Serializable {
     public String toString() {
         return "sv.edu.ues.occ.ingenieria.prn335_2024.cine.entity.Pelicula[ idPelicula=" + idPelicula + " ]";
     }
-    
+
+
 }

@@ -28,11 +28,15 @@ import java.io.Serializable;
 @Table(name = "pelicula_caracteristica")
 @XmlRootElement
 @NamedQueries({
+
+        @NamedQuery(name = "Caracteristica.findByPelicula", query = "SELECT c FROM PeliculaCaracteristica c WHERE c.idPeliculaCaracteristica = :peliculaId"),
+
     @NamedQuery(name = "PeliculaCaracteristica.findAll", query = "SELECT p FROM TipoPelicula p"),
     @NamedQuery(name = "PeliculaCaracteristica.findByIdPelicula", query = "SELECT pc FROM PeliculaCaracteristica pc WHERE pc.idPelicula.idPelicula = :idPelicula order by pc.idPeliculaCaracteristica asc "),
     @NamedQuery(name = "PeliculaCaracteristica.countByIdPelicula", query = "SELECT COUNT (pc.idPeliculaCaracteristica) FROM PeliculaCaracteristica pc WHERE pc.idPelicula.idPelicula = :idPelicula "),
     @NamedQuery(name = "PeliculaCaracteristica.findByValor", query = "SELECT p FROM PeliculaCaracteristica p WHERE p.valor = :valor")})
-public class PeliculaCaracteristica implements Serializable {
+
+    public class PeliculaCaracteristica implements Serializable {
 
     private static final long serialVersionUID = 1L;
     @Id
@@ -113,5 +117,6 @@ public class PeliculaCaracteristica implements Serializable {
     public String toString() {
         return "sv.edu.ues.occ.ingenieria.prn335_2024.cine.entity.PeliculaCaracteristica[ idPeliculaCaracteristica=" + idPeliculaCaracteristica + " ]";
     }
-    
+
+
 }

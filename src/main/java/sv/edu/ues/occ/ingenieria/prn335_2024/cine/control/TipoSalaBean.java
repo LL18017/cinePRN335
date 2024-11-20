@@ -26,4 +26,9 @@ public class TipoSalaBean extends AbstractDataPersist<TipoSala>{
     public EntityManager getEntityManager() {
         return em;
     }
+
+    @Override
+    public String orderParameterQuery() {
+        return "idTipoSala";
+    }
 }

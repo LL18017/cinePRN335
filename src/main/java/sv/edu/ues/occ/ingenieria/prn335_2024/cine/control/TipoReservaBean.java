@@ -25,4 +25,9 @@ public class TipoReservaBean extends AbstractDataPersist<TipoReserva> implements
     public EntityManager getEntityManager() {
         return em;
     }
+
+    @Override
+    public String orderParameterQuery() {
+        return "idTipoReserva";
+    }
 }

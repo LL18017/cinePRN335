@@ -20,4 +20,9 @@ public class ReservaBean extends AbstractDataPersist<Reserva> implements Seriali
     public EntityManager getEntityManager() {
         return em;
     }
+
+    @Override
+    public String orderParameterQuery() {
+        return "idReserva";
+    }
 }

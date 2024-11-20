@@ -1,8 +1,8 @@
 package sv.edu.ues.occ.ingenieria.prn335_2024.cine.boundary.jsf;
 
-import jakarta.el.MethodExpression;
 import jakarta.faces.application.FacesMessage;
 import jakarta.faces.context.FacesContext;
+import jakarta.faces.event.ActionEvent;
 import jakarta.faces.view.ViewScoped;
 import jakarta.inject.Inject;
 import jakarta.inject.Named;
@@ -12,15 +12,15 @@ import sv.edu.ues.occ.ingenieria.prn335_2024.cine.control.AbstractDataPersist;
 import sv.edu.ues.occ.ingenieria.prn335_2024.cine.control.PeliculaBean;
 import sv.edu.ues.occ.ingenieria.prn335_2024.cine.entity.Pelicula;
 
-import javax.faces.component.UIComponent;
-import javax.faces.component.UIInput;
+import jakarta.faces.component.UIComponent;
+import jakarta.faces.component.UIInput;
 import java.io.Serializable;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.regex.Pattern;
 
-@Named
 @ViewScoped
+@Named
 public class FrmPelicula extends AbstractFrm<Pelicula> implements Serializable {
     @Inject
     PeliculaBean pBean;
@@ -81,7 +81,15 @@ public class FrmPelicula extends AbstractFrm<Pelicula> implements Serializable {
     public String paginaNombre() {
         return "Pelicula";
     }
+    public void cambiarTab(TabChangeEvent event){
 
+        if(event.getTab().getTitle().equals("Caracteristicas")){
+            System.out.println("enviando");
+            frmPeliculaCarractreistica.setIdPelicula(registro.getIdPelicula());
+            frmPeliculaCarractreistica.inicioRegistros();
+            frmPeliculaCarractreistica.setPeliculaSelecionada(registro);
+        }
+    }
 
 
     public FrmPeliculaCarracteristica getFrmPeliculaCarractreistica() {
@@ -92,11 +100,11 @@ public class FrmPelicula extends AbstractFrm<Pelicula> implements Serializable {
         this.frmPeliculaCarractreistica = frmPeliculaCarractreistica;
     }
 
-    public void cambiarTab(TabChangeEvent tce) {
-        if (tce.getTab().getTitle().equals("Tipos")){
-            if (this.registro.getIdPelicula()!=null && this.frmPeliculaCarractreistica!=null){
-                frmPeliculaCarractreistica.setIdPelicula(this.registro.getIdPelicula());
-            }
-        }
+
+    @Override
+    public void btnCancelarHandler(ActionEvent actionEvent) {
+        frmPeliculaCarractreistica.estado=ESTADO_CRUD.NINGUNO;
+        frmPeliculaCarractreistica.registro=null;
+        super.btnCancelarHandler(actionEvent);
     }
 }

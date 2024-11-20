@@ -1,9 +1,5 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
-package sv.edu.ues.occ.ingenieria.prn335_2024.cine.entity;
 
+package sv.edu.ues.occ.ingenieria.prn335_2024.cine.entity;
 import jakarta.persistence.Basic;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -34,14 +30,16 @@ import java.util.List;
 @Table(name = "programacion")
 @XmlRootElement
 @NamedQueries({
-    @NamedQuery(name = "Programacion.findAll", query = "SELECT p FROM Programacion p"),
-    @NamedQuery(name = "Programacion.CountAll", query = "SELECT COUNT (p) FROM Programacion p"),
-    @NamedQuery(name = "Programacion.findByIdProgramacion", query = "SELECT p FROM Programacion p WHERE p.idProgramacion = :idProgramacion"),
-    @NamedQuery(name = "Programacion.findByDesde", query = "SELECT p FROM Programacion p WHERE p.desde = :desde"),
-    @NamedQuery(name = "Programacion.findByHasta", query = "SELECT p FROM Programacion p WHERE p.hasta = :hasta"),
-    @NamedQuery(name = "Programacion.findProgramacionBySala", query = "SELECT p FROM Programacion p WHERE p.idSala = :sala"),
-    @NamedQuery(name = "Programacion.findProgramacionBySala", query = "SELECT p FROM Programacion p WHERE p.idSala = :sala"),
-    @NamedQuery(name = "Programacion.findByComentarios", query = "SELECT p FROM Programacion p WHERE p.comentarios = :comentarios")})
+        @NamedQuery(name = "Programacion.findAll", query = "SELECT p FROM Programacion p"),
+        @NamedQuery(name = "Programacion.CountAll", query = "SELECT COUNT (p) FROM Programacion p"),
+        @NamedQuery(name = "Programacion.findByFecha",query = "SELECT p FROM Programacion p WHERE FUNCTION('DATE', p.desde) = :fecha AND FUNCTION('DATE', p.hasta) = :fecha"),
+        @NamedQuery(name = "Programacion.findByIdProgramacion", query = "SELECT p FROM Programacion p WHERE p.idProgramacion = :idProgramacion"),
+        @NamedQuery(name = "Programacion.findByDesde", query = "SELECT p FROM Programacion p WHERE p.desde = :desde"),
+        @NamedQuery(name = "Programacion.findByHasta", query = "SELECT p FROM Programacion p WHERE p.hasta = :hasta"),
+        @NamedQuery(name = "Programacion.findProgramacionBySala", query = "SELECT p FROM Programacion p WHERE p.idSala = :sala"),
+        @NamedQuery(name = "Programacion.findProgramacionBySalaRangoTiempo", query = "SELECT p FROM Programacion p WHERE p.idSala = :sala AND p.desde BETWEEN :fechaInicio AND :fechaFin"),
+        @NamedQuery(name = "Programacion.findAsientoParaReserva", query = "SELECT a FROM Sala s,Asiento a where a.asientoCaracteristicaList = a "),
+        @NamedQuery(name = "Programacion.findByComentarios", query = "SELECT p FROM Programacion p WHERE p.comentarios = :comentarios")})
 public class Programacion implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -156,5 +154,5 @@ public class Programacion implements Serializable {
     public String toString() {
         return "sv.edu.ues.occ.ingenieria.prn335_2024.cine.entity.Programacion[ idProgramacion=" + idProgramacion + " ]";
     }
-    
+
 }

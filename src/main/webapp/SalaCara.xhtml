@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="jakarta.faces.html"
+                xmlns:ui="jakarta.faces.facelets"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:crud="jakarta.faces.composite/crud"
+                template="WEB-INF/templates/principal.xhtml"
+>
+    <ui:define name="titulo">
+        #{frmSalaCaracteristica.paginaNombre()}
+    </ui:define>
+
+    <ui:define name="cuerpo">
+        <h:panelGrid>
+            <h:panelGroup id="pnlTabla">
+                <h:form id="frmTabla">
+                    <p:dataTable value="#{frmSalaCaracteristica.modelo}" var="r"
+                                 lazy="true"
+                                 paginator="true"
+                                 rows="5"
+                                 first="0"
+                                 selectionMode="single"
+                                 selection="#{frmSalaCaracteristica.registro}"
+                                 rendered="#{empty frmSalaCaracteristica.registro}"
+                    >
+                        <p:ajax process="@this" update=":pnlDetalle @form" event="rowSelect"
+                                listener="#{frmSalaCaracteristica.selecionarFila}"/>
+                        <p:column headerText="ID"><h:outputText value="#{r.idSalaCaracteristica}"/></p:column>
+
+                    </p:dataTable>
+                    <crud:botonesTop frm="#{frmSalaCaracteristica}"/>
+                    <p:growl id="growl" showDetail="true" sticky="false" life="1500"/>
+                </h:form>
+            </h:panelGroup>
+        </h:panelGrid>
+    </ui:define>
+</ui:composition>

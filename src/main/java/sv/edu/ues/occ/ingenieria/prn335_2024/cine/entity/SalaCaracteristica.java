@@ -28,9 +28,14 @@ import java.io.Serializable;
 @Table(name = "sala_caracteristica")
 @XmlRootElement
 @NamedQueries({
-    @NamedQuery(name = "SalaCaracteristica.findAll", query = "SELECT s FROM SalaCaracteristica s"),
-    @NamedQuery(name = "SalaCaracteristica.findByIdSalaCaracteristica", query = "SELECT s FROM SalaCaracteristica s WHERE s.idSalaCaracteristica = :idSalaCaracteristica"),
-    @NamedQuery(name = "SalaCaracteristica.findByValor", query = "SELECT s FROM SalaCaracteristica s WHERE s.valor = :valor")})
+        @NamedQuery(name = "SalaCaracteristica.findAll", query = "SELECT s FROM SalaCaracteristica s"),
+        @NamedQuery(name = "SalaCaracteristica.findAllTipoSala", query = "SELECT ts FROM TipoSala ts"),
+        @NamedQuery(name = "SalaCaracteristica.findByIdCaracteristicasBySala", query = "SELECT sc FROM SalaCaracteristica sc WHERE sc.idSala.idSala = :idSala"),
+        @NamedQuery(name = "SalaCaracteristica.findByIdSalaCaracteristica", query = "SELECT s FROM SalaCaracteristica s WHERE s.idSalaCaracteristica = :idSalaCaracteristica"),
+        @NamedQuery(name = "SalaCaracteristica.countByIdSalaCaracteristica", query = "SELECT COUNT (sc.idSalaCaracteristica) FROM SalaCaracteristica sc WHERE sc.idSala.idSala = :idSala"),
+        @NamedQuery(name = "SalaCaracteristica.findByValor", query = "SELECT s FROM SalaCaracteristica s WHERE s.valor = :valor"),
+        @NamedQuery(name = "SalaCaracteristica.findByIdSala", query = "SELECT s FROM SalaCaracteristica s WHERE s.idSala = :idSala"),
+})
 public class SalaCaracteristica implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -85,7 +90,9 @@ public class SalaCaracteristica implements Serializable {
     }
 
     public void setIdTipoSala(TipoSala idTipoSala) {
+
         this.idTipoSala = idTipoSala;
+
     }
 
     @Override

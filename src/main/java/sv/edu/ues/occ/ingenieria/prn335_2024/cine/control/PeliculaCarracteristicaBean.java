@@ -26,6 +26,10 @@ public class PeliculaCarracteristicaBean extends AbstractDataPersist<PeliculaCar
     public EntityManager getEntityManager() {
         return em;
     }
+
+
+
+
     public List<PeliculaCaracteristica> findByIdPelicula(final long idPeicula,int first,int last) {
         try {
             TypedQuery<PeliculaCaracteristica> q = em.createNamedQuery("PeliculaCaracteristica.findByIdPelicula", PeliculaCaracteristica.class);
@@ -58,5 +62,10 @@ public class PeliculaCarracteristicaBean extends AbstractDataPersist<PeliculaCar
             Logger.getLogger(getClass().getName()).log(Level.SEVERE, e.getMessage(), e);
         }
         return 0;
+    }
+
+    @Override
+    public String orderParameterQuery() {
+        return "idPeliculaCaracteristica";
     }
 }

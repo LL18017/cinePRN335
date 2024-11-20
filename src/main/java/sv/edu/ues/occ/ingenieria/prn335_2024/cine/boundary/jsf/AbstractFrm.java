@@ -56,6 +56,8 @@ public abstract class AbstractFrm<T> implements Serializable {
       inicioRegistros();
    }
    public void  inicioRegistros(){
+
+      System.out.println("hola 2");
       this.modelo=new LazyDataModel<T>() {
 
          //se indica cuantas filas tiene el entity atravas del metod count
@@ -70,27 +72,7 @@ public abstract class AbstractFrm<T> implements Serializable {
 
             return result;
          }
-         //se cargarn elelmetos de acuerdo al findrabge
-//         public List<T> load(int init, int max, Map<String, SortMeta> map, Map<String, FilterMeta> map1) {
-//
-//           if (init >= 0 && max > 0){
-//
-//              try {
-//                 AbstractDataPersist<T> clBean=getAbstractDataPersist();
-//
-////                 implementacion para ordenar
-//                 if (!map.isEmpty()){
-//                    String CampoOrden=map.values().stream().findFirst().get().getField();
-//                    String direcion=map.values().stream().findFirst().get().getOrder().toString();
-//                    return clBean.findRange(init,max,CampoOrden,direcion);
-//                 }
-//                 return clBean.findRange(init,max);
-//              }catch (Exception e) {
-//                 Logger.getLogger(AbstractFrm.class.getName()).log(Level.SEVERE, null, e);
-//              }
-//           }
-//            return List.of();
-//         }
+
          @Override
          public List<T> load(int init, int max, Map<String, SortMeta> map, Map<String, FilterMeta> map1) {
 
@@ -171,6 +153,13 @@ public abstract class AbstractFrm<T> implements Serializable {
       this.estado = ESTADO_CRUD.NINGUNO;
       this.registro = null;
 
+   }
+
+   public void enviarMensaje(FacesMessage.Severity severity,String mensaje){
+      FacesMessage mensaje1=new FacesMessage();
+      mensaje1.setSeverity(severity);
+      mensaje1.setSummary(mensaje);
+      getFC().addMessage(null,mensaje1);
    }
 
    public void btneEliminarHandler(ActionEvent ex) {
