@@ -15,12 +15,17 @@ import java.util.logging.Logger;
 @Stateless
 @LocalBean
 public class AsientoBean extends AbstractDataPersist<Asiento> implements Serializable {
+
     @PersistenceContext(unitName = "cinePU")
     EntityManager em;
     public AsientoBean() {
         super(Asiento.class);
     }
 
+    @Override
+    public String orderParameterQuery() {
+        return "idAsiento";
+    }
     @Override
     public EntityManager getEntityManager() {
         return em;
@@ -73,6 +78,20 @@ public class AsientoBean extends AbstractDataPersist<Asiento> implements Seriali
         }
         return List.of();
     }
+
+    public List<AsientoCaracteristica> findCaracteristicaByIdAsiento(Asiento asiento) {
+        try {
+            TypedQuery<AsientoCaracteristica> q = em.createNamedQuery("Asiento.AsientoCaracteristicaByIdASiento", AsientoCaracteristica.class);
+            q.setFirstResult(0);
+            q.setMaxResults(Integer.MAX_VALUE);
+            q.setParameter("idAsiento", asiento.getIdAsiento());
+            return q.getResultList();
+        }catch (Exception e){
+            Logger.getLogger(getClass().getName()).log(Level.SEVERE,e.getMessage(),e);
+        }
+        return List.of();
+    }
+
 
 
 }

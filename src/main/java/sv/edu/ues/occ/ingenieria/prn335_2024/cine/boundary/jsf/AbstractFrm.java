@@ -155,6 +155,13 @@ public abstract class AbstractFrm<T> implements Serializable {
 
    }
 
+   public void enviarMensaje(FacesMessage.Severity severity,String mensaje){
+      FacesMessage mensaje1=new FacesMessage();
+      mensaje1.setSeverity(severity);
+      mensaje1.setSummary(mensaje);
+      getFC().addMessage(null,mensaje1);
+   }
+
    public void btneEliminarHandler(ActionEvent ex) {
       FacesMessage mensaje=new FacesMessage();;
       try {

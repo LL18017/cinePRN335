@@ -30,7 +30,7 @@ import java.io.Serializable;
 @NamedQueries({
     @NamedQuery(name = "AsientoCaracteristica.findAll", query = "SELECT a FROM AsientoCaracteristica a"),
     @NamedQuery(name = "AsientoCaracteristica.countAll", query = "SELECT COUNT(a) FROM AsientoCaracteristica a"),
-    @NamedQuery(name = "AsientoCaracteristica.findByIdAsientoCaracteristica", query = "SELECT a FROM AsientoCaracteristica a WHERE a.idAsiento.idSala.idSala = :idAsientoCaracteristica"),
+    @NamedQuery(name = "AsientoCaracteristica.findByIdAsientoCaracteristica", query = "SELECT a FROM AsientoCaracteristica a WHERE a.idAsientoCaracteristica= :idAsientoCaracteristica"),
     @NamedQuery(name = "AsientoCaracteristica.findBySalaId", query = "SELECT a FROM AsientoCaracteristica a WHERE a.idAsiento.idSala = :idSala"),
     @NamedQuery(name = "AsientoCaracteristica.findCaracteristicaByIdAsiento", query = "SELECT a FROM AsientoCaracteristica a WHERE a.idAsiento.idAsiento = :idAsiento"),
     @NamedQuery(name = "AsientoCaracteristica.countCaracteristicaByIdAsiento", query = "SELECT COUNT(a.idAsientoCaracteristica) FROM AsientoCaracteristica a WHERE a.idAsiento.idAsiento = :idAsiento"),

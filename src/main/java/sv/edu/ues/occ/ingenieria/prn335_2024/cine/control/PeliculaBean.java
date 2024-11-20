@@ -64,4 +64,8 @@ public class PeliculaBean extends AbstractDataPersist<Pelicula> implements Seria
         }
     }
 
+    @Override
+    public String orderParameterQuery() {
+        return "idPelicula";
+    }
 }

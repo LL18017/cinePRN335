@@ -1,18 +1,22 @@
 package sv.edu.ues.occ.ingenieria.prn335_2024.cine.boundary.jsf;
 
 import jakarta.faces.application.FacesMessage;
+import jakarta.faces.component.UIComponent;
 import jakarta.faces.context.FacesContext;
 import jakarta.faces.event.ActionEvent;
+import jakarta.faces.validator.ValidatorException;
 import jakarta.faces.view.ViewScoped;
 import jakarta.inject.Inject;
 import jakarta.inject.Named;
 import org.primefaces.event.SelectEvent;
 import sv.edu.ues.occ.ingenieria.prn335_2024.cine.control.AbstractDataPersist;
 import sv.edu.ues.occ.ingenieria.prn335_2024.cine.control.AsientoCaracteristicaBean;
+import sv.edu.ues.occ.ingenieria.prn335_2024.cine.control.TipoAsientoBean;
 import sv.edu.ues.occ.ingenieria.prn335_2024.cine.entity.*;
 
 
 import java.io.Serializable;
+import java.sql.SQLOutput;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -25,23 +29,35 @@ public class FrmAsientoCaracteristica extends AbstractFrm<AsientoCaracteristica>
     @Inject
     AsientoCaracteristicaBean asientoCaracteristicaBean;
     @Inject
+    TipoAsientoBean tipoAsientoBean;
+    @Inject
     FacesContext fc;
 
 
+    Asiento AsientoSelecionado;
+    TipoAsiento tipoAsientoSelecionado;
+    Integer idTipoAsientoSelecionado;
     List<TipoAsiento> tipoAsientoslist;
-    Integer idTipoAsiento;
-    Asiento idAsientoSelecionado;
+    String expresionTipoAsiento;
 
+    Integer idAsientoCaracteristica;
+
+    Integer temporan;
     @Override
     public void instanciarRegistro() {
+        System.out.println("CreandoInstancias");
         registro = new AsientoCaracteristica();
+        registro.setIdAsiento(AsientoSelecionado);
+        registro.setIdTipoAsiento(new TipoAsiento());
+        expresionTipoAsiento=tipoAsientoslist.getFirst().getExpresionRegular();
+
     }
 
     @Override
     public void inicioRegistros() {
         super.inicioRegistros();
         try {
-            this.tipoAsientoslist=asientoCaracteristicaBean.findAllTiposAsiento();
+            this.tipoAsientoslist=tipoAsientoBean.findAllTipoAsiento();
         }catch (Exception e){
             Logger.getLogger(getClass().getName()).log(Level.SEVERE, e.getMessage(), e);
         }
@@ -99,18 +115,43 @@ public class FrmAsientoCaracteristica extends AbstractFrm<AsientoCaracteristica>
 
     @Override
     public int contar() {
-        return asientoCaracteristicaBean.countByIdAsientoCaracteristica(idAsientoSelecionado);
+        return asientoCaracteristicaBean.countByIdAsientoCaracteristica(AsientoSelecionado);
     }
 
     @Override
     public List<AsientoCaracteristica> cargar(int first, int max) {
-        return asientoCaracteristicaBean.findByIdAsiento(idAsientoSelecionado, first, max);
+        return asientoCaracteristicaBean.findByIdAsiento(AsientoSelecionado, first, max);
     }
 
+    public void onTipoAsientoChange(){
+        expresionTipoAsiento=tipoAsientoSelecionado.getExpresionRegular();
+        enviarMensaje(FacesMessage.SEVERITY_INFO,"se ha selecionado un tipo de asiento: "+tipoAsientoSelecionado.getNombre());
+        registro.setIdTipoAsiento(tipoAsientoSelecionado);
+//        estado=ESTADO_CRUD.MODIFICAR;
+//        estado=ESTADO_CRUD.CREAR;
 
+    }
 
+    public void validarTexto(FacesContext context, UIComponent component, Object value) throws ValidatorException {
+        String inputText = (String) value;
+        System.out.println("la expresion es " +expresionTipoAsiento);
+        if (inputText != null && !inputText.matches(expresionTipoAsiento) && !expresionTipoAsiento.equals(".")) {
+            FacesMessage msg = new FacesMessage("El texto no es válido.", "El texto debe ser uno de los valores permitidos: "+expresionTipoAsiento);
+            msg.setSeverity(FacesMessage.SEVERITY_ERROR);
+            throw new ValidatorException(msg);
+        }
+    }
 
     //Getters and Setters-------------------------------------------
+
+
+    public String getExpresionTipoAsiento() {
+        return expresionTipoAsiento;
+    }
+
+    public void setExpresionTipoAsiento(String expresionTipoAsiento) {
+        this.expresionTipoAsiento = expresionTipoAsiento;
+    }
 
     public List<TipoAsiento> getTipoAsientoslist() {
         return tipoAsientoslist;
@@ -120,52 +161,64 @@ public class FrmAsientoCaracteristica extends AbstractFrm<AsientoCaracteristica>
         this.tipoAsientoslist = tipoAsientoslist;
     }
 
-    public Integer getIdTipoAsiento() {
-        return idTipoAsiento;
+    public Integer getIdTipoAsientoSelecionado() {
+        return idTipoAsientoSelecionado;
     }
 
-    public void setIdTipoAsiento(Integer idTipoAsiento) {
-        this.idTipoAsiento = idTipoAsiento;
+    public void setIdTipoAsientoSelecionado(Integer idTipoAsientoSelecionado) {
+        this.idTipoAsientoSelecionado = idTipoAsientoSelecionado;
+        tipoAsientoSelecionado=tipoAsientoslist.stream().filter(ta->ta.getIdTipoAsiento().equals(idTipoAsientoSelecionado)).findFirst().orElse(null);
     }
 
-    public Asiento getIdAsientoSelecionado() {
-        return idAsientoSelecionado;
+    public TipoAsiento getTipoAsientoSelecionado() {
+        return tipoAsientoSelecionado;
     }
 
-    public void setIdAsientoSelecionado(Asiento idAsientoSelecionado) {
-        this.idAsientoSelecionado = idAsientoSelecionado;
-
+    public void setTipoAsientoSelecionado(TipoAsiento tipoAsientoSelecionado) {
+        this.tipoAsientoSelecionado = tipoAsientoSelecionado;
     }
 
-    //Botones -----------------------------------------------------
+    public Asiento getAsientoSelecionado() {
+        return AsientoSelecionado;
+    }
 
+    public Integer getIdAsientoCaracteristica() {
+        return idAsientoCaracteristica;
+    }
+
+    public void setIdAsientoCaracteristica(Integer idAsientoCaracteristica) {
+        this.idAsientoCaracteristica = idAsientoCaracteristica;
+        registro=asientoCaracteristicaBean.findByIdAsientoCaracterisctica(idAsientoCaracteristica);
+    }
+
+    public void setAsientoSelecionado(Asiento asientoSelecionado) {
+        AsientoSelecionado = asientoSelecionado;
+    }
+
+    public Integer getTemporan() {
+        return temporan;
+    }
+
+    public void setTemporan(Integer temporan) {
+        this.temporan = temporan;
+    }
+
+    public void probar() {
+        System.out.println("sirve");
+    }
+    public void onAsientoCaracteristicaChange(){
+//        enviarMensaje(FacesMessage.SEVERITY_INFO,"SELECION");
+        estado=ESTADO_CRUD.MODIFICAR;
+    }
     @Override
-    public void btnGuardarHandler(ActionEvent e) {
-        registro.setIdAsiento(idAsientoSelecionado);
-        try {
-            TipoAsiento idAsientoSelecionado = tipoAsientoslist.stream().filter(ts-> ts.getIdTipoAsiento().
-                    toString().equals(String.valueOf(idTipoAsiento))).findFirst().orElse(null);
-            registro.setIdTipoAsiento(idAsientoSelecionado);
-            super.btnGuardarHandler(e);
-
-        }catch (Exception ec){
-            Logger.getLogger(getClass().getName()).log(Level.SEVERE, ec.getMessage(), ec);
-        }
-
+    public void btnNuevoHandler(ActionEvent actionEvent) {
+        super.btnNuevoHandler(actionEvent);
     }
 
     @Override
     public void btnModificarHandler(ActionEvent ex) {
-        registro.setIdAsiento(idAsientoSelecionado);
-        try {
-            if (!tipoAsientoslist.isEmpty()){
-                TipoAsiento idAsientoSelecionado = tipoAsientoslist.stream().filter(ts-> ts.getIdTipoAsiento().
-                        toString().equals(String.valueOf(idTipoAsiento))).findFirst().orElse(null);
-                registro.setIdTipoAsiento(idAsientoSelecionado);
-                super.btnModificarHandler(ex);
-            }
-        }catch (Exception ec){
-            Logger.getLogger(getClass().getName()).log(Level.SEVERE, ec.getMessage(), ec);
-        }
+
+        super.btnModificarHandler(ex);
     }
 }
+

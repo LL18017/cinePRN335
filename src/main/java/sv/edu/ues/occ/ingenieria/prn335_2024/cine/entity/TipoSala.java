@@ -68,4 +68,5 @@ public class TipoSala {
         this.expresionRegular = expresionRegular;
     }
 
+
 }

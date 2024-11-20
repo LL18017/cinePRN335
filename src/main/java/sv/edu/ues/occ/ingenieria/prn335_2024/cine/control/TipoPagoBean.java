@@ -21,4 +21,9 @@ public class TipoPagoBean extends AbstractDataPersist<TipoPago> implements Seria
     public EntityManager getEntityManager() {
         return em;
     }
+
+    @Override
+    public String orderParameterQuery() {
+        return "idTipoPago";
+    }
 }

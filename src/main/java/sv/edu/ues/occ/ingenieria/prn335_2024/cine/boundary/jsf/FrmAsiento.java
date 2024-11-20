@@ -1,6 +1,7 @@
 package sv.edu.ues.occ.ingenieria.prn335_2024.cine.boundary.jsf;
 
 import jakarta.annotation.PostConstruct;
+import jakarta.enterprise.context.Dependent;
 import jakarta.faces.application.FacesMessage;
 import jakarta.faces.context.FacesContext;
 import jakarta.faces.event.ActionEvent;
@@ -9,6 +10,8 @@ import jakarta.inject.Named;
 import org.primefaces.event.SelectEvent;
 import sv.edu.ues.occ.ingenieria.prn335_2024.cine.control.AbstractDataPersist;
 import sv.edu.ues.occ.ingenieria.prn335_2024.cine.control.AsientoBean;
+import sv.edu.ues.occ.ingenieria.prn335_2024.cine.control.AsientoCaracteristicaBean;
+import sv.edu.ues.occ.ingenieria.prn335_2024.cine.control.TipoAsientoBean;
 import sv.edu.ues.occ.ingenieria.prn335_2024.cine.entity.*;
 
 import jakarta.faces.view.ViewScoped;
@@ -19,24 +22,37 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 @Named
-@ViewScoped
+@Dependent
 public class FrmAsiento extends AbstractFrm<Asiento> implements Serializable {
 
     @Inject
     AsientoBean asientoBean;
     @Inject
+    TipoAsientoBean tipoAsientoBean;
+    @Inject
+    AsientoCaracteristicaBean asientoCaracteristicaBean;
+    @Inject
     FacesContext fc;
     @Inject
     FrmAsientoCaracteristica frmAsientoCaracteristica;
+    @Inject
+    FrmTipoAsiento frmTipoAsiento;
 
-    Sala idSalaSelecionada;
-    List<AsientoCaracteristica> asientoCaracteristicaList;
-    Integer idAsientoCaracteristica;
+    Sala SalaSelecionada;
+
+    Asiento AsientoSelecionado;
+    Integer idAsientoSelecionado;
+
+    List<TipoAsiento> tipoAsientoList;
+    TipoAsiento tipoAsientoSelecionado;
+    Integer idTipoAsientoSelecionado;
+
+    Integer idAsientoCaracteristicaSelecionado;
 
     @Override
     public void instanciarRegistro() {
         registro = new Asiento();
-
+        registro.setIdSala(SalaSelecionada);
     }
 
     @PostConstruct
@@ -44,9 +60,10 @@ public class FrmAsiento extends AbstractFrm<Asiento> implements Serializable {
     public void inicioRegistros() {
         super.inicioRegistros();
         try {
-            this.asientoCaracteristicaList=asientoBean.findAllAsientoCaracteristica();
+            this.tipoAsientoList=tipoAsientoBean.findAll();
         }catch (Exception e){
             Logger.getLogger(getClass().getName()).log(Level.SEVERE, e.getMessage(), e);
+            enviarMensaje(FacesMessage.SEVERITY_ERROR,"error al cargar datos de asiento");
         }
     }
 
@@ -81,16 +98,12 @@ public class FrmAsiento extends AbstractFrm<Asiento> implements Serializable {
     @Override
     public void selecionarFila(SelectEvent<Asiento> event) {
         Asiento asientoSelected =  event.getObject();
-        if (asientoSelected!=null){
-            FacesMessage mensaje=new FacesMessage("Se ha Seleccionado el Asiento°",registro.getNombre());
-            fc.addMessage(null, mensaje);
-            this.registro=asientoSelected;
+            enviarMensaje(FacesMessage.SEVERITY_INFO,"has selecionado el asiento: "+asientoSelected.getNombre());
             this.estado=ESTADO_CRUD.MODIFICAR;
-            frmAsientoCaracteristica.estado=ESTADO_CRUD.MODIFICAR;
-            frmAsientoCaracteristica.setIdAsientoSelecionado(registro);
-        }else {
-            fc.addMessage(null,  new FacesMessage(FacesMessage.SEVERITY_ERROR, "no se ha encontrado ", " "));
-        }
+            frmAsientoCaracteristica.setAsientoSelecionado(registro);
+
+            frmAsientoCaracteristica.expresionTipoAsiento= frmAsientoCaracteristica.tipoAsientoslist.getFirst().getExpresionRegular();
+        System.out.println("se ha selecionado algo");
     }
 
     @Override
@@ -98,33 +111,41 @@ public class FrmAsiento extends AbstractFrm<Asiento> implements Serializable {
         return "Asientos";
     }
 
-    //Metodo para seleccionar la sala -------------------------------
 
-    @Override
-    public int contar() {
-        return asientoBean.countAsientos(idSalaSelecionada);
+
+    public Sala getSalaSelecionada() {
+        return SalaSelecionada;
     }
 
-    @Override
-    public List<Asiento> cargar(int first, int max) {
-        return  asientoBean.findIdAsientoBySala(idSalaSelecionada, first, max);
+    public void setSalaSelecionada(Sala salaSelecionada) {
+        SalaSelecionada = salaSelecionada;
     }
 
-    //Getters y Setters -----------------------------------------------------
-    public Sala getIdSalaSelecionada() {
-        return idSalaSelecionada;
+    public List<TipoAsiento> getTipoAsientoList() {
+        return tipoAsientoList;
     }
 
-    public void setIdSalaSelecionada(Sala idSala) {
-        this.idSalaSelecionada = idSala;
+    public void setTipoAsientoList(List<TipoAsiento> tipoAsientoList) {
+        this.tipoAsientoList = tipoAsientoList;
     }
 
-    public List<AsientoCaracteristica> getAsientoCaracteristicaList() {
-        return asientoCaracteristicaList;
+    public TipoAsiento getTipoAsientoSelecionado() {
+        return tipoAsientoSelecionado;
     }
 
-    public void setAsientoCaracteristicaList(List<AsientoCaracteristica> asientoCaracteristicaList) {
-        this.asientoCaracteristicaList = asientoCaracteristicaList;
+    public void setTipoAsientoSelecionado(TipoAsiento tipoAsientoSelecionado) {
+        this.tipoAsientoSelecionado = tipoAsientoSelecionado;
+    }
+
+    public Integer getIdTipoAsientoSelecionado() {
+        return idTipoAsientoSelecionado;
+    }
+
+    public void setIdTipoAsientoSelecionado(Integer idTipoAsientoSelecionado) {
+        this.idTipoAsientoSelecionado = idTipoAsientoSelecionado;
+        tipoAsientoSelecionado=tipoAsientoList.stream().filter(ta->ta.getIdTipoAsiento().equals(idTipoAsientoSelecionado))
+                .findFirst().orElse(null);
+
     }
 
     public FrmAsientoCaracteristica getFrmAsientoCaracteristica() {
@@ -135,22 +156,51 @@ public class FrmAsiento extends AbstractFrm<Asiento> implements Serializable {
         this.frmAsientoCaracteristica = frmAsientoCaracteristica;
     }
 
-    public Integer getIdAsientoCaracteristica() {
-        return idAsientoCaracteristica;
+    public Integer getIdAsientoCaracteristicaSelecionado() {
+        return idAsientoCaracteristicaSelecionado;
     }
 
-    public void setIdAsientoCaracteristica(Integer idAsientoCaracteristica) {
-        this.idAsientoCaracteristica = idAsientoCaracteristica;
+    public void setIdAsientoCaracteristicaSelecionado(Integer idAsientoCaracteristicaSelecionado) {
+        this.idAsientoCaracteristicaSelecionado = idAsientoCaracteristicaSelecionado;
+        registro=asientoBean.findById(idAsientoCaracteristicaSelecionado);
+    }
+
+    //Metodo para seleccionar la sala -------------------------------
+
+    @Override
+    public int contar() {
+        try {
+
+        return asientoBean.countAsientos(SalaSelecionada);
+        }catch (Exception e){
+            Logger.getLogger(getClass().getName()).log(Level.SEVERE, e.getMessage(), e);
+            enviarMensaje(FacesMessage.SEVERITY_ERROR,"eeror al cargar los asientos");
+        }
+        return 0;
+    }
+
+    @Override
+    public List<Asiento> cargar(int first, int max) {
+        try {
+            return  asientoBean.findIdAsientoBySala(SalaSelecionada, first, max);
+
+        }catch (Exception e){
+            Logger.getLogger(getClass().getName()).log(Level.SEVERE, e.getMessage(), e);
+            enviarMensaje(FacesMessage.SEVERITY_ERROR,"eeror al cargar los asientos");
+        }
+        return List.of();
     }
 
 
-    public AsientoBean getAsientoBean() {
-        return asientoBean;
+    public void onTipoAsientoChange(){
+        //logica para cargar las cracteristicas
+        estado=ESTADO_CRUD.CREAR;
     }
 
-    public void setAsientoBean(AsientoBean asientoBean) {
-        this.asientoBean = asientoBean;
-    }
+
+
+    //Getters y Setters -----------------------------------------------------
+
 
 
 

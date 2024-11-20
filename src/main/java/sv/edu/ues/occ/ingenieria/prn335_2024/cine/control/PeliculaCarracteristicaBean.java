@@ -63,4 +63,9 @@ public class PeliculaCarracteristicaBean extends AbstractDataPersist<PeliculaCar
         }
         return 0;
     }
+
+    @Override
+    public String orderParameterQuery() {
+        return "idPeliculaCaracteristica";
+    }
 }

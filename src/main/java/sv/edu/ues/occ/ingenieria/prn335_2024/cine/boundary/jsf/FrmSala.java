@@ -1,37 +1,25 @@
 package sv.edu.ues.occ.ingenieria.prn335_2024.cine.boundary.jsf;
 
-
 import jakarta.faces.application.FacesMessage;
 import jakarta.faces.context.FacesContext;
 import jakarta.faces.event.ActionEvent;
 import jakarta.faces.view.ViewScoped;
 import jakarta.inject.Inject;
 import jakarta.inject.Named;
-import org.primefaces.event.NodeSelectEvent;
 import org.primefaces.event.SelectEvent;
 import org.primefaces.event.TabChangeEvent;
-import org.primefaces.model.*;
-import org.w3c.dom.events.Event;
 import sv.edu.ues.occ.ingenieria.prn335_2024.cine.control.*;
-import sv.edu.ues.occ.ingenieria.prn335_2024.cine.control.utils.LazyDataModelBuilder;
-import sv.edu.ues.occ.ingenieria.prn335_2024.cine.control.utils.TreeNodeBuilder;
-import sv.edu.ues.occ.ingenieria.prn335_2024.cine.entity.*;
+import sv.edu.ues.occ.ingenieria.prn335_2024.cine.entity.Sala;
+import sv.edu.ues.occ.ingenieria.prn335_2024.cine.entity.Sucursal;
 
-import jakarta.faces.event.ValueChangeEvent;
-import java.io.Serializable;
-import java.rmi.registry.Registry;
-import java.sql.SQLOutput;
-import java.text.SimpleDateFormat;
-import java.util.*;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
+
 
 @Named
 @ViewScoped
-public class FrmSala extends AbstractFrm<Sala> implements Serializable {
-
+public class FrmSala extends AbstractFrm<Sala> {
     @Inject
     SalaBean salaBean;
     @Inject
@@ -39,77 +27,35 @@ public class FrmSala extends AbstractFrm<Sala> implements Serializable {
     @Inject
     ProgramacionBean programacionBean;
     @Inject
-    AsientoBean asientoBean;
-    @Inject
-    FrmAsiento frmAsiento;
-    @Inject
-    SalaCaracteristicaBean SalaCBean;
-    @Inject
-    FrmSalaCaracteristica frmSalaCaracteristica;
-    @Inject
     SalaCaracteristicaBean salaCaracteristicaBean;
     @Inject
     FacesContext fc;
     @Inject
-    FrmProgramacion  frmProgramacion;
+    FrmSalaCaracteristica frmSalaCaracteristica;
+    @Inject
+    FrmProgramacion frmProgramacion;
+    @Inject
+    FrmAsiento frmAsiento;
 
 
-    List<Sucursal> sucursales;
+
+    //propiedades de sala
+
     Sucursal sucursalSelecionada;
-    String idSucursalSelecionado;
-
-
-    List<Programacion> programaciones;
-    List<Asiento> asientos;
-    private int sucursalId;
-    List<TipoSala> tipoSalasDisponibles;
-    List<Asiento> asientosDisponibles;
-    List<Asiento> asientosSelecionados;
-    Date fechaReservaSelecionada;
-    Programacion programacionSelecionada;
-    String idProgramacion;
-    String fechaProgramacion;
-    String idAsientoSelecionado;
-    String idAsientoELiminado;
-
-
-    public void cargarSucursales() {
-        sucursales = sucursalBean.getAllSucursales();
-    }
-
-    public void cambiarTab(TabChangeEvent event){
-        System.out.println("cambiando tab");
-        try {
-            //obtener sucursales
-            cargarSucursales();
-            cargarDatosIniciales();
-            if(event.getTab().getTitle().equals("Caracteristicas")){
-                frmSalaCaracteristica.setIdSalaSelecionada(registro);
-
-                frmSalaCaracteristica.selecionarTipoSala();
-                System.out.println("se envio datos");
-            }
-            if(event.getTab().getTitle().equals("programaciones")){
-                frmProgramacion.setSalaSelecionada(registro);
-                frmProgramacion.inicioRegistros();
-                System.out.println("se envio datos para programaciones");
-            }
-        }catch (Exception e){
-            Logger.getLogger(FrmSala.class.getName()).log(Level.SEVERE, null, e);
-
-        }
-    }
+    Integer idSucursalSelecionada;
+    List<Sucursal> sucursalesDisponibles;
 
     @Override
     public void instanciarRegistro() {
-        this.registro=new Sala();
-        this.estado=ESTADO_CRUD.CREAR;
+            registro = new Sala();
+            registro.setIdSucursal(new Sucursal());
+            registro.setActivo(true);
     }
 
     @Override
     public void inicioRegistros() {
         super.inicioRegistros();
-        cargarDatosIniciales();
+        cargarSucursales();
     }
 
     @Override
@@ -124,52 +70,27 @@ public class FrmSala extends AbstractFrm<Sala> implements Serializable {
 
     @Override
     public String getIdByObject(Sala object) {
-        if (object.getIdSala()!=null){
+        if (object != null) {
             return object.getIdSala().toString();
         }
-        return null;
+        return "";
     }
 
     @Override
     public Sala getObjectById(String id) {
-        if (id!=null && modelo!=null & modelo.getWrappedData()!=null){
-            return modelo.getWrappedData().stream().
-                    filter(r->id.equals(r.getIdSala().toString())).findFirst().
-                    orElseGet(()->{
-                        Logger.getLogger(getClass().getName()).log(Level.INFO,"Objeto no encontradoo");
-                        return null;
-                    });
+        if (id != null && modelo != null && modelo.getWrappedData() != null) {
+            return modelo.getWrappedData().stream()
+                    .filter(s -> s.getIdSala().toString().equals(id))
+                    .findFirst().orElse(null);
         }
         return null;
     }
 
     @Override
     public void selecionarFila(SelectEvent<Sala> event) {
-        Sala filaSelelcted = event.getObject();
-        if(filaSelelcted!=null){
-            FacesMessage mensaje=new FacesMessage("Sala selecionada ", registro.getNombre());
-            fc.addMessage(null, mensaje);
-            this.registro = filaSelelcted;
-            this.estado=ESTADO_CRUD.MODIFICAR;
-            cargarSucursales();
-            frmSalaCaracteristica.estado=ESTADO_CRUD.MODIFICAR;
-            frmSalaCaracteristica.setIdSalaSelecionada(registro);
-            frmAsiento.estado=ESTADO_CRUD.MODIFICAR;
-            frmAsiento.setIdSalaSelecionada(registro);
-            frmSalaCaracteristica.idSalaSelecionada=registro;
-            cargarDatosIniciales();
 
-        }else {
-            fc.addMessage(null,  new FacesMessage(FacesMessage.SEVERITY_ERROR, "no se ha encontrado ", " "));
-        }
-    }
-
-
-    public void cargarDatosIniciales(){
-        cargarSucursales();
-        frmSalaCaracteristica.estado=ESTADO_CRUD.MODIFICAR;
-        frmSalaCaracteristica.setIdSalaSelecionada(registro);
-        frmProgramacion.setSalaSelecionada(registro);
+        enviarMensaje(FacesMessage.SEVERITY_INFO,"se ha selecionado: "+registro.getNombre());
+        estado=ESTADO_CRUD.MODIFICAR;
     }
 
     @Override
@@ -177,121 +98,56 @@ public class FrmSala extends AbstractFrm<Sala> implements Serializable {
         return "Sala";
     }
 
-    public void selecionarTipoSala(){
-        sucursalSelecionada=sucursales.stream().filter(s->s.getIdSucursal().toString().equals(idSucursalSelecionado)).findFirst().orElse(null);
+    //funcionaliddaes de Sala
 
-    }
-    public void buscarProgramaciones() {
-        programaciones=programacionBean.findProgramacionesByDate(fechaReservaSelecionada);
-        programaciones=programaciones.stream().filter(p->(fechaReservaSelecionada.compareTo(p.getDesde())<0 && fechaReservaSelecionada.compareTo(p.getHasta())>0)).collect(Collectors.toList());
-
-    }
-
-    public List<String> sugerencias(String clave){
-        List<String> sugerencias=new ArrayList<>();
-        if (!programaciones.isEmpty()){
-            SimpleDateFormat sdf = new SimpleDateFormat("HH:mm");
-            programaciones.forEach(p->{
-
-                sugerencias.add(
-                        p.getIdProgramacion() + "_" +
-                                p.getIdPelicula().getNombre() + "," +
-                                p.getIdSala().getNombre() + " (" +
-                                sdf.format(p.getDesde()) + "-" + sdf.format(p.getHasta()) + ")");
-            });
-
-            List<String> results = new ArrayList<>();
-            // Filtrar las sugerencias que coincidan con el texto ingresado
-            for (String option : sugerencias) {
-                if (option.toLowerCase().contains(clave.toLowerCase())) {
-                    results.add(option);
-                }
-            }
-            return results;
+    public void cambiarTab(TabChangeEvent e){
+        String titulo = e.getTab().getTitle();
+        if (titulo.equals("generalidades")){
+            inicioRegistros();
+        } else if (titulo.equals("Caracteristicas")) {
+            frmSalaCaracteristica.registro=null;
+            frmSalaCaracteristica.estado=ESTADO_CRUD.NINGUNO;
+            frmSalaCaracteristica.setSalaSelecionada(registro);
+            frmSalaCaracteristica.inicioRegistros();
+        }else if (titulo.equals("Asientos")) {
+            frmAsiento.registro=null;
+            frmAsiento.estado=ESTADO_CRUD.NINGUNO;
+            frmAsiento.setSalaSelecionada(registro);
+            frmAsiento.inicioRegistros();
+        } else if (titulo.equals("programaciones")) {
+            frmProgramacion.registro=null;
+            frmProgramacion.estado=ESTADO_CRUD.NINGUNO;
+            frmProgramacion.setSalaSelecionada(registro);
+            frmProgramacion.inicioRegistros();
         }
-        return List.of();
+
+
     }
 
-    public void onProgramacionChange() {
-
-        if (!programaciones.isEmpty()){
-            programacionSelecionada = programaciones.stream().filter(p->p.getIdProgramacion().toString().equals(idProgramacion)).findFirst().orElse(null);
-            SimpleDateFormat sdf = new SimpleDateFormat("HH:mm");
-            fechaProgramacion="hora (" +sdf.format(programacionSelecionada.getDesde()) + "-" + sdf.format(programacionSelecionada.getHasta()) + ")";
-
-        }
-    }
-
-    //Asientos ------------------------------------------------------------------
-
-    public void buscarAsientosByProgramacion() {
-        //buscar asientos asientos libres de una sala y programacion
-
-        //buscar todos los asientos que tiene una sala
+    public void cargarSucursales(){
         try {
-            asientosDisponibles=asientoBean.findAsientosBySalaandProgramacion(programacionSelecionada.getIdSala(),programacionSelecionada);
-
+            sucursalesDisponibles=sucursalBean.findAll();
         }catch (Exception e) {
-            Logger.getLogger(getClass().getName()).log(Level.SEVERE, e.getMessage(),e);
-            System.out.println("error al cargar los asientos");
-        }
-
-    }
-
-    public void agregarAsiento(){
-        try {
-            Asiento asientoSelecionado=asientosDisponibles.stream().
-                    filter(a->a.getIdAsiento().toString().equals(idAsientoSelecionado)).findFirst().orElse(null);
-            if (asientosSelecionados==null){
-                asientosSelecionados=new ArrayList<>();
-            }
-            if (asientoSelecionado!=null){
-                asientosDisponibles.remove(asientoSelecionado);
-                asientosSelecionados.add(asientoSelecionado);
-            }
-            idAsientoSelecionado="";
-        }catch (Exception e) {
-            Logger.getLogger(getClass().getName()).log(Level.SEVERE, e.getMessage(),e);
+            Logger.getLogger(getClass().getName()).log(Level.SEVERE,e.getMessage(),e);
+            enviarMensaje(FacesMessage.SEVERITY_ERROR,"Error al cargar datos de sucursal");
         }
     }
 
+    public void pruebas(){
+        enviarMensaje(FacesMessage.SEVERITY_INFO,"selecionado "+sucursalSelecionada.getNombre());
 
-    public void eliminarAsiento(){
-        try {
-            Asiento asientoEliminado=asientosSelecionados.stream().
-                    filter(a->a.getIdAsiento().toString().equals(idAsientoELiminado)).findFirst().orElse(null);
-
-            if (asientoEliminado!=null){
-                asientosSelecionados.remove(asientoEliminado);
-                asientosDisponibles.add(asientoEliminado);
-                asientosDisponibles.sort(Comparator.comparingLong(Asiento::getIdAsiento));
-            }
-            idAsientoSelecionado="";
-        }catch (Exception e) {
-            Logger.getLogger(getClass().getName()).log(Level.SEVERE, e.getMessage(),e);
-        }
     }
 
 
 
-    //SalaCaracteristica -------------------------------------------------------
-
-    //SalaCaracteristica -------------------------------------------------------
-
-   /* public FrmSalaCaracteristica getFrmSalaCaracteristica() {
-        return frmSalaCaracteristica;
+    public Integer getIdSucursalSelecionada() {
+        return idSucursalSelecionada;
     }
 
-    public void setFrmSalaCaracteristica(FrmSalaCaracteristica frmSalaCaracteristica) {
-        this.frmSalaCaracteristica = frmSalaCaracteristica;
-    }*/
-
-    public List<Sucursal> getSucursales() {
-        return sucursales;
-    }
-
-    public void setSucursales(List<Sucursal> sucursales) {
-        this.sucursales = sucursales;
+    public void setIdSucursalSelecionada(Integer idSucursalSelecionada) {
+        this.idSucursalSelecionada = idSucursalSelecionada;
+        sucursalSelecionada=sucursalesDisponibles.stream().filter(s->s.getIdSucursal().equals(idSucursalSelecionada)).findFirst().orElse(null);
+        registro.setIdSucursal(sucursalSelecionada);
     }
 
     public Sucursal getSucursalSelecionada() {
@@ -302,12 +158,12 @@ public class FrmSala extends AbstractFrm<Sala> implements Serializable {
         this.sucursalSelecionada = sucursalSelecionada;
     }
 
-    public String getIdSucursalSelecionado() {
-        return idSucursalSelecionado;
+    public List<Sucursal> getSucursalesDisponibles() {
+        return sucursalesDisponibles;
     }
 
-    public void setIdSucursalSelecionado(String idSucursalSelecionado) {
-        this.idSucursalSelecionado = idSucursalSelecionado;
+    public void setSucursalesDisponibles(List<Sucursal> sucursalesDisponibles) {
+        this.sucursalesDisponibles = sucursalesDisponibles;
     }
 
     public FrmSalaCaracteristica getFrmSalaCaracteristica() {
@@ -318,20 +174,6 @@ public class FrmSala extends AbstractFrm<Sala> implements Serializable {
         this.frmSalaCaracteristica = frmSalaCaracteristica;
     }
 
-    public FrmProgramacion getFrmProgramacion() {
-        return frmProgramacion;
-    }
-
-
-    public void setFrmProgramacion(FrmProgramacion frmProgramacion) {
-        this.frmProgramacion = frmProgramacion;
-    }
-
-    public void sugerencias(){
-
-    }
-
-
     public FrmAsiento getFrmAsiento() {
         return frmAsiento;
     }
@@ -340,30 +182,21 @@ public class FrmSala extends AbstractFrm<Sala> implements Serializable {
         this.frmAsiento = frmAsiento;
     }
 
+    public FrmProgramacion getFrmProgramacion() {
+        return frmProgramacion;
+    }
 
+    public void setFrmProgramacion(FrmProgramacion frmProgramacion) {
+        this.frmProgramacion = frmProgramacion;
+    }
 
     @Override
     public void btnCancelarHandler(ActionEvent actionEvent) {
-        frmSalaCaracteristica.estado=ESTADO_CRUD.NINGUNO;
         frmSalaCaracteristica.registro=null;
+        frmSalaCaracteristica.estado=ESTADO_CRUD.NINGUNO;
+        frmAsiento.registro=null;
+        frmAsiento.estado=ESTADO_CRUD.NINGUNO;
         super.btnCancelarHandler(actionEvent);
     }
-
-    @Override
-    public void btnNuevoHandler(ActionEvent actionEvent) {
-        frmSalaCaracteristica.estado=ESTADO_CRUD.NINGUNO;
-        frmSalaCaracteristica.registro=null;
-        super.btnNuevoHandler(actionEvent);
-    }
-
-
-
-    public void metodoPruebas(){
-        System.out.println("probando");
-
-    }
-
-
-
 
 }

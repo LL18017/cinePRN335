@@ -21,4 +21,9 @@ public class TipoPeliculaBean extends AbstractDataPersist<TipoPelicula> implemen
     public EntityManager getEntityManager() {
         return em;
     }
+
+    @Override
+    public String orderParameterQuery() {
+        return "idTipoPelicula";
+    }
 }

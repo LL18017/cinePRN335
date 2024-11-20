@@ -66,8 +66,10 @@ public class ProgramacionBean extends AbstractDataPersist<Programacion> implemen
     }
 
 
-
-
+    @Override
+    public String orderParameterQuery() {
+        return "idProgramacion";
+    }
 
     public List<Asiento> findAsientoParaReserva(Date fecha) {
         try {

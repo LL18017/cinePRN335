@@ -20,6 +20,7 @@ public abstract  class AbstractDataPersist<T> {
         this.tipoDeDato=t;
     }
     public abstract EntityManager getEntityManager();
+    public abstract String orderParameterQuery();
 
     public T findById(Object id) throws IllegalArgumentException ,IllegalStateException {
         EntityManager em = null;
@@ -48,8 +49,8 @@ public abstract  class AbstractDataPersist<T> {
                 CriteriaBuilder cb=em.getCriteriaBuilder();
                 CriteriaQuery cq=cb.createQuery(tipoDeDato);
                 Root<T> r=cq.from(tipoDeDato);
-                CriteriaQuery<T> cq2=cq.select(r);
-                TypedQuery<T> q=em.createQuery(cq2);
+                cq.select(r).orderBy(cb.asc(r.get(orderParameterQuery())));
+                TypedQuery<T> q=em.createQuery(cq);
                 resultados=q.getResultList();
                 return resultados;
             }catch (java.lang.IllegalStateException e){
@@ -59,6 +60,7 @@ public abstract  class AbstractDataPersist<T> {
     }
 
     public List<T> findRange(int first, int max) throws IllegalStateException, IllegalArgumentException {
+
         return findRange(first, max, "",""); // Llama al método con orden como cadena vacía
     }
     public List<T> findRange(int first, int max,String orden,String direccion) throws IllegalStateException,IllegalArgumentException {
@@ -72,7 +74,7 @@ public abstract  class AbstractDataPersist<T> {
                     CriteriaBuilder cb = em.getCriteriaBuilder();
                     CriteriaQuery<T> cq = cb.createQuery(this.tipoDeDato);
                     Root<T> raiz = cq.from(this.tipoDeDato);
-                    cq.select(raiz);
+                    cq.select(raiz).orderBy(cb.asc(raiz.get(orderParameterQuery())));
 
                     // Agregar ordenamiento si se proporciona
                     if (!orden.isEmpty()) {

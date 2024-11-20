@@ -58,4 +58,8 @@ public class SalaBean extends AbstractDataPersist<Sala> implements Serializable 
         return List.of();
     }
 
+    @Override
+    public String orderParameterQuery() {
+        return "idSala";
+    }
 }

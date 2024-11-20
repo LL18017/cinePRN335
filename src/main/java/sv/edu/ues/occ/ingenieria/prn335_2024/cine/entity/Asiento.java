@@ -33,6 +33,7 @@ import java.util.List;
 @NamedQueries({
     @NamedQuery(name = "Asiento.findAll", query = "SELECT a FROM Asiento a"),
     @NamedQuery(name = "Asiento.findAllAsientoCaracteristica", query = "SELECT ac FROM AsientoCaracteristica ac"),
+    @NamedQuery(name = "Asiento.AsientoCaracteristicaByIdASiento", query = "SELECT ac FROM AsientoCaracteristica ac where ac.idAsiento.idAsiento=:idAsiento"),
     @NamedQuery(name = "Asiento.findByIdAsiento", query = "SELECT a FROM Asiento a WHERE a.idAsiento = :idAsiento"),
     @NamedQuery(name = "Asiento.findByNombre", query = "SELECT a FROM Asiento a WHERE a.nombre = :nombre"),
     @NamedQuery(name = "Asiento.MatchCaracterAndTipoWithSala", query = "SELECT ac.valor, ta.nombre FROM AsientoCaracteristica ac JOIN ac.idTipoAsiento ta WHERE ac.idAsiento.idAsiento = :asiento"),

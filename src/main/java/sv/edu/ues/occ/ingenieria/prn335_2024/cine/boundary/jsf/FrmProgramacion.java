@@ -1,8 +1,6 @@
 package sv.edu.ues.occ.ingenieria.prn335_2024.cine.boundary.jsf;
 
-import jakarta.annotation.PostConstruct;
 import jakarta.enterprise.context.Dependent;
-import jakarta.faces.annotation.ManagedProperty;
 import jakarta.faces.application.FacesMessage;
 import jakarta.faces.context.FacesContext;
 import jakarta.inject.Inject;
@@ -19,20 +17,16 @@ import sv.edu.ues.occ.ingenieria.prn335_2024.cine.entity.Pelicula;
 import sv.edu.ues.occ.ingenieria.prn335_2024.cine.entity.PeliculaCaracteristica;
 import sv.edu.ues.occ.ingenieria.prn335_2024.cine.entity.Programacion;
 
-import jakarta.faces.view.ViewScoped;
 import sv.edu.ues.occ.ingenieria.prn335_2024.cine.entity.Sala;
 
 import java.io.Serializable;
-import java.sql.SQLOutput;
-import java.text.SimpleDateFormat;
+import java.time.LocalDate;
 import java.time.ZoneId;
 import java.time.ZoneOffset;
-import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.Date;
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.concurrent.RecursiveTask;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
@@ -45,12 +39,10 @@ public class FrmProgramacion extends AbstractFrm<Programacion> implements Serial
     @Inject
     PeliculaBean peliculaBean;
 
-//    @ManagedProperty("#{frmSala}")
-//    private FrmSala frmSala;
-
     List<Pelicula> peliculasDisponibles = new ArrayList<>();
 
-    String idPeliculaProgramar;
+    Integer idPeliculaProgramar;
+    String nombrePelicula;
 
     Sala SalaSelecionada;
     Integer idSalaSelecionada;
@@ -65,12 +57,12 @@ public class FrmProgramacion extends AbstractFrm<Programacion> implements Serial
 
     @Inject FacesContext fc;
 
-    List<Programacion> programaciones;
+    List<Programacion> programacionesDisponibles;
 
     @Override
     public void instanciarRegistro() {
         registro=new Programacion();
-        programaciones=pBean.findAll();
+        programacionesDisponibles =pBean.findAll();
 
     }
 //    @PostConstruct
@@ -78,10 +70,10 @@ public class FrmProgramacion extends AbstractFrm<Programacion> implements Serial
     public void inicioRegistros() {
         super.inicioRegistros();
         BuscarPeliculaDisponibles();
-        List<Programacion> programacionesPorSala=findProgramacionBySala();
+        programacionesDisponibles=findProgramacionBySala();
         eventModel = new DefaultScheduleModel();
-        if (programacionesPorSala!=null && !programacionesPorSala.isEmpty()) {
-            programacionesPorSala.forEach(p->{
+        if (programacionesDisponibles!=null && !programacionesDisponibles.isEmpty()) {
+            programacionesDisponibles.forEach(p->{
                 eventModel.addEvent(eventBuilder(p,6));
             });
         }
@@ -145,51 +137,71 @@ public class FrmProgramacion extends AbstractFrm<Programacion> implements Serial
         return "Programacion";
     }
 
-    public void onEventSelect(SelectEvent<DefaultScheduleEvent> eventSelected) {
+    public void onEventSelect(SelectEvent<ScheduleEvent<?>> selectEvent) {
         // Obtener el evento seleccionado
-        DefaultScheduleEvent selectedEvent = eventSelected.getObject();
+        Integer idProgramacionSElecionada = Integer.valueOf(selectEvent.getObject().getId());
 
-         desde = Date.from(eventSelected.getObject().getStartDate().atOffset(ZoneOffset.UTC).toInstant());
-        hasta = Date.from(eventSelected.getObject().getEndDate().atOffset(ZoneOffset.UTC).toInstant());
-        idPeliculaProgramar=eventSelected.getObject().getId();
+        System.out.println("selecionado: "+idProgramacionSElecionada);
+        try {
 
-//        Date date = event.getObject();
-//        dia=String.valueOf(date.toInstant()
-//                .atZone(ZoneId.systemDefault())
-//                .toLocalDate().getDayOfMonth());
-//        System.out.println(dia);
-
-
-    }
-
-    public void onDateSelect(org.primefaces.event.SelectEvent<Date> selectEvent) {
-//        System.out.println("el dia es" + dia);
-//        System.out.println("el dia es" + selectEvent.getObject().getDay());
-    }
-
-
-    public List<String> sugerencias(String clave) {
-
-        List<String> sugerencias=new ArrayList<>();
-        if (!peliculasDisponibles.isEmpty()){
-            peliculasDisponibles.forEach(p->{
-
-                sugerencias.add(
-                        p.getIdPelicula() + "_" +
-                                p.getNombre() );
-            });
-
-            List<String> results = new ArrayList<>();
-            // Filtrar las sugerencias que coincidan con el texto ingresado
-            for (String option : sugerencias) {
-                if (option.toLowerCase().contains(clave.toLowerCase())) {
-                    results.add(option);
-                }
-            }
-            return results;
+        registro=programacionesDisponibles.stream().filter(p->p.getIdProgramacion().toString().equals(idProgramacionSElecionada.toString())).findFirst().orElse(null);
+        estado =ESTADO_CRUD.MODIFICAR;
+        if (registro!=null){
+            nombrePelicula=registro.getIdPelicula().getNombre();
         }
-        return List.of();
+        }catch (Exception e){
+            Logger.getLogger(getClass().getName()).log(Level.SEVERE, e.getMessage(), e);
+        }
+        if (registro!=null){
+        System.out.println("selecionado: "+nombrePelicula);
+        }else {
+
+        }
+
     }
+
+    public void onDateSelect(SelectEvent<LocalDateTime> selectEvent) {
+
+        if (selectEvent.getObject()!=null){
+        instanciarRegistro();
+        try {
+        LocalDateTime t=selectEvent.getObject();
+        System.out.println("no es nulo" + t);
+            registro.setDesde(Date.from(t.atZone(ZoneId.systemDefault()).toInstant()));
+            registro.setHasta(Date.from(t.atZone(ZoneId.systemDefault()).toInstant()));
+        }catch (Exception e){
+            Logger.getLogger(getClass().getName()).log(Level.SEVERE, e.getMessage(), e);
+        }
+        }else{
+
+        System.out.println("es nulo");
+        }
+    }
+
+
+    public List<Pelicula> getPeliculasDisponibles() {
+        return peliculasDisponibles;
+    }
+
+    public void setPeliculasDisponibles(List<Pelicula> peliculasDisponibles) {
+        this.peliculasDisponibles = peliculasDisponibles;
+    }
+
+    public void SelecionarFecha() {
+        System.out.println("el dia es");
+    }
+
+
+    public List<String> sugerencias(String query) {
+
+
+        return peliculasDisponibles.stream().
+                map(Pelicula::getNombre)
+                .filter(item -> item.toLowerCase().contains(query.toLowerCase()))
+                .collect(Collectors.toList());
+    }
+
+
     public void cambioPelicula(){
         if (idPeliculaProgramar!=null && !peliculasDisponibles.isEmpty()){
             Pelicula Selecionada=peliculasDisponibles.stream().filter(p->p.getIdPelicula().toString().equals(idPeliculaProgramar)).findFirst().orElseGet(null);
@@ -211,12 +223,12 @@ public class FrmProgramacion extends AbstractFrm<Programacion> implements Serial
     public void pruebas(){
         System.out.println("prueba soijapo");
     }
-    public List<Programacion> getProgramaciones() {
-        return programaciones;
+    public List<Programacion> getProgramacionesDisponibles() {
+        return programacionesDisponibles;
     }
 
-    public void setProgramaciones(List<Programacion> programaciones) {
-        this.programaciones = programaciones;
+    public void setProgramacionesDisponibles(List<Programacion> programacionesDisponibles) {
+        this.programacionesDisponibles = programacionesDisponibles;
     }
 
     public ScheduleModel getEventModel() {
@@ -234,12 +246,14 @@ public class FrmProgramacion extends AbstractFrm<Programacion> implements Serial
         this.event = event;
     }
 
-    public String getIdPeliculaProgramar() {
+    public Integer getIdPeliculaProgramar() {
+
         return idPeliculaProgramar;
     }
 
-    public void setIdPeliculaProgramar(String idPeliculaProgramar) {
+    public void setIdPeliculaProgramar(Integer idPeliculaProgramar) {
         this.idPeliculaProgramar = idPeliculaProgramar;
+        registro.setIdPelicula(peliculasDisponibles.stream().filter(pr-> pr.getIdPelicula().equals((Long.valueOf(idPeliculaProgramar.toString())))).findFirst().orElse(null));
     }
 
     public Sala getSalaSelecionada() {
@@ -265,6 +279,29 @@ public class FrmProgramacion extends AbstractFrm<Programacion> implements Serial
     public void setHasta(Date hasta) {
         this.hasta = hasta;
     }
+
+    public String getNombrePelicula() {
+        return nombrePelicula;
+    }
+
+    public void setNombrePelicula(String nombrePelicula) {
+        this.nombrePelicula = nombrePelicula;
+        registro.setIdPelicula(peliculasDisponibles.stream().filter(p->p.getNombre().equals(nombrePelicula)).findFirst().orElse(null));
+    }
+
+    public void onItemSelect(SelectEvent<String> event) {
+        String itemSeleccionado = event.getObject(); // Este es el itemValue definido en el p:autoComplete
+        Integer idSeleccionado = Integer.valueOf(itemSeleccionado);
+
+        this.idPeliculaProgramar = idSeleccionado;
+        this.registro = programacionesDisponibles.stream()
+                .filter(pr -> pr.getIdProgramacion().equals(Long.valueOf(idSeleccionado)))
+                .findFirst()
+                .orElse(null);
+        estado=ESTADO_CRUD.MODIFICAR;
+
+    }
+
 
     public void addEvent() {
         if (colicionFechas() && verificarPelicula() && verificarSala()){
@@ -370,6 +407,7 @@ public class FrmProgramacion extends AbstractFrm<Programacion> implements Serial
                             .plusHours(t)
                     )
                     .description(p.getIdPelicula().getSinopsis())
+                    .id(p.getIdProgramacion().toString())
                     .build();
 
         }
@@ -393,9 +431,9 @@ public class FrmProgramacion extends AbstractFrm<Programacion> implements Serial
     }
 
     public boolean verificarPelicula(){
-        if (idPeliculaProgramar!=null && !idPeliculaProgramar.isEmpty()){
+        if (idPeliculaProgramar!=null){
             BuscarPeliculaDisponibles();
-            Pelicula peli=peliculasDisponibles.stream().filter(p->p.getIdPelicula().toString().equals(idPeliculaProgramar)).findFirst().orElse(null);
+            Pelicula peli=peliculasDisponibles.stream().filter(p->p.getIdPelicula().equals(Long.valueOf(idPeliculaProgramar.toString()))).findFirst().orElse(null);
 //            enviarMensaje(FacesMessage.SEVERITY_INFO,"el pelicula seleccionada es "+peli.getNombre().toString());
             return true;
         }

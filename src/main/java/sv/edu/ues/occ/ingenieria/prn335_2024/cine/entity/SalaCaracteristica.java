@@ -90,7 +90,9 @@ public class SalaCaracteristica implements Serializable {
     }
 
     public void setIdTipoSala(TipoSala idTipoSala) {
+
         this.idTipoSala = idTipoSala;
+
     }
 
     @Override

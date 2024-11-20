@@ -67,6 +67,8 @@ public class SalaCaracteristicaBean extends AbstractDataPersist<SalaCaracteristi
         return List.of();
     }
 
-
-
+    @Override
+    public String orderParameterQuery() {
+        return "idSalaCaracteristica";
+    }
 }

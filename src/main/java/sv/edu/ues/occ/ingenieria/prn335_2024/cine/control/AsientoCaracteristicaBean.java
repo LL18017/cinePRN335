@@ -73,21 +73,19 @@ public class AsientoCaracteristicaBean extends AbstractDataPersist<AsientoCaract
         return List.of();
     }
 
-   /* public List<Object[]> findCaracterAndTipo(Asiento asiento) {
+    public AsientoCaracteristica findByIdAsientoCaracterisctica(Integer idAsientoCaracteristica) {
         try {
-            TypedQuery<Asiento> q = em.createNamedQuery("Asiento.findIdAsientoBySala", Asiento.class);
-            q.setParameter("idSala", idSala.getIdSala());
-            q.setFirstResult(first);
-            q.setMaxResults(last);
-            return q.getResultList();
-        }catch (Exception e){
-            Logger.getLogger(getClass().getName()).log(Level.SEVERE,e.getMessage(),e);
+            TypedQuery<AsientoCaracteristica> q = em.createNamedQuery("AsientoCaracteristica.findByIdAsientoCaracteristica", AsientoCaracteristica.class);
+            q.setParameter("idAsientoCaracteristica", idAsientoCaracteristica);
+            return q.getSingleResult();
+        } catch (Exception e) {
+            Logger.getLogger(getClass().getName()).log(Level.SEVERE, e.getMessage(), e);
         }
-        return List.of();
-    }*/
+        return null;
+    }
 
-
-
-
-
+    @Override
+    public String orderParameterQuery() {
+        return "idAsientoCaracteristica";
+    }
 }

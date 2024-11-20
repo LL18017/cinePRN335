@@ -23,4 +23,9 @@ public class TipoProductoBean  extends AbstractDataPersist<TipoProducto> impleme
     public EntityManager getEntityManager() {
         return em;
     }
+
+    @Override
+    public String orderParameterQuery() {
+        return "idTipoProducto";
+    }
 }

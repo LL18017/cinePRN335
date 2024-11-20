@@ -20,4 +20,9 @@ public class ReservaDetalleBean extends AbstractDataPersist<ReservaDetalle> impl
     public EntityManager getEntityManager() {
         return em;
     }
+
+    @Override
+    public String orderParameterQuery() {
+        return "idReservaDetalle";
+    }
 }
