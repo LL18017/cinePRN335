@@ -92,6 +92,49 @@ public abstract class AbstracDataSource<T> implements Serializable {
     }
 
 
+    @DELETE
+    @Produces({MediaType.APPLICATION_JSON})
+    @Consumes({MediaType.APPLICATION_JSON})
+    public Response delete(T registro, @Context UriInfo uriInfo){
+        System.out.println(getId(registro));
+        if (registro != null && getId(registro) != null ) {
+            try {
+                getBean().delete(registro);
+                if (getId(registro) !=null) {
+
+                    return Response.status(200).build();
+                }
+                return Response.status(500).header("process-error","Record couldnt be deleted").build();
+            }catch (Exception e) {
+                Logger.getLogger(getClass().getName()).log(Level.SEVERE, e.getMessage(), e);
+                return Response.status(500).entity(e.getMessage()).build();
+            }
+        }
+        return Response.status(500).header("Wrong-parameter", registro).build();
+    }
+
+
+
+    @PUT
+    @Produces({MediaType.APPLICATION_JSON})
+    @Consumes({MediaType.APPLICATION_JSON})
+    public Response update(T registro, @Context UriInfo uriInfo){
+        System.out.println(getId(registro));
+        if (registro != null && getId(registro) != null ) {
+            try {
+                getBean().update(registro);
+                if (getId(registro) !=null) {
+
+                    return Response.status(200).build();
+                }
+                return Response.status(500).header("process-error","Record couldnt be updated").build();
+            }catch (Exception e) {
+                Logger.getLogger(getClass().getName()).log(Level.SEVERE, e.getMessage(), e);
+                return Response.status(500).entity(e.getMessage()).build();
+            }
+        }
+        return Response.status(500).header("Wrong-parameter", registro).build();
+    }
 
 
 
