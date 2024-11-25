@@ -63,6 +63,9 @@
 
                     <p:outputLabel value="Descripcion" for="txtDescripcion"/>
                     <p:inputText id="txtDescripcion" value="#{frmTipoAsiento.registro.comentarios}" size="70"/>
+
+                    <p:outputLabel value="Expresion Regular" for="txtExpresionRegular"/>
+                    <p:inputText id="txtExpresionRegular" value="#{frmTipoAsiento.registro.expresionRegular}" size="70"/>
                 </h:panelGrid>
                 <h:panelGrid columns="#{frmTipoAsiento.estado=='CREAR'?'1':'2'}">
                     <h:panelGrid>

@@ -10,6 +10,7 @@
                 xmlns:ui="jakarta.faces.facelets"
                 xmlns:p="http://primefaces.org/ui"
                 xmlns:crud="jakarta.faces.composite/crud"
+                xmlns:f="http://java.sun.com/jsf/core"
                 template="WEB-INF/templates/principal.xhtml"
 >
     <ui:define name="titulo">
@@ -17,57 +18,110 @@
     </ui:define>
 
     <ui:define name="cuerpo">
-        <h:panelGrid>
-            <h:panelGroup id="pnlTabla">
-                <h:form id="frmTabla">
-                    <p:dataTable value="#{frmTipoAsiento.modelo}" var="r"
-                                 lazy="true"
-                                 paginator="true"
-                                 rows="5"
-                                 first="0"
-                                 selectionMode="single"
-                                 selection="#{frmTipoAsiento.registro}"
-                                 rendered="#{empty frmTipoAsiento.registro}"
-                                 sortMode="single"
-                    >
-                        <p:ajax process="@this" update=":pnlDetalle @form" event="rowSelect"
-                                listener="#{frmTipoAsiento.selecionarFila}"/>
-                        <p:column headerText="ID" sortBy="#{r.idTipoAsiento}"><h:outputText value="#{r.idTipoAsiento}"/></p:column>
-                        <p:column headerText="NOMBRE" sortBy="#{r.nombre}"><h:outputText
-                                value="#{r.nombre}"/></p:column>
-                        <p:column headerText="ACTIVO"><h:outputText value="#{r.activo}"/></p:column>
-                        <p:column headerText="COMENTARIOS"><h:outputText value="#{r.comentarios}"/></p:column>
-                        <p:column headerText="EXPRESION REGULAR"><h:outputText
-                                value="#{r.expresionRegular}"/></p:column>
 
-                    </p:dataTable>
+
+
+
+
+
+
+
+
+
+        <h:panelGroup id="pnlDetalleAs">
+            <h:form rendered="#{not empty frmSala.frmAsiento.registro}" id="frmDetalleAs">
+
+                <h:panelGrid columns="1">
                     <h:panelGrid columns="2">
-                        <crud:botonesTop frm="#{frmTipoAsiento}" />
+                        <p:outputLabel value="ID" for="txtIdAsiento"/>
+                        <p:inputText id="txtIdAsiento" value="#{frmSala.frmAsiento.registro.idAsiento}" readonly="true" disabled="true"/>
+
+                        <p:outputLabel value="Nombre" for="txtNombreAsiento"/>
+                        <p:inputText id="txtNombreAsiento" value="#{frmSala.frmAsiento.registro.nombre}"/>
                     </h:panelGrid>
-                    <p:growl id="growl" showDetail="true" sticky="false" life="1500"/>
-                </h:form>
-            </h:panelGroup>
-        </h:panelGrid>
-        <h:panelGroup id="pnlDetalle">
-            <h:form rendered="#{not empty frmTipoAsiento.registro}" id="frmDetalle">
-                <h:panelGrid columns="2">
-                    <p:outputLabel value="ID" for="txtid"/>
-                    <p:inputText id="txtid" value="#{frmTipoAsiento.registro.idTipoAsiento}" readonly="true"
-                                 disabled="true"/>
+                    <h:panelGrid>
+                        <crud:botonesBottom frm="#{frmSala.frmAsiento}"/>
+                    </h:panelGrid>
 
-                    <p:outputLabel value="Nombre" for="txtNombre"/>
-                    <p:inputText id="txtNombre" value="#{frmTipoAsiento.registro.nombre}" size="70"/>
 
-                    <p:outputLabel value="Activo" for="chkActivo"/>
-                    <p:selectBooleanCheckbox id="chkActivo" value="#{frmTipoAsiento.registro.activo}" size="70"/>
-
-                    <p:outputLabel value="Descripcion" for="txtDescripcion"/>
-                    <p:inputText id="txtDescripcion" value="#{frmTipoAsiento.registro.comentarios}" size="70"/>
                 </h:panelGrid>
-                <h:panelGrid>
-                    <crud:botonesBottom frm="#{frmTipoAsiento}" actualizar=":frmTabla  :pnlDetalle @form"/>
+                <h:panelGrid columns="#{frmAsiento.estado=='CREAR'?'1':'2'}">
+                    <h:panelGrid>
+                        <crud:botonesBottom frm="#{frmSala.frmSalaCaracteristica}" actualizar=" pnlDetalleAs :growl"/>
+                    </h:panelGrid>
+                </h:panelGrid>
+
+                <h:panelGrid id="caraAsContainer" columns="2">
+
+                    <h:panelGrid id="pnlTipoAsiento">
+                        info
+                        <h:panelGrid columns="1" rendered="#{not empty frmSala.frmAsiento.registro}">
+
+                            <h:panelGrid>
+                                <p:commandButton value="craar" actionListener="${frmAsientoCaracteristica.probar}"/>
+                                <!--                                            <crud:botonesTop frm="#{frmSala.frmAsiento.frmAsientoCaracteristica}"/>-->
+                            </h:panelGrid>
+                        </h:panelGrid>
+
+                    </h:panelGrid>
+
+
+
+                    <h:panelGrid id="pnlcaracteristicasAsiento" rendered="#{not empty frmSala.frmAsiento.registro}">
+
+                        <h:panelGrid columns="1">
+                            <h:panelGrid columns="2">
+                                <h:panelGrid columns="2">
+                                    <p:outputLabel value="Tipo Cracteristica"/>
+                                    <p:selectOneListbox value="#{frmSala.frmAsiento.frmAsientoCaracteristica.idTipoAsientoSelecionado}">
+                                        <f:selectItems value="#{frmSala.frmAsiento.tipoAsientoList}"
+                                                       var="ta" itemLabel="#{ta.nombre}"
+                                                       itemValue="#{ta.idTipoAsiento}"/>
+                                        <p:ajax event="valueChange" listener="#{frmSala.frmAsiento.frmAsientoCaracteristica.onTipoAsientoChange}"
+                                                update="growl pnlcaracteristicasAsiento pnlValorTipoAsiento" />
+                                    </p:selectOneListbox>
+                                    <p:outputLabel value="Valor" for="txtArValorAsiento"/>
+
+                                    <h:panelGroup id="pnlValorTipoAsiento">
+
+                                        <p:inputTextarea id="txtArValorAsiento"
+                                                         required="true"
+                                                         validator="#{frmSala.frmAsiento.frmAsientoCaracteristica.validarTexto}"
+                                                         value="#{frmSala.frmAsiento.frmAsientoCaracteristica.registro.valor}"
+                                                         size="70"/>
+                                        <p:tooltip for="txtArValorAsiento" id="tpExTipoAsiento" value="#{frmSala.frmAsiento.frmAsientoCaracteristica.expresionTipoAsiento}"
+                                                   position="right" showEvent="mouseover"
+                                        />
+                                    </h:panelGroup>
+
+                                </h:panelGrid>
+                            </h:panelGrid>
+                            <crud:botonesBottom frm="#{frmSala.frmAsiento.frmAsientoCaracteristica}"/>
+
+                            <h:panelGrid>
+
+                            </h:panelGrid>
+                        </h:panelGrid>
+                    </h:panelGrid>
+
+
                 </h:panelGrid>
             </h:form>
+
+
         </h:panelGroup>
+
+
+
+
+
+
+
+
+
+
+
+
+
     </ui:define>
 </ui:composition>

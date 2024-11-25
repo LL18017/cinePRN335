@@ -109,6 +109,11 @@
             <configuration>
                 <installDirectory>/usr/local/openLiberty/wlp10_24_0_0_8</installDirectory>
                 <serverName>prn335_2024</serverName>
+<!--                <features>-->
+<!--                    <feature>jakartaee-10.0</feature>-->
+<!--&lt;!&ndash;                    <feature>websocket-1.1</feature>&ndash;&gt;-->
+<!--                    &lt;!&ndash; Otras características necesarias &ndash;&gt;-->
+<!--                </features>-->
             </configuration>
         </plugin>
         <plugin>

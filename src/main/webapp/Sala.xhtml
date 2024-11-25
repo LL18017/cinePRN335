@@ -282,7 +282,7 @@
 
 
 <!--                info de programacion-->
-                <p:tab closable="false" title="programaciones" id="tabProgramcion">
+                <p:tab closable="false" title="programaciones" id="tabProgramcion"  rendered="#{frmSala.registro ne 'CREAR'}" >
                     <p:outputLabel value="Programacion para #{frmSala.registro.nombre}"/>
                     <h:panelGrid>
                         <h:panelGroup id="pnlTablaSP">
@@ -342,6 +342,10 @@
 
                                         <h:panelGrid columns="2" id="pnlFechasProgrmacion">
 
+
+                                            <h:outputLabel id="idPROGRMACION" value="ID:" />
+                                            <p:calendar value="#{frmSala.frmProgramacion.registro.idProgramacion}" disabled="true" readonly="true"  />
+
                                             <h:outputLabel id="inicioSelecionProgramacion" value="Inicio:" />
                                             <p:calendar value="#{frmSala.frmProgramacion.registro.desde}" showTime="true" pattern="dd/MM/yyyy HH:mm" />
 
@@ -351,19 +355,8 @@
                                     </h:panelGrid>
 
                                     <h:panelGroup>
-                                        <p:commandButton
-                                                value="#{abstrasctpffrm['abstrasctpffrm.create']}"
-                                                actionListener="#{frmSala.frmProgramacion.addEvent}"
-                                                update="schedule :growl"
-                                                oncomplete="PF('eventDialog').hide();" />
-
-                                        <p:commandButton
-                                                value="#{abstrasctpffrm['abstrasctpffrm.cancel']}"
-                                                onclick="PF('eventDialog').hide();"
-                                                type="button"
-                                                update="schedule @form"
-                                                actionListener="${frmSala.frmProgramacion.cancelarProgramacion}"
-                                        />
+                                        <crud:botonesTop frm="#{frmSala.frmProgramacion}" onclick="PF('eventDialog').hide();" actualizar="schedule growl"/>
+                                        <crud:botonesBottom frm="#{frmSala.frmProgramacion}" oncomplete="PF('eventDialog').hide();" actualizar="schedule growl"/>
 
                                     </h:panelGroup>
                                 </p:dialog>
@@ -371,25 +364,6 @@
                             </h:form>
                         </h:panelGroup>
                     </h:panelGrid>
-
-
-
-
-                    <h:panelGroup id="pnlProgramacionS">
-                        <h:form rendered="#{not empty frmSala.frmSalaCaracteristica.registro}" id="frmDetalleSP">
-                            <h:panelGrid columns="2">
-                                <!-- dadawd                                       EDITABLES-->
-
-
-                            </h:panelGrid>
-                            <h:panelGrid columns="#{frmTipoProducto.estado=='CREAR'?'1':'2'}">
-                                <h:panelGrid>
-                                    <crud:botonesBottom frm="#{frmSala.frmSalaCaracteristica}" actualizar="growl"/>
-                                </h:panelGrid>
-                            </h:panelGrid>
-                        </h:form>
-                    </h:panelGroup>
-
 
                 </p:tab>
 

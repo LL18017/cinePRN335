@@ -3,6 +3,7 @@ package sv.edu.ues.occ.ingenieria.prn335_2024.cine.boundary.jsf;
 import jakarta.enterprise.context.Dependent;
 import jakarta.faces.application.FacesMessage;
 import jakarta.faces.context.FacesContext;
+import jakarta.faces.event.ActionEvent;
 import jakarta.inject.Inject;
 import jakarta.inject.Named;
 import org.primefaces.event.SelectEvent;
@@ -62,6 +63,7 @@ public class FrmProgramacion extends AbstractFrm<Programacion> implements Serial
     @Override
     public void instanciarRegistro() {
         registro=new Programacion();
+        estado=ESTADO_CRUD.CREAR;
         programacionesDisponibles =pBean.findAll();
 
     }
@@ -161,20 +163,16 @@ public class FrmProgramacion extends AbstractFrm<Programacion> implements Serial
     }
 
     public void onDateSelect(SelectEvent<LocalDateTime> selectEvent) {
-
-        if (selectEvent.getObject()!=null){
-        instanciarRegistro();
-        try {
-        LocalDateTime t=selectEvent.getObject();
-        System.out.println("no es nulo" + t);
-            registro.setDesde(Date.from(t.atZone(ZoneId.systemDefault()).toInstant()));
-            registro.setHasta(Date.from(t.atZone(ZoneId.systemDefault()).toInstant()));
-        }catch (Exception e){
-            Logger.getLogger(getClass().getName()).log(Level.SEVERE, e.getMessage(), e);
-        }
-        }else{
-
-        System.out.println("es nulo");
+        if (selectEvent.getObject()!=null) {
+            instanciarRegistro();
+            setNombrePelicula(null);
+            try {
+                LocalDateTime t = selectEvent.getObject();
+                registro.setDesde(Date.from(t.atZone(ZoneId.systemDefault()).toInstant()));
+                registro.setHasta(Date.from(t.atZone(ZoneId.systemDefault()).toInstant()));
+            } catch (Exception e) {
+                Logger.getLogger(getClass().getName()).log(Level.SEVERE, e.getMessage(), e);
+            }
         }
     }
 
@@ -203,16 +201,17 @@ public class FrmProgramacion extends AbstractFrm<Programacion> implements Serial
 
 
     public void cambioPelicula(){
-        if (idPeliculaProgramar!=null && !peliculasDisponibles.isEmpty()){
-            Pelicula Selecionada=peliculasDisponibles.stream().filter(p->p.getIdPelicula().toString().equals(idPeliculaProgramar)).findFirst().orElseGet(null);
+        System.out.println("se esta cambiando");
+        if (!nombrePelicula.isEmpty() && !peliculasDisponibles.isEmpty()){
+            Pelicula Selecionada=peliculasDisponibles.stream().filter(p->p.getNombre().equals(nombrePelicula)).findFirst().orElseGet(null);
            PeliculaCaracteristica pc = Selecionada.getPeliculaCaracteristicaList().stream().filter(p-> p.getIdTipoPelicula().getNombre().equalsIgnoreCase("DURACION")).findFirst().orElseGet(null);
 
             LocalDateTime now = LocalDateTime.now().withMinute(0).withSecond(0).withNano(0);
             now.plusHours(1);
             LocalDateTime nuevaFechaHora = now.plusMinutes(Integer.parseInt(pc.getValor()));
             // Convertir a Date
-            desde=Date.from(now.atZone(ZoneId.systemDefault()).toInstant());
-             hasta = Date.from(nuevaFechaHora.atZone(ZoneId.systemDefault()).toInstant());
+            registro.setDesde(Date.from(now.atZone(ZoneId.systemDefault()).toInstant()));
+             registro.setHasta(Date.from(nuevaFechaHora.atZone(ZoneId.systemDefault()).toInstant()));
 
 
 
@@ -269,6 +268,7 @@ public class FrmProgramacion extends AbstractFrm<Programacion> implements Serial
     }
 
     public void setDesde(Date desde) {
+        registro.setDesde(desde);
         this.desde = desde;
     }
 
@@ -277,6 +277,7 @@ public class FrmProgramacion extends AbstractFrm<Programacion> implements Serial
     }
 
     public void setHasta(Date hasta) {
+        registro.setHasta(hasta);
         this.hasta = hasta;
     }
 
@@ -290,15 +291,14 @@ public class FrmProgramacion extends AbstractFrm<Programacion> implements Serial
     }
 
     public void onItemSelect(SelectEvent<String> event) {
-        String itemSeleccionado = event.getObject(); // Este es el itemValue definido en el p:autoComplete
-        Integer idSeleccionado = Integer.valueOf(itemSeleccionado);
-
-        this.idPeliculaProgramar = idSeleccionado;
-        this.registro = programacionesDisponibles.stream()
-                .filter(pr -> pr.getIdProgramacion().equals(Long.valueOf(idSeleccionado)))
-                .findFirst()
-                .orElse(null);
-        estado=ESTADO_CRUD.MODIFICAR;
+        String itemSeleccionado = getNombrePelicula(); // Este es el itemValue definido en el p:autoComplete
+        System.out.println("el item selecionado es");
+//        this.idPeliculaProgramar = idSeleccionado;
+//        this.registro = programacionesDisponibles.stream()
+//                .filter(pr -> pr.getIdProgramacion().equals(Long.valueOf(idSeleccionado)))
+//                .findFirst()
+//                .orElse(null);
+//        estado=ESTADO_CRUD.MODIFICAR;
 
     }
 
@@ -388,42 +388,50 @@ public class FrmProgramacion extends AbstractFrm<Programacion> implements Serial
 
         }
 
+    public void removeEvent(Programacion pro){
+        eventModel.deleteEvent(getEventModel().getEvent(pro.getIdProgramacion().toString()));
+
+    }
     public DefaultScheduleEvent<Object> eventBuilder(Programacion p,int t) {
+            System.out.println("el registro es: "+p);
         if (p!=null && p.getDesde()!=null && p.getHasta()!=null) {
-            return DefaultScheduleEvent.builder()
-                    .title(p.getIdPelicula().getNombre())
+            try {
+                return DefaultScheduleEvent.builder()
+                        .title(p.getIdPelicula().getNombre())
 
-                    // Ajustar la fecha de inicio
-                    .startDate(p.getDesde().toInstant()
-                            .atZone(ZoneId.systemDefault()) // Interpretar la fecha como UTC
-                            .toLocalDateTime()
-                                    .plusHours(t)
-                            )
+                        // Ajustar la fecha de inicio
+                        .startDate(p.getDesde().toInstant()
+                                .atZone(ZoneId.systemDefault()) // Interpretar la fecha como UTC
+                                .toLocalDateTime()
+                                .plusHours(t)
+                        )
 
-                    // Ajustar la fecha de fin
-                    .endDate(p.getHasta().toInstant()
-                            .atZone(ZoneId.systemDefault()) // Interpretar la fecha como UTC
-                            .toLocalDateTime()
-                            .plusHours(t)
-                    )
-                    .description(p.getIdPelicula().getSinopsis())
-                    .id(p.getIdProgramacion().toString())
-                    .build();
+                        // Ajustar la fecha de fin
+                        .endDate(p.getHasta().toInstant()
+                                .atZone(ZoneId.systemDefault()) // Interpretar la fecha como UTC
+                                .toLocalDateTime()
+                                .plusHours(t)
+                        )
+                        .description(p.getIdPelicula().getSinopsis())
+                        .id(p.getIdProgramacion().toString())
+                        .build();
+            }catch (Exception e){
+                Logger.getLogger(getClass().getName()).log(Level.SEVERE, e.getMessage(), e);
+                return null;
+            }
+
 
         }
-        enviarMensaje(FacesMessage.SEVERITY_ERROR,"ERROR AL OBTENER LAS FECHAS");
+//        enviarMensaje(FacesMessage.SEVERITY_ERROR,"ERROR AL OBTENER LAS FECHAS");
          return null;
     }
 
     public boolean colicionFechas(){
-            if (desde!=null && hasta!=null) {
-                    if (desde.after(hasta)){
+            if (registro!=null && registro.getDesde()!=null && registro.getHasta()!=null) {
+                    if (registro.getDesde().after(registro.getHasta())){
                         enviarMensaje(FacesMessage.SEVERITY_ERROR,"problemas de fechas");
-                        System.out.println(desde);
-                        System.out.println(hasta);
                         return false;
                 }
-
                 return true;
             }
             enviarMensaje(FacesMessage.SEVERITY_ERROR,"no se ha selelcionado fechas");
@@ -431,10 +439,11 @@ public class FrmProgramacion extends AbstractFrm<Programacion> implements Serial
     }
 
     public boolean verificarPelicula(){
-        if (idPeliculaProgramar!=null){
+        if (!nombrePelicula.isEmpty()){
             BuscarPeliculaDisponibles();
-            Pelicula peli=peliculasDisponibles.stream().filter(p->p.getIdPelicula().equals(Long.valueOf(idPeliculaProgramar.toString()))).findFirst().orElse(null);
+            Pelicula peli=peliculasDisponibles.stream().filter(p->p.getNombre().equals(nombrePelicula)).findFirst().orElse(null);
 //            enviarMensaje(FacesMessage.SEVERITY_INFO,"el pelicula seleccionada es "+peli.getNombre().toString());
+            System.out.println("paso verificar peliculas");
             return true;
         }
         enviarMensaje(FacesMessage.SEVERITY_ERROR,"no se ha seleccionado pelicula");
@@ -457,9 +466,72 @@ public class FrmProgramacion extends AbstractFrm<Programacion> implements Serial
 
 
     public void cancelarProgramacion(){
+        registro=null;
+
+    }
+
+    public void resertearVariables(){
         desde=null;
         hasta=null;
         idPeliculaProgramar=null;
 
+    }
+    @Override
+    public void btnCancelarHandler(ActionEvent actionEvent) {
+        resertearVariables();
+        registro=null;
+        super.btnCancelarHandler(actionEvent);
+    }
+
+    @Override
+    public void btnGuardarHandler(ActionEvent e) {
+        if (colicionFechas() && verificarPelicula() && verificarSala()){
+//        enviarMensaje(FacesMessage.SEVERITY_INFO,"guardando");
+            try {
+                if (pBean.verificarColision(registro.getDesde(),registro.getHasta(),getSalaSelecionada())){
+                    registro.setIdSala(getSalaSelecionada());
+                    Programacion pro= new Programacion();
+                    pro=registro;
+                    super.btnGuardarHandler(e);
+                    eventModel.addEvent(eventBuilder(pro,6));
+                    resertearVariables();
+                    return;
+                }
+                enviarMensaje(FacesMessage.SEVERITY_ERROR,"choque de programaciones");
+            }catch (Exception ex){
+                Logger.getLogger(getClass().getName()).log(Level.SEVERE, ex.getMessage(), ex);
+                enviarMensaje(FacesMessage.SEVERITY_ERROR,"error al guardar");
+            }
+        }
+    }
+
+    @Override
+    public void btnModificarHandler(ActionEvent e) {
+        if (colicionFechas() && verificarPelicula()){
+//        enviarMensaje(FacesMessage.SEVERITY_INFO,"guardando");
+            try {
+                if (pBean.verificarColision(registro.getDesde(),registro.getHasta(),getSalaSelecionada())){
+                    registro.setIdSala(getSalaSelecionada());
+                    Programacion pro= new Programacion();
+                    pro=registro;
+                    super.btnModificarHandler(e);
+                    resertearVariables();
+                    inicioRegistros();
+                    return;
+                }
+                enviarMensaje(FacesMessage.SEVERITY_ERROR,"choque de programaciones");
+            }catch (Exception ex){
+                Logger.getLogger(getClass().getName()).log(Level.SEVERE, ex.getMessage(), ex);
+                enviarMensaje(FacesMessage.SEVERITY_ERROR,"error al guardar");
+            }
+        }
+    }
+
+    @Override
+    public void btneEliminarHandler(ActionEvent ex) {
+        Programacion pro=registro;
+        super.btneEliminarHandler(ex);
+        inicioRegistros();
+        resertearVariables();
     }
 }

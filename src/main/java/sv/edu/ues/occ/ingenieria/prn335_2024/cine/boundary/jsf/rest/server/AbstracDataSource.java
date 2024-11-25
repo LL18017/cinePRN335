@@ -31,7 +31,8 @@ public abstract class AbstracDataSource<T> implements Serializable {
 
             List<T> encontrados= getBean().findRange(first,max);
             Integer total=getBean().count();
-                System.out.println("lalalalal");
+
+                System.out.println("total:"+total);
                 Response.ResponseBuilder builder = Response.ok(encontrados).
                         header("Total-records", total).
                         type(MediaType.APPLICATION_JSON);
@@ -69,8 +70,7 @@ public abstract class AbstracDataSource<T> implements Serializable {
     @POST
     @Produces({MediaType.APPLICATION_JSON})
     @Consumes({MediaType.APPLICATION_JSON})
-    public Response create(T registro, @Context UriInfo uriInfo){
-        System.out.println(getId(registro));
+        public Response create(T registro, @Context UriInfo uriInfo){
         if (registro != null && getId(registro) == null ) {
             System.out.println(registro.toString());
             try {
@@ -96,18 +96,14 @@ public abstract class AbstracDataSource<T> implements Serializable {
     @Produces({MediaType.APPLICATION_JSON})
     @Consumes({MediaType.APPLICATION_JSON})
     public Response delete(T registro, @Context UriInfo uriInfo){
-        System.out.println(getId(registro));
         if (registro != null && getId(registro) != null ) {
             try {
                 getBean().delete(registro);
-                if (getId(registro) !=null) {
-
+                System.out.println("se elimino");
                     return Response.status(200).build();
-                }
-                return Response.status(500).header("process-error","Record couldnt be deleted").build();
             }catch (Exception e) {
                 Logger.getLogger(getClass().getName()).log(Level.SEVERE, e.getMessage(), e);
-                return Response.status(500).entity(e.getMessage()).build();
+                return Response.status(500).header("process-error","Record couldnt be deleted").build();
             }
         }
         return Response.status(500).header("Wrong-parameter", registro).build();

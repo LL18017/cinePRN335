@@ -4,11 +4,14 @@ import jakarta.annotation.PostConstruct;
 import jakarta.faces.application.FacesMessage;
 import jakarta.faces.context.FacesContext;
 import jakarta.faces.event.ActionEvent;
+import jakarta.faces.event.WebsocketEvent;
+import jakarta.inject.Inject;
 import org.primefaces.event.SelectEvent;
 import org.primefaces.model.FilterMeta;
 import org.primefaces.model.LazyDataModel;
 import org.primefaces.model.SortMeta;
 import org.primefaces.model.SortOrder;
+import sv.edu.ues.occ.ingenieria.prn335_2024.cine.boundary.jsf.WS.WS;
 import sv.edu.ues.occ.ingenieria.prn335_2024.cine.boundary.jsf.orden.LazySorted;
 import sv.edu.ues.occ.ingenieria.prn335_2024.cine.control.AbstractDataPersist;
 import sv.edu.ues.occ.ingenieria.prn335_2024.cine.entity.TipoProducto;
@@ -38,6 +41,8 @@ public abstract class AbstractFrm<T> implements Serializable {
     T registro;
     List<T> registros;
     LazyDataModel<T> modelo;
+   @Inject
+   private WS websocket;
    //botones
    public void btnCancelarHandler(ActionEvent actionEvent) {
       this.estado=ESTADO_CRUD.NINGUNO;
@@ -117,7 +122,9 @@ public abstract class AbstractFrm<T> implements Serializable {
          mensaje.setSeverity(FacesMessage.SEVERITY_INFO);
          mensaje.setSummary("registro guardado");
          getFC().addMessage(null,mensaje);
+         websocket.PropargarMensaje("nuevo dato guardado");
          this.registro = null;
+
       } catch (Exception ex) {
          Logger.getLogger(getClass().getName()).log(Level.SEVERE, ex.getMessage(), ex);
          mensaje.setSeverity(FacesMessage.SEVERITY_ERROR);
@@ -141,7 +148,7 @@ public abstract class AbstractFrm<T> implements Serializable {
             mensaje.setSeverity(FacesMessage.SEVERITY_INFO);
             mensaje.setSummary("registro modificado");
             getFC().addMessage(null,mensaje);
-
+            websocket.PropargarMensaje("nuevo dato modificado");
          }
       } catch (Exception e) {
 //         Logger.getLogger(getClass().getName()).log(Level.SEVERE, e.getMessage(), e);
@@ -173,6 +180,7 @@ public abstract class AbstractFrm<T> implements Serializable {
          mensaje.setSeverity(FacesMessage.SEVERITY_INFO);
          mensaje.setSummary("registro eliminado");
          getFC().addMessage(null,mensaje);
+         websocket.PropargarMensaje("nuevo dato eliminado");
          return;
       } catch (Exception e) {
          mensaje.setSeverity(FacesMessage.SEVERITY_INFO);
