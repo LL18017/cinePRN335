@@ -122,8 +122,9 @@ public abstract class AbstractFrm<T> implements Serializable {
          mensaje.setSeverity(FacesMessage.SEVERITY_INFO);
          mensaje.setSummary("registro guardado");
          getFC().addMessage(null,mensaje);
-         websocket.PropargarMensaje("nuevo dato guardado");
+         websocket.PropargarMensaje(null,"nuevo dato guardado");
          this.registro = null;
+         System.out.println("se esta enviado");
 
       } catch (Exception ex) {
          Logger.getLogger(getClass().getName()).log(Level.SEVERE, ex.getMessage(), ex);
@@ -148,7 +149,7 @@ public abstract class AbstractFrm<T> implements Serializable {
             mensaje.setSeverity(FacesMessage.SEVERITY_INFO);
             mensaje.setSummary("registro modificado");
             getFC().addMessage(null,mensaje);
-            websocket.PropargarMensaje("nuevo dato modificado");
+            websocket.PropargarMensaje(null,"nuevo dato modificado");
          }
       } catch (Exception e) {
 //         Logger.getLogger(getClass().getName()).log(Level.SEVERE, e.getMessage(), e);
@@ -180,7 +181,7 @@ public abstract class AbstractFrm<T> implements Serializable {
          mensaje.setSeverity(FacesMessage.SEVERITY_INFO);
          mensaje.setSummary("registro eliminado");
          getFC().addMessage(null,mensaje);
-         websocket.PropargarMensaje("nuevo dato eliminado");
+         websocket.PropargarMensaje(null,"nuevo dato eliminado");
          return;
       } catch (Exception e) {
          mensaje.setSeverity(FacesMessage.SEVERITY_INFO);
@@ -191,7 +192,9 @@ public abstract class AbstractFrm<T> implements Serializable {
 
       }
    }
-   //modelo
+//   modelo if (session.isOpen()) {
+//                session.getBasicRemote().sendText(mensaje);
+//            }
 
 
    public LazyDataModel<T> getModelo() {

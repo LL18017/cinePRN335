@@ -49,6 +49,7 @@
 /home/mjlopez/Escritorio/cinePRN335/src/main/java/sv/edu/ues/occ/ingenieria/prn335_2024/cine/entity/Sucursal.java
 /home/mjlopez/Escritorio/cinePRN335/src/main/java/sv/edu/ues/occ/ingenieria/prn335_2024/cine/boundary/jsf/rest/server/TipoProductoResource.java
 /home/mjlopez/Escritorio/cinePRN335/src/main/java/sv/edu/ues/occ/ingenieria/prn335_2024/cine/entity/TipoPago.java
+/home/mjlopez/Escritorio/cinePRN335/src/main/java/sv/edu/ues/occ/ingenieria/prn335_2024/cine/control/EndPoint.java
 /home/mjlopez/Escritorio/cinePRN335/src/main/java/sv/edu/ues/occ/ingenieria/prn335_2024/cine/boundary/jsf/FrmSalaCaracteristica.java
 /home/mjlopez/Escritorio/cinePRN335/src/main/java/sv/edu/ues/occ/ingenieria/prn335_2024/cine/control/PeliculaBean.java
 /home/mjlopez/Escritorio/cinePRN335/src/main/java/sv/edu/ues/occ/ingenieria/prn335_2024/cine/control/PeliculaCarracteristicaBean.java
@@ -75,6 +76,7 @@
 /home/mjlopez/Escritorio/cinePRN335/src/main/java/sv/edu/ues/occ/ingenieria/prn335_2024/cine/HelloServlet.java
 /home/mjlopez/Escritorio/cinePRN335/src/main/java/sv/edu/ues/occ/ingenieria/prn335_2024/cine/control/TipoProductoBean.java
 /home/mjlopez/Escritorio/cinePRN335/src/main/java/sv/edu/ues/occ/ingenieria/prn335_2024/cine/boundary/jsf/rest/server/CorsFilter.java
+/home/mjlopez/Escritorio/cinePRN335/src/main/java/sv/edu/ues/occ/ingenieria/prn335_2024/cine/boundary/jsf/WS/TipoSalaEndPonit.java
 /home/mjlopez/Escritorio/cinePRN335/src/main/java/sv/edu/ues/occ/ingenieria/prn335_2024/cine/boundary/jsf/FrmReservas.java
 /home/mjlopez/Escritorio/cinePRN335/src/main/java/sv/edu/ues/occ/ingenieria/prn335_2024/cine/boundary/jsf/AbstractFrm.java
 /home/mjlopez/Escritorio/cinePRN335/src/main/java/sv/edu/ues/occ/ingenieria/prn335_2024/cine/control/ContadorBean.java
