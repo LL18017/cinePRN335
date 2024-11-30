@@ -6,6 +6,7 @@ import jakarta.faces.view.ViewScoped;
 import jakarta.inject.Inject;
 import jakarta.inject.Named;
 import org.primefaces.event.SelectEvent;
+import sv.edu.ues.occ.ingenieria.prn335_2024.cine.boundary.jsf.WS.WS;
 import sv.edu.ues.occ.ingenieria.prn335_2024.cine.control.AbstractDataPersist;
 import sv.edu.ues.occ.ingenieria.prn335_2024.cine.control.TipoReservaBean;
 import sv.edu.ues.occ.ingenieria.prn335_2024.cine.entity.TipoReserva;
@@ -70,5 +71,10 @@ public class FrmTipoReserva extends AbstractFrm<TipoReserva> {
     @Override
     public String paginaNombre() {
         return "Tipo Reserva";
+    }
+
+    @Override
+    public WS getWebsocketController() {
+        return null;
     }
 }

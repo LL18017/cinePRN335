@@ -8,6 +8,7 @@ import jakarta.faces.view.ViewScoped;
 import jakarta.inject.Inject;
 import jakarta.inject.Named;
 import org.primefaces.event.SelectEvent;
+import sv.edu.ues.occ.ingenieria.prn335_2024.cine.boundary.jsf.WS.WS;
 import sv.edu.ues.occ.ingenieria.prn335_2024.cine.control.AbstractDataPersist;
 import sv.edu.ues.occ.ingenieria.prn335_2024.cine.control.TipoSalaBean;
 import sv.edu.ues.occ.ingenieria.prn335_2024.cine.entity.TipoSala;
@@ -79,5 +80,10 @@ public class FrmTipoSala extends AbstractFrm<TipoSala> implements Serializable {
         @Override
         public String paginaNombre() {
             return "Tipo sala";
+        }
+
+        @Override
+        public WS getWebsocketController() {
+            return null;
         }
     }

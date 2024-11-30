@@ -8,6 +8,8 @@ import jakarta.inject.Inject;
 import jakarta.inject.Named;
 import org.primefaces.event.SelectEvent;
 import org.primefaces.event.TabChangeEvent;
+import sv.edu.ues.occ.ingenieria.prn335_2024.cine.boundary.jsf.WS.PeliculaEndPoint;
+import sv.edu.ues.occ.ingenieria.prn335_2024.cine.boundary.jsf.WS.WS;
 import sv.edu.ues.occ.ingenieria.prn335_2024.cine.control.AbstractDataPersist;
 import sv.edu.ues.occ.ingenieria.prn335_2024.cine.control.PeliculaBean;
 import sv.edu.ues.occ.ingenieria.prn335_2024.cine.entity.Pelicula;
@@ -26,6 +28,8 @@ public class FrmPelicula extends AbstractFrm<Pelicula> implements Serializable {
     PeliculaBean pBean;
     @Inject
     FacesContext fc;
+    @Inject
+    PeliculaEndPoint peliculaEndPoint;
 
     @Inject
     FrmPeliculaCarracteristica frmPeliculaCarractreistica;
@@ -106,5 +110,10 @@ public class FrmPelicula extends AbstractFrm<Pelicula> implements Serializable {
         frmPeliculaCarractreistica.estado=ESTADO_CRUD.NINGUNO;
         frmPeliculaCarractreistica.registro=null;
         super.btnCancelarHandler(actionEvent);
+    }
+
+    @Override
+    public WS getWebsocketController() {
+        return peliculaEndPoint;
     }
 }

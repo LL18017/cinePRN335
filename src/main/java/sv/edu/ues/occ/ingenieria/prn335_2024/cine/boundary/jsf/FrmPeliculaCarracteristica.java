@@ -11,6 +11,7 @@ import jakarta.faces.validator.ValidatorException;
 import jakarta.inject.Inject;
 import jakarta.inject.Named;
 import org.primefaces.event.SelectEvent;
+import sv.edu.ues.occ.ingenieria.prn335_2024.cine.boundary.jsf.WS.WS;
 import sv.edu.ues.occ.ingenieria.prn335_2024.cine.control.AbstractDataPersist;
 import sv.edu.ues.occ.ingenieria.prn335_2024.cine.control.PeliculaBean;
 import sv.edu.ues.occ.ingenieria.prn335_2024.cine.control.PeliculaCarracteristicaBean;
@@ -194,6 +195,11 @@ public class FrmPeliculaCarracteristica extends AbstractFrm<PeliculaCaracteristi
         if (registro!=null){
             expresionTipoPelicula=registro.getIdTipoPelicula().getExpresionRegular();
         }
+    }
+
+    @Override
+    public WS getWebsocketController() {
+        return null;
     }
 
     public Integer getIdTipoPeliculaSelecionada() {

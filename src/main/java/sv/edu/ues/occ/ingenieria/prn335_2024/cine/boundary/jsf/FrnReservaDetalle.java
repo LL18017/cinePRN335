@@ -5,6 +5,7 @@ import jakarta.faces.context.FacesContext;
 import jakarta.inject.Inject;
 import jakarta.inject.Named;
 import org.primefaces.event.SelectEvent;
+import sv.edu.ues.occ.ingenieria.prn335_2024.cine.boundary.jsf.WS.WS;
 import sv.edu.ues.occ.ingenieria.prn335_2024.cine.control.AbstractDataPersist;
 import sv.edu.ues.occ.ingenieria.prn335_2024.cine.control.ReservaBean;
 import sv.edu.ues.occ.ingenieria.prn335_2024.cine.control.ReservaDetalleBean;
@@ -57,5 +58,10 @@ public class FrnReservaDetalle extends AbstractFrm<ReservaDetalle> implements Se
     @Override
     public String paginaNombre() {
         return "Reserva Detalle";
+    }
+
+    @Override
+    public WS getWebsocketController() {
+        return null;
     }
 }

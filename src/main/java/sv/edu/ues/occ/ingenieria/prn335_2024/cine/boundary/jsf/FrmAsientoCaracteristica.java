@@ -9,6 +9,8 @@ import jakarta.faces.view.ViewScoped;
 import jakarta.inject.Inject;
 import jakarta.inject.Named;
 import org.primefaces.event.SelectEvent;
+import sv.edu.ues.occ.ingenieria.prn335_2024.cine.boundary.jsf.WS.AsientoCracteristicaEndPoint;
+import sv.edu.ues.occ.ingenieria.prn335_2024.cine.boundary.jsf.WS.WS;
 import sv.edu.ues.occ.ingenieria.prn335_2024.cine.control.AbstractDataPersist;
 import sv.edu.ues.occ.ingenieria.prn335_2024.cine.control.AsientoCaracteristicaBean;
 import sv.edu.ues.occ.ingenieria.prn335_2024.cine.control.TipoAsientoBean;
@@ -32,6 +34,8 @@ public class FrmAsientoCaracteristica extends AbstractFrm<AsientoCaracteristica>
     TipoAsientoBean tipoAsientoBean;
     @Inject
     FacesContext fc;
+    @Inject
+    AsientoCracteristicaEndPoint asientoCracteristicaEndPoint;
 
 
     Asiento AsientoSelecionado;
@@ -109,6 +113,11 @@ public class FrmAsientoCaracteristica extends AbstractFrm<AsientoCaracteristica>
     @Override
     public String paginaNombre() {
         return "Asiento Caracteristica";
+    }
+
+    @Override
+    public WS getWebsocketController() {
+        return asientoCracteristicaEndPoint;
     }
 
     //Metodos random y SobreEscritos-----------------------------------------------------

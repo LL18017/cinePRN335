@@ -4,6 +4,7 @@ import jakarta.faces.context.FacesContext;
 import jakarta.inject.Inject;
 import jakarta.inject.Named;
 import org.primefaces.event.SelectEvent;
+import sv.edu.ues.occ.ingenieria.prn335_2024.cine.boundary.jsf.WS.WS;
 import sv.edu.ues.occ.ingenieria.prn335_2024.cine.control.AbstractDataPersist;
 import sv.edu.ues.occ.ingenieria.prn335_2024.cine.control.ReservaBean;
 import sv.edu.ues.occ.ingenieria.prn335_2024.cine.entity.Reserva;
@@ -60,6 +61,11 @@ public class FrmReserva extends AbstractFrm<Reserva> implements Serializable {
     @Override
     public String paginaNombre() {
         return "Reserva  ";
+    }
+
+    @Override
+    public WS getWebsocketController() {
+        return null;
     }
 
     //funcionalidad

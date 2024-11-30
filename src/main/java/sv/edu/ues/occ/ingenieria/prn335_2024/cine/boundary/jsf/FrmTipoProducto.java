@@ -7,6 +7,8 @@ import jakarta.faces.view.ViewScoped;
 import jakarta.inject.Inject;
 import jakarta.inject.Named;
 import org.primefaces.event.SelectEvent;
+import sv.edu.ues.occ.ingenieria.prn335_2024.cine.boundary.jsf.WS.TipoProductoEndPoint;
+import sv.edu.ues.occ.ingenieria.prn335_2024.cine.boundary.jsf.WS.WS;
 import sv.edu.ues.occ.ingenieria.prn335_2024.cine.control.AbstractDataPersist;
 import sv.edu.ues.occ.ingenieria.prn335_2024.cine.control.TipoProductoBean;
 import sv.edu.ues.occ.ingenieria.prn335_2024.cine.entity.TipoProducto;
@@ -23,6 +25,11 @@ public class FrmTipoProducto extends AbstractFrm<TipoProducto> implements Serial
     TipoProductoBean tpBean;
     @Inject
     FacesContext fc;
+    @Inject
+    TipoProductoEndPoint tipoProductoEndPoint;
+
+
+
     @Override
     public void instanciarRegistro() {
         this.registro = new TipoProducto();
@@ -80,5 +87,10 @@ public class FrmTipoProducto extends AbstractFrm<TipoProducto> implements Serial
     @Override
     public String paginaNombre() {
         return "Tipo Producto";
+    }
+
+    @Override
+    public WS getWebsocketController() {
+        return tipoProductoEndPoint;
     }
 }

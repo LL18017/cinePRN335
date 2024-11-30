@@ -35,14 +35,14 @@ public abstract class AbstractFrm<T> implements Serializable {
    public abstract T getObjectById(String id);
    public abstract void selecionarFila(SelectEvent<T> event);
    public abstract String paginaNombre();
+   public abstract WS getWebsocketController();
+
 
    //propiedades
    ESTADO_CRUD estado=ESTADO_CRUD.NINGUNO;
     T registro;
     List<T> registros;
     LazyDataModel<T> modelo;
-   @Inject
-   private WS websocket;
    //botones
    public void btnCancelarHandler(ActionEvent actionEvent) {
       this.estado=ESTADO_CRUD.NINGUNO;
@@ -122,7 +122,7 @@ public abstract class AbstractFrm<T> implements Serializable {
          mensaje.setSeverity(FacesMessage.SEVERITY_INFO);
          mensaje.setSummary("registro guardado");
          getFC().addMessage(null,mensaje);
-         websocket.PropargarMensaje("nuevo dato guardado");
+         getWebsocketController().PropargarMensaje("nuevo dato guardado");
          this.registro = null;
          System.out.println("se esta enviado");
 
@@ -148,7 +148,7 @@ public abstract class AbstractFrm<T> implements Serializable {
             mensaje.setSeverity(FacesMessage.SEVERITY_INFO);
             mensaje.setSummary("registro modificado");
             getFC().addMessage(null,mensaje);
-            websocket.PropargarMensaje("nuevo dato modificado");
+            getWebsocketController().PropargarMensaje("nuevo dato modificado");
          }
       } catch (Exception e) {
 //         Logger.getLogger(getClass().getName()).log(Level.SEVERE, e.getMessage(), e);
@@ -180,7 +180,7 @@ public abstract class AbstractFrm<T> implements Serializable {
          mensaje.setSeverity(FacesMessage.SEVERITY_INFO);
          mensaje.setSummary("registro eliminado");
          getFC().addMessage(null,mensaje);
-         websocket.PropargarMensaje("nuevo dato eliminado");
+         getWebsocketController().PropargarMensaje("nuevo dato eliminado");
          return;
       } catch (Exception e) {
          mensaje.setSeverity(FacesMessage.SEVERITY_INFO);

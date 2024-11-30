@@ -11,6 +11,7 @@ import org.primefaces.model.DefaultScheduleEvent;
 import org.primefaces.model.DefaultScheduleModel;
 import org.primefaces.model.ScheduleEvent;
 import org.primefaces.model.ScheduleModel;
+import sv.edu.ues.occ.ingenieria.prn335_2024.cine.boundary.jsf.WS.WS;
 import sv.edu.ues.occ.ingenieria.prn335_2024.cine.control.AbstractDataPersist;
 import sv.edu.ues.occ.ingenieria.prn335_2024.cine.control.PeliculaBean;
 import sv.edu.ues.occ.ingenieria.prn335_2024.cine.control.ProgramacionBean;
@@ -125,6 +126,11 @@ public class FrmProgramacion extends AbstractFrm<Programacion> implements Serial
         this.registro= programacionSelected;
         estado =ESTADO_CRUD.MODIFICAR;
         fc.addMessage(null,new FacesMessage("se ha selecionado una programacion"+programacionSelected));
+    }
+
+    @Override
+    public WS getWebsocketController() {
+        return null;
     }
     public void BuscarPeliculaDisponibles() {
         try {

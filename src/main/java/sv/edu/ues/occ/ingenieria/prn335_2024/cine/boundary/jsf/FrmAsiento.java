@@ -8,6 +8,8 @@ import jakarta.faces.event.ActionEvent;
 import jakarta.inject.Inject;
 import jakarta.inject.Named;
 import org.primefaces.event.SelectEvent;
+import sv.edu.ues.occ.ingenieria.prn335_2024.cine.boundary.jsf.WS.AsientoEndPoint;
+import sv.edu.ues.occ.ingenieria.prn335_2024.cine.boundary.jsf.WS.WS;
 import sv.edu.ues.occ.ingenieria.prn335_2024.cine.control.AbstractDataPersist;
 import sv.edu.ues.occ.ingenieria.prn335_2024.cine.control.AsientoBean;
 import sv.edu.ues.occ.ingenieria.prn335_2024.cine.control.AsientoCaracteristicaBean;
@@ -37,6 +39,8 @@ public class FrmAsiento extends AbstractFrm<Asiento> implements Serializable {
     FrmAsientoCaracteristica frmAsientoCaracteristica;
     @Inject
     FrmTipoAsiento frmTipoAsiento;
+    @Inject
+    AsientoEndPoint asientoEndPoint;
 
     Sala SalaSelecionada;
 
@@ -111,7 +115,10 @@ public class FrmAsiento extends AbstractFrm<Asiento> implements Serializable {
         return "Asientos";
     }
 
-
+    @Override
+    public WS getWebsocketController() {
+        return asientoEndPoint;
+    }
 
     public Sala getSalaSelecionada() {
         return SalaSelecionada;

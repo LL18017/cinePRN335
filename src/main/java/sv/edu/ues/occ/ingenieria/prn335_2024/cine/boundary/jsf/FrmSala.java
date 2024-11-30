@@ -8,6 +8,7 @@ import jakarta.inject.Inject;
 import jakarta.inject.Named;
 import org.primefaces.event.SelectEvent;
 import org.primefaces.event.TabChangeEvent;
+import sv.edu.ues.occ.ingenieria.prn335_2024.cine.boundary.jsf.WS.WS;
 import sv.edu.ues.occ.ingenieria.prn335_2024.cine.control.*;
 import sv.edu.ues.occ.ingenieria.prn335_2024.cine.entity.Sala;
 import sv.edu.ues.occ.ingenieria.prn335_2024.cine.entity.Sucursal;
@@ -96,6 +97,11 @@ public class FrmSala extends AbstractFrm<Sala> {
     @Override
     public String paginaNombre() {
         return "Sala";
+    }
+
+    @Override
+    public WS getWebsocketController() {
+        return null;
     }
 
     //funcionaliddaes de Sala

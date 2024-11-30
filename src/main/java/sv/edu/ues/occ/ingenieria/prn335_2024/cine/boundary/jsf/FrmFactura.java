@@ -6,6 +6,8 @@ import jakarta.faces.view.ViewScoped;
 import jakarta.inject.Inject;
 import jakarta.inject.Named;
 import org.primefaces.event.SelectEvent;
+import sv.edu.ues.occ.ingenieria.prn335_2024.cine.boundary.jsf.WS.FacturaEndPoint;
+import sv.edu.ues.occ.ingenieria.prn335_2024.cine.boundary.jsf.WS.WS;
 import sv.edu.ues.occ.ingenieria.prn335_2024.cine.control.AbstractDataPersist;
 import sv.edu.ues.occ.ingenieria.prn335_2024.cine.control.FacturaBean;
 import sv.edu.ues.occ.ingenieria.prn335_2024.cine.entity.Factura;
@@ -17,6 +19,7 @@ import java.util.logging.Logger;
 @Named
 @ViewScoped
 public class FrmFactura extends AbstractFrm<Factura> implements Serializable {
+
     @Override
     public String paginaNombre() {
         return "";
@@ -26,6 +29,8 @@ public class FrmFactura extends AbstractFrm<Factura> implements Serializable {
     FacturaBean fBean;
     @Inject
     FacesContext fc;
+    @Inject
+    FacturaEndPoint facturaEndPoint;
 
     @Override
     public void instanciarRegistro() {
@@ -69,5 +74,10 @@ public class FrmFactura extends AbstractFrm<Factura> implements Serializable {
         fc.addMessage(null, mensaje);
         this.estado=ESTADO_CRUD.MODIFICAR;
 
+    }
+
+    @Override
+    public WS getWebsocketController() {
+        return facturaEndPoint;
     }
 }
