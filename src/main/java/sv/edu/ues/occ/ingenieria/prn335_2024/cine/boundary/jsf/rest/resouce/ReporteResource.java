@@ -1,4 +1,4 @@
-package sv.edu.ues.occ.ingenieria.prn335_2024.cine.boundary.jsf.rest.server;
+package sv.edu.ues.occ.ingenieria.prn335_2024.cine.boundary.jsf.rest.resouce;
 
 import jakarta.annotation.Resource;
 import jakarta.ws.rs.GET;
@@ -17,7 +17,6 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.Serializable;
 import java.util.HashMap;
-import java.util.concurrent.RecursiveTask;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -34,9 +33,9 @@ public class ReporteResource implements Serializable {
         HashMap parametros= new HashMap();
         String path;
         switch (reporte) {
-            case "tipo_sala":
+            case "tiposala":
 //                path = getClass().getResource("/reportes/tipoSalaRPT.jasper").toString();
-                path = "/reportes/tipoSalaRPT.jasper";
+                path = "/reportes/TipoSalaRPT.jasper";
                 break;
 
             default:
@@ -63,7 +62,6 @@ public class ReporteResource implements Serializable {
                         }
                     }
                 };
-//                JasperExportManager.exp
 
                 return Response.ok(salida,"application/pdf").build();
             }

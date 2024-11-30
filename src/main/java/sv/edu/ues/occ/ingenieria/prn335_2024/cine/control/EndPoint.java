@@ -3,7 +3,7 @@ package sv.edu.ues.occ.ingenieria.prn335_2024.cine.control;
 import jakarta.inject.Inject;
 import jakarta.websocket.*;
 import sv.edu.ues.occ.ingenieria.prn335_2024.cine.boundary.jsf.FrmTipoSala;
-import sv.edu.ues.occ.ingenieria.prn335_2024.cine.boundary.jsf.WS.ManagerSessionWS;
+import sv.edu.ues.occ.ingenieria.prn335_2024.cine.boundary.jsf.rest.WS.ManagerSessionWS;
 
 import java.io.IOException;
 

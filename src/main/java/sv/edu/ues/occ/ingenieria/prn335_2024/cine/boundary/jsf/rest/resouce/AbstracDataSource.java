@@ -1,6 +1,5 @@
-package sv.edu.ues.occ.ingenieria.prn335_2024.cine.boundary.jsf.rest.server;
+package sv.edu.ues.occ.ingenieria.prn335_2024.cine.boundary.jsf.rest.resouce;
 
-import jakarta.enterprise.inject.Default;
 import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.*;
 import sv.edu.ues.occ.ingenieria.prn335_2024.cine.control.AbstractDataPersist;

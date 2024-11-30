@@ -6,11 +6,10 @@ import jakarta.faces.view.ViewScoped;
 import jakarta.inject.Inject;
 import jakarta.inject.Named;
 import org.primefaces.event.SelectEvent;
-import sv.edu.ues.occ.ingenieria.prn335_2024.cine.boundary.jsf.WS.WS;
+import sv.edu.ues.occ.ingenieria.prn335_2024.cine.boundary.jsf.rest.WS.WS;
 import sv.edu.ues.occ.ingenieria.prn335_2024.cine.control.AbstractDataPersist;
 import sv.edu.ues.occ.ingenieria.prn335_2024.cine.control.TipoAsientoBean;
 import sv.edu.ues.occ.ingenieria.prn335_2024.cine.entity.TipoAsiento;
-import sv.edu.ues.occ.ingenieria.prn335_2024.cine.entity.TipoProducto;
 
 import java.io.Serializable;
 import java.util.logging.Logger;

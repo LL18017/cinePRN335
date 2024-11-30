@@ -9,7 +9,7 @@ import jakarta.faces.validator.ValidatorException;
 import jakarta.inject.Inject;
 import jakarta.inject.Named;
 import org.primefaces.event.SelectEvent;
-import sv.edu.ues.occ.ingenieria.prn335_2024.cine.boundary.jsf.WS.WS;
+import sv.edu.ues.occ.ingenieria.prn335_2024.cine.boundary.jsf.rest.WS.WS;
 import sv.edu.ues.occ.ingenieria.prn335_2024.cine.control.AbstractDataPersist;
 import sv.edu.ues.occ.ingenieria.prn335_2024.cine.control.SalaCaracteristicaBean;
 import sv.edu.ues.occ.ingenieria.prn335_2024.cine.entity.Sala;
@@ -18,7 +18,6 @@ import sv.edu.ues.occ.ingenieria.prn335_2024.cine.entity.TipoSala;
 
 //import javax.faces.validator.ValidatorException;
 import java.io.Serializable;
-import java.sql.SQLOutput;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;

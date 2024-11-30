@@ -8,18 +8,15 @@ import jakarta.inject.Inject;
 import jakarta.inject.Named;
 import org.primefaces.event.SelectEvent;
 import org.primefaces.event.TabChangeEvent;
-import sv.edu.ues.occ.ingenieria.prn335_2024.cine.boundary.jsf.WS.PeliculaEndPoint;
-import sv.edu.ues.occ.ingenieria.prn335_2024.cine.boundary.jsf.WS.WS;
+import sv.edu.ues.occ.ingenieria.prn335_2024.cine.boundary.jsf.rest.WS.PeliculaEndPoint;
+import sv.edu.ues.occ.ingenieria.prn335_2024.cine.boundary.jsf.rest.WS.WS;
 import sv.edu.ues.occ.ingenieria.prn335_2024.cine.control.AbstractDataPersist;
 import sv.edu.ues.occ.ingenieria.prn335_2024.cine.control.PeliculaBean;
 import sv.edu.ues.occ.ingenieria.prn335_2024.cine.entity.Pelicula;
 
-import jakarta.faces.component.UIComponent;
-import jakarta.faces.component.UIInput;
 import java.io.Serializable;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import java.util.regex.Pattern;
 
 @ViewScoped
 @Named

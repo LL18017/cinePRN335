@@ -4,26 +4,19 @@ import jakarta.annotation.PostConstruct;
 import jakarta.faces.application.FacesMessage;
 import jakarta.faces.context.FacesContext;
 import jakarta.faces.event.ActionEvent;
-import jakarta.faces.event.WebsocketEvent;
-import jakarta.inject.Inject;
 import org.primefaces.event.SelectEvent;
 import org.primefaces.model.FilterMeta;
 import org.primefaces.model.LazyDataModel;
 import org.primefaces.model.SortMeta;
-import org.primefaces.model.SortOrder;
-import sv.edu.ues.occ.ingenieria.prn335_2024.cine.boundary.jsf.WS.WS;
-import sv.edu.ues.occ.ingenieria.prn335_2024.cine.boundary.jsf.orden.LazySorted;
+import sv.edu.ues.occ.ingenieria.prn335_2024.cine.boundary.jsf.rest.WS.WS;
 import sv.edu.ues.occ.ingenieria.prn335_2024.cine.control.AbstractDataPersist;
-import sv.edu.ues.occ.ingenieria.prn335_2024.cine.entity.TipoProducto;
 
 import java.io.Serializable;
 import java.util.Collections;
-import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import java.util.stream.Collectors;
 
 public abstract class AbstractFrm<T> implements Serializable {
    //metodos abstractos

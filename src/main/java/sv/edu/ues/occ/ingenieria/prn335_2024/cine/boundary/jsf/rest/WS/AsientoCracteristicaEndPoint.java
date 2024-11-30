@@ -1,4 +1,4 @@
-package sv.edu.ues.occ.ingenieria.prn335_2024.cine.boundary.jsf.WS;
+package sv.edu.ues.occ.ingenieria.prn335_2024.cine.boundary.jsf.rest.WS;
 
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Named;
@@ -12,8 +12,8 @@ import java.io.IOException;
 
 @Named
 @ApplicationScoped
-@ServerEndpoint("/notificadorasiento")
-public class AsientoEndPoint extends WS{
+@ServerEndpoint("/notificadorasientocaracteristica")
+public class AsientoCracteristicaEndPoint extends WS {
     @OnMessage
     @Override
     public void PropargarMensaje(String mensaje) throws IOException {

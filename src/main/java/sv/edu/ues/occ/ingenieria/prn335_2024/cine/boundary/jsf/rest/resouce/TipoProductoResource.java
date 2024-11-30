@@ -1,4 +1,4 @@
-package sv.edu.ues.occ.ingenieria.prn335_2024.cine.boundary.jsf.rest.server;
+package sv.edu.ues.occ.ingenieria.prn335_2024.cine.boundary.jsf.rest.resouce;
 
 import jakarta.inject.Inject;
 import jakarta.ws.rs.Path;
