@@ -1,4 +1,4 @@
-package sv.edu.ues.occ.ingenieria.prn335_2024.cine.control;
+package sv.edu.ues.occ.ingenieria.prn335_2024.cine.boundary.jsf.WS;
 
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Named;

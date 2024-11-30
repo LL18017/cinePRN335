@@ -7,6 +7,7 @@
 /home/mjlopez/Escritorio/cinePRN335/src/main/java/sv/edu/ues/occ/ingenieria/prn335_2024/cine/control/TipoSalaBean.java
 /home/mjlopez/Escritorio/cinePRN335/src/main/java/sv/edu/ues/occ/ingenieria/prn335_2024/cine/boundary/jsf/FrmTipoPelicula.java
 /home/mjlopez/Escritorio/cinePRN335/src/main/java/sv/edu/ues/occ/ingenieria/prn335_2024/cine/entity/Reserva.java
+/home/mjlopez/Escritorio/cinePRN335/src/main/java/sv/edu/ues/occ/ingenieria/prn335_2024/cine/boundary/jsf/rest/server/ReporteResource.java
 /home/mjlopez/Escritorio/cinePRN335/src/main/java/sv/edu/ues/occ/ingenieria/prn335_2024/cine/entity/TipoReserva.java
 /home/mjlopez/Escritorio/cinePRN335/src/main/java/sv/edu/ues/occ/ingenieria/prn335_2024/cine/control/utils/TreeNodeBuilder.java
 /home/mjlopez/Escritorio/cinePRN335/src/main/java/sv/edu/ues/occ/ingenieria/prn335_2024/cine/entity/SalaCaracteristica.java

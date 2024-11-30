@@ -122,7 +122,7 @@ public abstract class AbstractFrm<T> implements Serializable {
          mensaje.setSeverity(FacesMessage.SEVERITY_INFO);
          mensaje.setSummary("registro guardado");
          getFC().addMessage(null,mensaje);
-         websocket.PropargarMensaje(null,"nuevo dato guardado");
+         websocket.PropargarMensaje("nuevo dato guardado");
          this.registro = null;
          System.out.println("se esta enviado");
 
@@ -137,7 +137,6 @@ public abstract class AbstractFrm<T> implements Serializable {
    }
 
    public void btnModificarHandler(ActionEvent ex) {
-      System.out.println("se esta modificando");
       T modificado = null;
       FacesMessage mensaje=new FacesMessage();;
       try {
@@ -149,7 +148,7 @@ public abstract class AbstractFrm<T> implements Serializable {
             mensaje.setSeverity(FacesMessage.SEVERITY_INFO);
             mensaje.setSummary("registro modificado");
             getFC().addMessage(null,mensaje);
-            websocket.PropargarMensaje(null,"nuevo dato modificado");
+            websocket.PropargarMensaje("nuevo dato modificado");
          }
       } catch (Exception e) {
 //         Logger.getLogger(getClass().getName()).log(Level.SEVERE, e.getMessage(), e);
@@ -181,7 +180,7 @@ public abstract class AbstractFrm<T> implements Serializable {
          mensaje.setSeverity(FacesMessage.SEVERITY_INFO);
          mensaje.setSummary("registro eliminado");
          getFC().addMessage(null,mensaje);
-         websocket.PropargarMensaje(null,"nuevo dato eliminado");
+         websocket.PropargarMensaje("nuevo dato eliminado");
          return;
       } catch (Exception e) {
          mensaje.setSeverity(FacesMessage.SEVERITY_INFO);

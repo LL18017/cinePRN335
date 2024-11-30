@@ -26,5 +26,7 @@ public class CorsFilter implements ContainerResponseFilter {
         // Permitir encabezados expuestos
         containerResponseContext.getHeaders().add("Access-Control-Expose-Headers", "Authorization");
         containerResponseContext.getHeaders().add("Access-Control-Expose-Headers", "Authorization, Total-records");
+        containerResponseContext.getHeaders().add("JSESSIONID", "SameSite=None, Secure");
+
     }
 }
