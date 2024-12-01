@@ -46,6 +46,9 @@ public class FrmSala extends AbstractFrm<Sala> {
     Integer idSucursalSelecionada;
     List<Sucursal> sucursalesDisponibles;
 
+
+
+
     @Override
     public void instanciarRegistro() {
             registro = new Sala();

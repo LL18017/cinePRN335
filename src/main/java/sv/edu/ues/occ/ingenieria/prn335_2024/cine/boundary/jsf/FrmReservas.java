@@ -9,6 +9,8 @@ import jakarta.faces.view.ViewScoped;
 import jakarta.inject.Inject;
 import jakarta.inject.Named;
 import org.primefaces.event.SelectEvent;
+import sv.edu.ues.occ.ingenieria.prn335_2024.cine.boundary.jsf.rest.WS.ReservaDetalleEndPoint;
+import sv.edu.ues.occ.ingenieria.prn335_2024.cine.boundary.jsf.rest.WS.ReservaEndPoint;
 import sv.edu.ues.occ.ingenieria.prn335_2024.cine.boundary.jsf.rest.WS.WS;
 import sv.edu.ues.occ.ingenieria.prn335_2024.cine.control.*;
 import sv.edu.ues.occ.ingenieria.prn335_2024.cine.entity.*;
@@ -35,6 +37,9 @@ public class FrmReservas extends AbstractFrm<Reserva> implements Serializable {
     ProgramacionBean programacionBean;
     @Inject
     AsientoBean asientoBean;
+    @Inject
+    ReservaEndPoint reservaEndPoint;
+
 
 
     //variables para la pagina
@@ -44,6 +49,7 @@ public class FrmReservas extends AbstractFrm<Reserva> implements Serializable {
     Date fechaReservaSelecionada;
     int idTipoReservaSelecionada;
     //segundo tab
+    String nombreProgramacion;
     List<TipoReserva> tipoReservasDisponibles;
     List<Programacion> programaciones;
     Programacion programacionSelecionada;
@@ -56,17 +62,17 @@ public class FrmReservas extends AbstractFrm<Reserva> implements Serializable {
     String idAsientoELiminado;
     Date fechaActual;
 
+
+
     @Override
     public void instanciarRegistro() {
         registro = new Reserva();
     }
 
-    @PostConstruct
     @Override
-    public void init() {
-        super.init();
+    public void inicioRegistros() {
         tipoReservasDisponibles = tipoReservaBean.findAll();
-        System.out.println("la cantidad de reservas son" + tipoReservasDisponibles.size());
+        super.inicioRegistros();
     }
 
     @Override
@@ -106,8 +112,13 @@ public class FrmReservas extends AbstractFrm<Reserva> implements Serializable {
 
     @Override
     public WS getWebsocketController() {
-        return null;
+        return reservaEndPoint;
     }
+
+
+
+    //METODOS
+
 
     private boolean esFechaReservaValida() {
         // Obtener fecha actual truncada al inicio del día
@@ -148,11 +159,6 @@ public class FrmReservas extends AbstractFrm<Reserva> implements Serializable {
         return calendar.getTime();
     }
 
-
-
-
-
-    //funcionalidad
     public void nextTab() {
         if (!esFechaReservaValida()) {
             // Si la fecha no es válida, salir del método
@@ -214,28 +220,14 @@ public class FrmReservas extends AbstractFrm<Reserva> implements Serializable {
     public void buscarProgramaciones() {
         // Llamar directamente al método que devuelve las programaciones filtradas
         programaciones = programacionBean.findProgramacionesByDate(fechaReservaSelecionada);
-        System.out.println("Programaciones encontradas para la fecha " + fechaReservaSelecionada + ":");
-        programaciones.forEach(p -> System.out.println("Desde: " + p.getDesde() + ", Hasta: " + p.getHasta()));
 
     }
 
-//        public void buscarProgramaciones() {
-//        programaciones=programacionBean.findProgramacionesByDate(fechaReservaSelecionada);
-//        programaciones=programaciones.stream().filter(p->(fechaReservaSelecionada.compareTo(p.getDesde())>0 && fechaReservaSelecionada.compareTo(p.getHasta())<0)).collect(Collectors.toList());
-//
-//    }
-
     public void buscarAsientosByProgramacion() {
-        //buscar asientos asientos libres de una sala y programacion
-
-        //buscar todos los asientos que tiene una sala
         try {
             asientosDisponibles = asientoBean.findAsientosBySalaandProgramacion(programacionSelecionada.getIdSala(), programacionSelecionada);
-            System.out.println("los asientos displonibles son " + asientosDisponibles.size());
-            asientosDisponibles.forEach(System.out::println);
         } catch (Exception e) {
             Logger.getLogger(getClass().getName()).log(Level.SEVERE, e.getMessage(), e);
-            System.out.println("error al cargar los asientos");
         }
     }
 
@@ -246,7 +238,6 @@ public class FrmReservas extends AbstractFrm<Reserva> implements Serializable {
             SimpleDateFormat sdf = new SimpleDateFormat("HH:mm");
             programaciones.forEach(p -> {
                 sugerencias.add(
-                        p.getIdProgramacion() + "_" +
                                 p.getIdPelicula().getNombre() + "," +
                                 p.getIdSala().getNombre() + " (" +
                                 sdf.format(p.getDesde()) + "-" + sdf.format(p.getHasta()) + ")");
@@ -260,18 +251,13 @@ public class FrmReservas extends AbstractFrm<Reserva> implements Serializable {
 
 
     public void onItemSelect(AjaxBehaviorEvent event) {
-        // Obtener el valor del input automáticamente
+
         String selectedValue = (String) ((UIInput) event.getSource()).getValue();
-        System.out.println("Seleccionaste: " + selectedValue);
     }
 
     //    esto es de hdz
     public void onProgramacionChange(SelectEvent event) {
-        String idString = (String) event.getObject();
-        Long id = Long.parseLong(idString.split("_")[0]);
-        programacionSelecionada = programaciones.stream()
-                .filter(p -> p.getIdProgramacion().equals(id))
-                .findFirst() .orElse(null);
+
         if (programacionSelecionada != null) {
             SimpleDateFormat sdf = new SimpleDateFormat("HH:mm");
             fechaProgramacion = "hora (" + sdf.format(programacionSelecionada.getDesde()) + "-" + sdf.format(programacionSelecionada.getHasta()) + ")"; }
@@ -490,4 +476,14 @@ public class FrmReservas extends AbstractFrm<Reserva> implements Serializable {
         this.idAsientoELiminado = idAsientoELiminado;
     }
 
+    public String getNombreProgramacion() {
+        return nombreProgramacion;
+    }
+
+    public void setNombreProgramacion(String nombreProgramacion) {
+        System.out.println(nombreProgramacion.split(",")[0]);
+        setProgramacionSelecionada(programaciones.stream().filter(p->p.getIdPelicula().getNombre().equals(nombreProgramacion.split(",")[0])).findFirst().orElse(null));
+        System.out.println(programacionSelecionada);
+        this.nombreProgramacion = nombreProgramacion;
+    }
 }

@@ -66,6 +66,7 @@ public class AsientoCaracteristica implements Serializable {
     }
 
     public void setIdAsientoCaracteristica(Long idAsientoCaracteristica) {
+
         this.idAsientoCaracteristica = idAsientoCaracteristica;
     }
 

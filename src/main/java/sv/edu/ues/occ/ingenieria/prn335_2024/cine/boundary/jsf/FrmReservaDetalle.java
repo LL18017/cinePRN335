@@ -5,6 +5,7 @@ import jakarta.faces.context.FacesContext;
 import jakarta.inject.Inject;
 import jakarta.inject.Named;
 import org.primefaces.event.SelectEvent;
+import sv.edu.ues.occ.ingenieria.prn335_2024.cine.boundary.jsf.rest.WS.ReservaDetalleEndPoint;
 import sv.edu.ues.occ.ingenieria.prn335_2024.cine.boundary.jsf.rest.WS.WS;
 import sv.edu.ues.occ.ingenieria.prn335_2024.cine.control.AbstractDataPersist;
 import sv.edu.ues.occ.ingenieria.prn335_2024.cine.control.ReservaDetalleBean;
@@ -13,11 +14,14 @@ import sv.edu.ues.occ.ingenieria.prn335_2024.cine.entity.ReservaDetalle;
 import java.io.Serializable;
 @Named
 @Dependent
-public class FrnReservaDetalle extends AbstractFrm<ReservaDetalle> implements Serializable {
+public class FrmReservaDetalle extends AbstractFrm<ReservaDetalle> implements Serializable {
     @Inject
     ReservaDetalleBean reservaDetalleBean;
     @Inject
     FacesContext fc;
+    @Inject
+    ReservaDetalleEndPoint reservaDetalleEndPoint;
+
     @Override
     public void instanciarRegistro() {
         registro=new ReservaDetalle();
@@ -61,6 +65,6 @@ public class FrnReservaDetalle extends AbstractFrm<ReservaDetalle> implements Se
 
     @Override
     public WS getWebsocketController() {
-        return null;
+        return reservaDetalleEndPoint;
     }
 }

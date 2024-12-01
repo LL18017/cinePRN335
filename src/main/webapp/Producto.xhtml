@@ -1,0 +1,144 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<f:composition xmlns="http://www.w3.org/1999/xhtml"
+               xmlns:h="jakarta.faces.html"
+               xmlns:f="jakarta.faces.facelets"
+               xmlns:o="http://xmlns.jcp.org/jsf/core"
+               xmlns:p="http://primefaces.org/ui"
+               xmlns:crud="jakarta.faces.composite/crud"
+               template="WEB-INF/templates/principal.xhtml"
+
+>
+
+
+   <f:define name="titulo">
+      #{frmProducto.paginaNombre()}
+   </f:define>
+
+   <f:define name="cuerpo">
+      <h:panelGrid>
+         <h:panelGroup id="pnlTabla">
+            <h:form id="frmTabla">
+               <p:dataTable value="#{frmProducto.modelo}" var="r"
+                            lazy="true"
+                            paginator="true"
+                            rows="5"
+                            first="0"
+                            selectionMode="single"
+                            selection="#{frmProducto.registro}"
+                            rendered="#{empty frmProducto.registro}"
+               >
+                  <p:ajax process="@this" update=":pnlDetalle frmTabla @form" event="rowSelect"
+                          listener="#{frmProducto.selecionarFila}"/>
+                  <p:column headerText="ID"><h:outputText value="#{r.idProducto}"/></p:column>
+                  <p:column headerText="NOMBRE"><h:outputText value="#{r.nombre}"/></p:column>
+                  <p:column headerText="TIPO PRODUCTO"><h:outputText value="#{r.idTipoProducto.nombre}"/></p:column>
+
+               </p:dataTable>
+               <crud:botonesTop frm="#{frmProducto}"/>
+               <p:growl id="growl" showDetail="true" sticky="false" life="10000"/>
+            </h:form>
+         </h:panelGroup>
+      </h:panelGrid>
+
+      <h:panelGroup id="pnlDetalle">
+         <p:tabView id="tabDetalle" rendered="#{not empty frmProducto.registro}">
+            <!--            generalidades-->
+            <p:tab title="Generalidades" id="generalidades" cache="false" dynamic="true" closable="false">
+               <h:form id="frmDetalle" rendered="#{not empty frmProducto.registro}">
+
+
+                  <h:panelGrid columns="2">
+                     <p:outputLabel value="ID" for="txtid"/>
+                     <p:inputText id="txtid" value="#{frmProducto.registro.idProducto}" readonly="true"
+                                  disabled="true"/>
+
+                     <p:outputLabel value="Nombre" for="txtNombre"/>
+                     <p:inputText id="txtNombre" value="#{frmProducto.registro.nombre}" size="70"/>
+
+                     <p:outputLabel value="Descripcion" for="txtDescripcion"/>
+                     <p:inputText id="txtDescripcion" value="#{frmProducto.registro.descripcion}" size="70"/>
+                  </h:panelGrid>
+                  <h:panelGrid columns="#{frmProducto.estado=='CREAR'?'1':'2'}">
+                     <crud:botonesBottom frm="#{frmProducto}" actualizar=":frmTabla  :pnlDetalle @form"/>
+                  </h:panelGrid>
+               </h:form>
+            </p:tab>
+
+<!--            <p:ajax process="@this" event="tabChange" listener="#{frmProducto.cambiarTab}" update=":growl"/>-->
+            <!--            Tipos-->
+<!--            <p:tab title="Caracteristicas" id="Tipos" disabled="#{frmProducto.estado eq 'CREAR'}">-->
+<!--               <h:panelGrid columns="2">-->
+<!--                  <h:panelGroup id="pnlTablaC">-->
+
+<!--                     <h:form id="frmTablaC">-->
+<!--                        <p:dataTable value="#{frmProducto.frmTipoProducto.modelo}" var="rc"-->
+<!--                                     lazy="true"-->
+<!--                                     paginator="true"-->
+<!--                                     rows="5"-->
+<!--                                     first="0"-->
+<!--                                     selectionMode="single"-->
+<!--                                     selection="#{frmProducto.frmTipoProducto.registro}"-->
+<!--                                     rendered="#{frmProducto.frmTipoProducto.estado=='NINGUNO'}"-->
+<!--                        >-->
+
+<!--                           <p:ajax process="@this"-->
+<!--                                   update=":growl @form pnlDetalleC"-->
+<!--                                   event="rowSelect"-->
+<!--                                   listener="#{frmProducto.frmTipoProducto.selecionarFila}"/>-->
+
+<!--                           <p:column headerText="ID"><h:outputText value="#{rc.idPeliculaCaracteristica}"/></p:column>-->
+<!--                           <p:column headerText="Caracteristicas"><h:outputText value="#{rc.idTipoPelicula.nombre}"/></p:column>-->
+<!--                           <p:column headerText="VALOR"><h:outputText value="#{rc.valor}"/></p:column>-->
+
+<!--                        </p:dataTable>-->
+<!--                        <crud:botonesTop frm="#{frmProducto.frmTipoProducto}"-->
+<!--                                         actualizar=" :growl pnlTablaC pnlDetalleC"/>-->
+
+<!--                     </h:form>-->
+<!--                  </h:panelGroup>-->
+
+<!--               </h:panelGrid>-->
+
+<!--               <h:panelGroup id="pnlDetalleC">-->
+<!--                  <h:form id="frmDetalleC" rendered="#{not empty frmProducto.frmProductoCarractreistica.registro}">-->
+<!--                     <h:panelGrid columns="2">-->
+<!--                        <p:outputLabel value="ID" for="txtid"/>-->
+<!--                        <p:inputText id="txtidPC"-->
+<!--                                     value="#{frmProducto.frmProductoCarractreistica.registro.idPeliculaCaracteristica}"-->
+<!--                                     readonly="true" disabled="true"/>-->
+
+<!--                        <p:outputLabel value="TIPO PELICULA" for="lstTipoPelicula"/>-->
+<!--                        <p:selectOneMenu id="lstTipoPelicula"-->
+<!--                                         value="#{frmProducto.frmProductoCarractreistica.idTipoPeliculaSelecionada}">-->
+<!--                           <o:selectItems value="#{frmProducto.frmProductoCarractreistica.tipoPeliculaList}"-->
+<!--                                          var="tp" itemLabel="#{tp.nombre}"-->
+<!--                                          itemValue="#{tp.idTipoPelicula}"/>-->
+<!--                           <p:ajax event="itemSelect" update=":growl pnlValorValues" process="@this" listener="#{frmProducto.frmProductoCarractreistica.SelecionarTipoPelicula}"/>-->
+<!--                        </p:selectOneMenu>-->
+
+<!--                        <p:outputLabel value="Valor" for="txtValor"/>-->
+
+<!--                        <h:panelGroup id="pnlValorValues">-->
+<!--                           <p:inputTextarea id="txtArValor"-->
+<!--                                            validator="#{frmProducto.frmProductoCarractreistica.validarValor}"-->
+<!--                                            value="#{frmProducto.frmProductoCarractreistica.registro.valor}"-->
+<!--                                            size="70"/>-->
+<!--                           <p:tooltip for="txtArValor" id="tpExTipoSala" value="#{frmProducto.frmProductoCarractreistica.expresionTipoPelicula}"-->
+<!--                                      position="right" showEvent="mouseover"-->
+<!--                           />-->
+<!--                        </h:panelGroup>-->
+<!--                     </h:panelGrid>-->
+
+<!--                     <crud:botonesBottom frm="#{frmProducto.frmProductoCarractreistica}"-->
+<!--                                         actualizar=":pnlDetalle tabDetalle :growl @form"/>-->
+
+
+<!--                  </h:form>-->
+<!--               </h:panelGroup>-->
+<!--            </p:tab>-->
+
+         </p:tabView>
+      </h:panelGroup>
+   </f:define>
+
+</f:composition>

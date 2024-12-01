@@ -41,6 +41,7 @@ public class FrmAsientoCaracteristica extends AbstractFrm<AsientoCaracteristica>
     TipoAsiento tipoAsientoSelecionado;
     Integer idTipoAsientoSelecionado;
     List<TipoAsiento> tipoAsientoslist;
+    List<AsientoCaracteristica> asientoCaracteristicaList;
     String expresionTipoAsiento;
 
     Integer idAsientoCaracteristica;
@@ -61,6 +62,7 @@ public class FrmAsientoCaracteristica extends AbstractFrm<AsientoCaracteristica>
         super.inicioRegistros();
         try {
             this.tipoAsientoslist=tipoAsientoBean.findAllTipoAsiento();
+//            this.asientoCaracteristicaList=asientoCaracteristicaBean.findByIdAsiento(AsientoSelecionado,0,Integer.MAX_VALUE);
         }catch (Exception e){
             Logger.getLogger(getClass().getName()).log(Level.SEVERE, e.getMessage(), e);
         }
@@ -161,12 +163,22 @@ public class FrmAsientoCaracteristica extends AbstractFrm<AsientoCaracteristica>
         this.expresionTipoAsiento = expresionTipoAsiento;
     }
 
+
+
     public List<TipoAsiento> getTipoAsientoslist() {
         return tipoAsientoslist;
     }
 
     public void setTipoAsientoslist(List<TipoAsiento> tipoAsientoslist) {
         this.tipoAsientoslist = tipoAsientoslist;
+    }
+
+    public List<AsientoCaracteristica> getAsientoCaracteristicaList() {
+        return asientoCaracteristicaList;
+    }
+
+    public void setAsientoCaracteristicaList(Asiento asiento) {
+        this.asientoCaracteristicaList = asientoCaracteristicaBean.findByIdAsiento(asiento,0 ,Integer.MAX_VALUE);
     }
 
     public Integer getIdTipoAsientoSelecionado() {
@@ -197,6 +209,8 @@ public class FrmAsientoCaracteristica extends AbstractFrm<AsientoCaracteristica>
     public void setIdAsientoCaracteristica(Integer idAsientoCaracteristica) {
         this.idAsientoCaracteristica = idAsientoCaracteristica;
         registro=asientoCaracteristicaBean.findByIdAsientoCaracterisctica(idAsientoCaracteristica);
+        System.out.println("el registro es: "+registro);
+
     }
 
     public void setAsientoSelecionado(Asiento asientoSelecionado) {
@@ -215,18 +229,28 @@ public class FrmAsientoCaracteristica extends AbstractFrm<AsientoCaracteristica>
         System.out.println("sirve");
     }
     public void onAsientoCaracteristicaChange(){
-//        enviarMensaje(FacesMessage.SEVERITY_INFO,"SELECION");
+        expresionTipoAsiento=registro.getIdTipoAsiento().getExpresionRegular();
+        idTipoAsientoSelecionado=registro.getIdTipoAsiento().getIdTipoAsiento();
         estado=ESTADO_CRUD.MODIFICAR;
     }
-    @Override
-    public void btnNuevoHandler(ActionEvent actionEvent) {
-        super.btnNuevoHandler(actionEvent);
-    }
+
 
     @Override
     public void btnModificarHandler(ActionEvent ex) {
-
         super.btnModificarHandler(ex);
+        setAsientoCaracteristicaList(getAsientoSelecionado());
+    }
+
+    @Override
+    public void btnGuardarHandler(ActionEvent e) {
+        super.btnGuardarHandler(e);
+        setAsientoCaracteristicaList(getAsientoSelecionado());
+    }
+
+    @Override
+    public void btneEliminarHandler(ActionEvent ex) {
+        super.btneEliminarHandler(ex);
+        setAsientoCaracteristicaList(getAsientoSelecionado());
     }
 }
 

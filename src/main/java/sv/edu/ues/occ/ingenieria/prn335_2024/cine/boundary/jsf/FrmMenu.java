@@ -1,8 +1,6 @@
 package sv.edu.ues.occ.ingenieria.prn335_2024.cine.boundary.jsf;
 
 import jakarta.annotation.PostConstruct;
-import jakarta.enterprise.context.RequestScoped;
-import jakarta.enterprise.inject.Default;
 import jakarta.faces.application.FacesMessage;
 import jakarta.faces.context.FacesContext;
 import jakarta.faces.view.ViewScoped;
@@ -15,117 +13,66 @@ import org.primefaces.model.menu.DefaultSubMenu;
 
 import java.io.IOException;
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
 
 @Named
 @ViewScoped
-
-
 public class FrmMenu implements Serializable {
+
     @Inject
     FacesContext facesContext;
-    DefaultMenuModel model;
+
+    private DefaultMenuModel model;
+    private List<String> tiposList = new ArrayList<>();
+    private List<String> cineList = new ArrayList<>();
 
     @PostConstruct
     public void init() {
         model = new DefaultMenuModel();
 
-        // Registro para comprobar si init se llama
-        System.out.println("Inicializando el menú...");
+        // Inicializar listas
+        inicializarListas();
 
-        DefaultSubMenu tipos = DefaultSubMenu.builder()
-                .label("Tipos")
-                .expanded(true)
-                .build();
+        // Crear submenús dinámicos
+        agregarSubMenu("Tipos","Tipo", tiposList);
+        agregarSubMenu("Cine","", cineList);
 
-        DefaultSubMenu cineclasi = DefaultSubMenu.builder()
-                .label("Cine")
-                .expanded(true)
-                .build();
-
-        // Add menu items cine
-        DefaultMenuItem PeliculaItem = DefaultMenuItem.builder()
-                .value("Pelicula")
-                .ajax(true)
-                .command("#{frmMenu.navegar('Pelicula.jsf')}") // Pago navigation logic
-                .build();
-
-        DefaultMenuItem SucursalItem = DefaultMenuItem.builder()
-                .value("Sucursal")
-                .ajax(true)
-                .command("#{frmMenu.navegar('Sucursal.jsf')}") // Asiento navigation logic
-                .build();
-
-        DefaultMenuItem SalaItem = DefaultMenuItem.builder()
-                .value("Sala")
-                .ajax(true)
-                .command("#{frmMenu.navegar('Sala.jsf')}") // Pelicula navigation logic
-                .build();
-
-        DefaultMenuItem ReservaItem = DefaultMenuItem.builder()
-                .value("Reserva")
-                .ajax(true)
-                .command("#{frmMenu.navegar('Reserva.jsf')}") // Producto navigation logic
-                .build();
-
-
-
-        // Add menu items tipos
-        DefaultMenuItem pagoTipo = DefaultMenuItem.builder()
-                .value("Pago")
-                .ajax(true)
-                .command("#{frmMenu.navegar('TipoPago.jsf')}") // Pago navigation logic
-                .build();
-
-        DefaultMenuItem asientoTipo = DefaultMenuItem.builder()
-                .value("Asiento")
-                .ajax(true)
-                .command("#{frmMenu.navegar('TipoAsiento.jsf')}") // Asiento navigation logic
-                .build();
-
-        DefaultMenuItem peliculaTipo = DefaultMenuItem.builder()
-                .value("Película")
-                .ajax(true)
-                .command("#{frmMenu.navegar('TipoPelicula.jsf')}") // Pelicula navigation logic
-                .build();
-
-        DefaultMenuItem productoTipo = DefaultMenuItem.builder()
-                .value("Producto")
-                .ajax(true)
-                .command("#{frmMenu.navegar('TipoProducto.jsf')}") // Producto navigation logic
-                .build();
-
-        DefaultMenuItem reservaTipo = DefaultMenuItem.builder()
-                .value("Reserva")
-                .ajax(true)
-                .command("#{frmMenu.navegar('TipoReserva.jsf')}") // Reserva navigation logic
-                .build();
-
-        DefaultMenuItem salaTipo = DefaultMenuItem.builder()
-                .value("Sala")
-                .ajax(true)
-                .command("#{frmMenu.navegar('TipoSala.jsf')}")
-                .build();
-
-
-
-        // Add items directly to the main menu
-        tipos.getElements().add(pagoTipo);
-        tipos.getElements().add(asientoTipo);
-        tipos.getElements().add(peliculaTipo);
-        tipos.getElements().add(productoTipo);
-        tipos.getElements().add(reservaTipo);
-        tipos.getElements().add(salaTipo);
-
-        cineclasi.getElements().add(PeliculaItem);
-        cineclasi.getElements().add(SucursalItem);
-        cineclasi.getElements().add(SalaItem);
-        cineclasi.getElements().add(ReservaItem);
-
-        model.getElements().add(tipos);
-        model.getElements().add(cineclasi);
-
-        // Registro para comprobar la estructura del modelo
+        // Registro para depuración
         System.out.println("Modelo de menú inicializado: " + model.getElements());
+    }
+
+    private void inicializarListas() {
+        cineList.add("Pelicula");
+        cineList.add("Sucursal");
+        cineList.add("Sala");
+        cineList.add("Reserva");
+        cineList.add("Producto");
+
+        tiposList.add("Pago");
+        tiposList.add("Asiento");
+        tiposList.add("Producto");
+        tiposList.add("Reserva");
+        tiposList.add("Sala");
+    }
+
+    private void agregarSubMenu(String titulo,String sufijo, List<String> lista) {
+        DefaultSubMenu subMenu = DefaultSubMenu.builder()
+                .label(titulo)
+                .expanded(true)
+                .build();
+
+        lista.forEach(item -> {
+            String formulario =sufijo+ item + ".jsf"; // Construir la ruta del formulario
+            DefaultMenuItem menuItem = DefaultMenuItem.builder()
+                    .value(item) // Nombre visible en el menú
+                    .ajax(true)
+                    .command("#{frmMenu.navegar('" + formulario + "')}")
+                    .build();
+            subMenu.getElements().add(menuItem);
+        });
+
+        model.getElements().add(subMenu);
     }
 
     public void navegar(String formulario) {
@@ -134,10 +81,9 @@ public class FrmMenu implements Serializable {
         } catch (IOException e) {
             FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error", "No se pudo navegar.");
             facesContext.addMessage(null, message);
-            e.printStackTrace(); // Para depuración
+            e.printStackTrace();
         }
     }
-
 
     public DefaultMenuModel getModel() {
         return model;

@@ -44,11 +44,11 @@
                             <h:outputText value="Selecione una pelicula"/>
                             <p:autoComplete
                                     id="pelicula"
-                                    value="#{frmReservas.idProgramacion}"
+                                    value="#{frmReservas.nombreProgramacion}"
                                     completeMethod="#{frmReservas.sugerencias}"
                                     var="item"
-                                    itemValue="#{item.split('_')[0]}"
-                                    itemLabel="#{item.split('_')[1]}"
+                                    itemValue="#{item}"
+                                    itemLabel="#{item}"
                                     dropdown="true"
                                     effect="fade"
                                     forceSelection="true"

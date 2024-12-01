@@ -7,12 +7,12 @@
 /home/mj99lopez/proyestosUes/CinePRN335/src/main/java/sv/edu/ues/occ/ingenieria/prn335_2024/cine/control/EndPoint.java
 /home/mj99lopez/proyestosUes/CinePRN335/src/main/java/sv/edu/ues/occ/ingenieria/prn335_2024/cine/entity/Pago.java
 /home/mj99lopez/proyestosUes/CinePRN335/src/main/java/sv/edu/ues/occ/ingenieria/prn335_2024/cine/entity/Reserva.java
+/home/mj99lopez/proyestosUes/CinePRN335/src/main/java/sv/edu/ues/occ/ingenieria/prn335_2024/cine/boundary/jsf/rest/WS/ProductoEndPoint.java
 /home/mj99lopez/proyestosUes/CinePRN335/src/main/java/sv/edu/ues/occ/ingenieria/prn335_2024/cine/boundary/jsf/FrmSucursal.java
 /home/mj99lopez/proyestosUes/CinePRN335/src/main/java/sv/edu/ues/occ/ingenieria/prn335_2024/cine/boundary/jsf/rest/WS/PeliculaEndPoint.java
 /home/mj99lopez/proyestosUes/CinePRN335/src/main/java/sv/edu/ues/occ/ingenieria/prn335_2024/cine/boundary/jsf/rest/WS/ManagerSessionWS.java
 /home/mj99lopez/proyestosUes/CinePRN335/src/main/java/sv/edu/ues/occ/ingenieria/prn335_2024/cine/entity/PeliculaCaracteristica.java
 /home/mj99lopez/proyestosUes/CinePRN335/src/main/java/sv/edu/ues/occ/ingenieria/prn335_2024/cine/boundary/jsf/FrmFactura.java
-/home/mj99lopez/proyestosUes/CinePRN335/src/main/java/sv/edu/ues/occ/ingenieria/prn335_2024/cine/boundary/jsf/FrnReservaDetalle.java
 /home/mj99lopez/proyestosUes/CinePRN335/src/main/java/sv/edu/ues/occ/ingenieria/prn335_2024/cine/entity/AsientoCaracteristica.java
 /home/mj99lopez/proyestosUes/CinePRN335/src/main/java/sv/edu/ues/occ/ingenieria/prn335_2024/cine/boundary/jsf/rest/resouce/CineApp.java
 /home/mj99lopez/proyestosUes/CinePRN335/src/main/java/sv/edu/ues/occ/ingenieria/prn335_2024/cine/entity/Sucursal.java
@@ -26,6 +26,7 @@
 /home/mj99lopez/proyestosUes/CinePRN335/src/main/java/sv/edu/ues/occ/ingenieria/prn335_2024/cine/boundary/jsf/FrmReserva.java
 /home/mj99lopez/proyestosUes/CinePRN335/src/main/java/sv/edu/ues/occ/ingenieria/prn335_2024/cine/boundary/jsf/rest/resouce/CorsFilter.java
 /home/mj99lopez/proyestosUes/CinePRN335/src/main/java/sv/edu/ues/occ/ingenieria/prn335_2024/cine/control/utils/TreeNodeBuilder.java
+/home/mj99lopez/proyestosUes/CinePRN335/src/main/java/sv/edu/ues/occ/ingenieria/prn335_2024/cine/control/ProductoBean.java
 /home/mj99lopez/proyestosUes/CinePRN335/src/main/java/sv/edu/ues/occ/ingenieria/prn335_2024/cine/boundary/jsf/rest/WS/AsientoEndPoint.java
 /home/mj99lopez/proyestosUes/CinePRN335/src/main/java/sv/edu/ues/occ/ingenieria/prn335_2024/cine/boundary/jsf/rest/resouce/TipoProductoResource.java
 /home/mj99lopez/proyestosUes/CinePRN335/src/main/java/sv/edu/ues/occ/ingenieria/prn335_2024/cine/entity/TipoProducto.java
@@ -38,6 +39,7 @@
 /home/mj99lopez/proyestosUes/CinePRN335/src/main/java/sv/edu/ues/occ/ingenieria/prn335_2024/cine/boundary/jsf/rest/resouce/TipoSalaResorce.java
 /home/mj99lopez/proyestosUes/CinePRN335/src/main/java/sv/edu/ues/occ/ingenieria/prn335_2024/cine/HelloServlet.java
 /home/mj99lopez/proyestosUes/CinePRN335/src/main/java/sv/edu/ues/occ/ingenieria/prn335_2024/cine/control/TipoAsientoBean.java
+/home/mj99lopez/proyestosUes/CinePRN335/src/main/java/sv/edu/ues/occ/ingenieria/prn335_2024/cine/boundary/jsf/rest/WS/ReservaDetalleEndPoint.java
 /home/mj99lopez/proyestosUes/CinePRN335/src/main/java/sv/edu/ues/occ/ingenieria/prn335_2024/cine/boundary/jsf/ESTADO_CRUD.java
 /home/mj99lopez/proyestosUes/CinePRN335/src/main/java/sv/edu/ues/occ/ingenieria/prn335_2024/cine/control/ContadorBean.java
 /home/mj99lopez/proyestosUes/CinePRN335/src/main/java/sv/edu/ues/occ/ingenieria/prn335_2024/cine/entity/TipoPelicula.java
@@ -54,7 +56,9 @@
 /home/mj99lopez/proyestosUes/CinePRN335/src/main/java/sv/edu/ues/occ/ingenieria/prn335_2024/cine/entity/Sala.java
 /home/mj99lopez/proyestosUes/CinePRN335/src/main/java/sv/edu/ues/occ/ingenieria/prn335_2024/cine/entity/PagoDetalle.java
 /home/mj99lopez/proyestosUes/CinePRN335/src/main/java/sv/edu/ues/occ/ingenieria/prn335_2024/cine/control/TipoPeliculaBean.java
+/home/mj99lopez/proyestosUes/CinePRN335/src/main/java/sv/edu/ues/occ/ingenieria/prn335_2024/cine/boundary/jsf/rest/WS/ReservaEndPoint.java
 /home/mj99lopez/proyestosUes/CinePRN335/src/main/java/sv/edu/ues/occ/ingenieria/prn335_2024/cine/boundary/jsf/FrmSalaCaracteristica.java
+/home/mj99lopez/proyestosUes/CinePRN335/src/main/java/sv/edu/ues/occ/ingenieria/prn335_2024/cine/boundary/jsf/FrmReservaDetalle.java
 /home/mj99lopez/proyestosUes/CinePRN335/src/main/java/sv/edu/ues/occ/ingenieria/prn335_2024/cine/control/ProgramacionBean.java
 /home/mj99lopez/proyestosUes/CinePRN335/src/main/java/sv/edu/ues/occ/ingenieria/prn335_2024/cine/control/utils/LazyDataModelBuilder.java
 /home/mj99lopez/proyestosUes/CinePRN335/src/main/java/sv/edu/ues/occ/ingenieria/prn335_2024/cine/control/ReservaDetalleBean.java
@@ -62,6 +66,7 @@
 /home/mj99lopez/proyestosUes/CinePRN335/src/main/java/sv/edu/ues/occ/ingenieria/prn335_2024/cine/boundary/jsf/orden/ShowCaseUtil.java
 /home/mj99lopez/proyestosUes/CinePRN335/src/main/java/sv/edu/ues/occ/ingenieria/prn335_2024/cine/control/TipoProductoBean.java
 /home/mj99lopez/proyestosUes/CinePRN335/src/main/java/sv/edu/ues/occ/ingenieria/prn335_2024/cine/boundary/jsf/rest/WS/AsientoCracteristicaEndPoint.java
+/home/mj99lopez/proyestosUes/CinePRN335/src/main/java/sv/edu/ues/occ/ingenieria/prn335_2024/cine/boundary/jsf/rest/WS/PeliculaCaracteristicaEndPoint.java
 /home/mj99lopez/proyestosUes/CinePRN335/src/main/java/sv/edu/ues/occ/ingenieria/prn335_2024/cine/entity/TipoReserva.java
 /home/mj99lopez/proyestosUes/CinePRN335/src/main/java/sv/edu/ues/occ/ingenieria/prn335_2024/cine/control/SucursalBean.java
 /home/mj99lopez/proyestosUes/CinePRN335/src/main/java/sv/edu/ues/occ/ingenieria/prn335_2024/cine/control/TipoSalaBean.java
@@ -76,6 +81,7 @@
 /home/mj99lopez/proyestosUes/CinePRN335/src/main/java/sv/edu/ues/occ/ingenieria/prn335_2024/cine/control/ReservaBean.java
 /home/mj99lopez/proyestosUes/CinePRN335/src/main/java/sv/edu/ues/occ/ingenieria/prn335_2024/cine/boundary/jsf/FrmTipoSala.java
 /home/mj99lopez/proyestosUes/CinePRN335/src/main/java/sv/edu/ues/occ/ingenieria/prn335_2024/cine/boundary/jsf/FrmPelicula.java
+/home/mj99lopez/proyestosUes/CinePRN335/src/main/java/sv/edu/ues/occ/ingenieria/prn335_2024/cine/boundary/jsf/FrmProducto.java
 /home/mj99lopez/proyestosUes/CinePRN335/src/main/java/sv/edu/ues/occ/ingenieria/prn335_2024/cine/control/SalaBean.java
 /home/mj99lopez/proyestosUes/CinePRN335/src/main/java/sv/edu/ues/occ/ingenieria/prn335_2024/cine/boundary/jsf/rest/resouce/ReporteResource.java
 /home/mj99lopez/proyestosUes/CinePRN335/src/main/java/sv/edu/ues/occ/ingenieria/prn335_2024/cine/entity/TipoSala.java

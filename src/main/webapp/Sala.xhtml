@@ -161,7 +161,7 @@
                                              selection="#{frmSala.frmAsiento.registro}"
                                              rendered="#{frmSala.frmAsiento.registro eq null}"
                                 >
-                                    <p:ajax process="@this" update="pnlDetalleAs  caraAsContainer @form :growl" event="rowSelect"
+                                    <p:ajax process="@this" update="pnlDetalleAs  caraAsContainer @form growl" event="rowSelect"
                                             listener="#{frmSala.frmAsiento.selecionarFila}"/>
                                     <p:column headerText="ID"><h:outputText value="#{sc.idAsiento}"/></p:column>
                                     <p:column headerText="NOMBRE"><h:outputText value="#{sc.nombre}"/></p:column>
@@ -191,49 +191,47 @@
 
                                     </h:panelGrid>
                                     <h:panelGrid>
-                                        <crud:botonesBottom frm="#{frmSala.frmAsiento}"/>
+                                        <crud:botonesBottom frm="#{frmSala.frmAsiento}" actualizar="pnlDetalleAs pnlTablaAs growl" />
                                     </h:panelGrid>
                                 </h:form>
 
 
                             </h:panelGrid>
-                            <h:panelGrid columns="#{frmAsiento.estado=='CREAR'?'1':'2'}">
-                                <h:panelGrid>
-                                    <crud:botonesBottom frm="#{frmSala.frmSalaCaracteristica}" actualizar=" pnlDetalleAs :growl"/>
-                                </h:panelGrid>
-                            </h:panelGrid>
 
                             <h:panelGrid id="caraAsContainer" columns="2" rendered="#{frmSala.frmAsiento.estado ne 'CREAR'}">
 
-                                <h:panelGrid id="pnlTipoAsiento">
-                                        info
-                                    <h:panelGrid columns="1" rendered="#{not empty frmSala.frmAsiento.registro}">
-                                        <h:form>
-                                            <p:selectOneMenu value="#{frmSala.frmAsiento.frmAsientoCaracteristica.idAsientoCaracteristica}">
-                                                <f:selectItems value="#{frmSala.frmAsiento.registro.asientoCaracteristicaList}"
-                                                               var="ta" itemLabel="#{ta.idTipoAsiento.nombre}: #{ta.valor} id:#{ta.idAsientoCaracteristica}"
-                                                               itemValue="#{ta.idAsientoCaracteristica}"/>
-                                                <p:ajax event="change" listener="#{frmSala.frmAsiento.frmAsientoCaracteristica.onAsientoCaracteristicaChange}"
-                                                        update=":growl pnlcaracteristicasAsiento pnlValorTipoAsiento caraAsContainer" />
-                                            </p:selectOneMenu>
-                                        <h:panelGrid>
-                                            <crud:botonesTop frm="#{frmSala.frmAsiento.frmAsientoCaracteristica}" actualizar="caraAsContainer"/>
+                                <h:form id="frmTipoAsiento">
+                                    <h:panelGrid id="pnlTipoAsiento">
+                                        <h:panelGrid columns="1" rendered="#{not empty frmSala.frmAsiento.registro}">
+                                                <p:selectOneMenu id="somAC" value="#{frmSala.frmAsiento.frmAsientoCaracteristica.idAsientoCaracteristica}">
+                                                    <f:selectItems value="#{frmSala.frmAsiento.frmAsientoCaracteristica.asientoCaracteristicaList}"
+                                                                   var="ta"
+                                                                   itemLabel="#{ta.idTipoAsiento.nombre}: #{ta.valor} id:#{ta.idAsientoCaracteristica}"
+                                                                   itemValue="#{ta.idAsientoCaracteristica}"/>
+                                                    <p:ajax event="itemSelect" listener="#{frmSala.frmAsiento.frmAsientoCaracteristica.onAsientoCaracteristicaChange}"
+                                                            update=":growl pnlcaracteristicasAsiento pnlValorTipoAsiento caraAsContainer pnlValorTipoAsiento" />
+                                                </p:selectOneMenu>
+                                            <h:panelGrid>
+                                                <crud:botonesTop frm="#{frmSala.frmAsiento.frmAsientoCaracteristica}" actualizar="caraAsContainer"/>
+                                            </h:panelGrid>
                                         </h:panelGrid>
-                                        </h:form>
                                     </h:panelGrid>
-
-                                </h:panelGrid>
-
+                                </h:form>
 
 
-                                <h:panelGrid id="pnlcaracteristicasAsiento" rendered="#{not empty frmSala.frmAsiento.frmAsientoCaracteristica.registro}">
+
+                                <h:panelGrid id="pnlcaracteristicasAsiento">
 
                                     <h:panelGrid columns="1">
                                         <h:form>
 
-                                            <h:panelGrid columns="2">
+                                            <h:panelGrid columns="2" id="pnlDetalleAsientoCara"  rendered="#{not empty frmSala.frmAsiento.frmAsientoCaracteristica.registro}">
                                                 <h:panelGrid columns="2">
+                                                    <p:outputLabel value="ID" for="txtIdAsientoCaracteristica"/>
+                                                    <p:inputText id="txtIdAsientoCaracteristica" value="#{frmSala.frmAsiento.frmAsientoCaracteristica.registro.idAsientoCaracteristica}" readonly="true" disabled="true"/>
+
                                                     <p:outputLabel value="Tipo Caracteristica"/>
+
                                                     <p:selectOneListbox value="#{frmSala.frmAsiento.frmAsientoCaracteristica.idTipoAsientoSelecionado}" required="true">
                                                         <f:selectItems value="#{frmSala.frmAsiento.frmAsientoCaracteristica.tipoAsientoslist}"
                                                                        var="ta" itemLabel="#{ta.nombre}"
@@ -257,8 +255,9 @@
 
                                                 </h:panelGrid>
                                             </h:panelGrid>
-                                                <crud:botonesBottom frm="#{frmSala.frmAsiento.frmAsientoCaracteristica}" actualizar="tabAsientos"/>
-
+<!--                                                <crud:botonesBottom frm="#{frmSala.frmAsiento.frmAsientoCaracteristica}" actualizar="tabAsientos:caraAsContainer pnlDetalleAsientoCara @form growl"/>-->
+                                            <crud:botonesBottom frm="#{frmSala.frmAsiento.frmAsientoCaracteristica}"
+                                                                actualizar="caraAsContainer growl"/>
                                             <h:panelGrid>
                                             </h:panelGrid>
                                         </h:form>
@@ -272,6 +271,7 @@
 
                     </h:panelGroup>
                     <h:panelGroup id="pnlCaraContainer" rendered="#{not empty frmSala.frmAsiento.registro}">
+
                     </h:panelGroup>
 
 

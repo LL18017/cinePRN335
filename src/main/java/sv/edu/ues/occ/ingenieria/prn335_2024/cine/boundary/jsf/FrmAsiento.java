@@ -56,7 +56,6 @@ public class FrmAsiento extends AbstractFrm<Asiento> implements Serializable {
         registro.setIdSala(SalaSelecionada);
     }
 
-    @PostConstruct
    @Override
     public void inicioRegistros() {
         super.inicioRegistros();
@@ -98,13 +97,14 @@ public class FrmAsiento extends AbstractFrm<Asiento> implements Serializable {
 
     @Override
     public void selecionarFila(SelectEvent<Asiento> event) {
-        Asiento asientoSelected =  event.getObject();
-            enviarMensaje(FacesMessage.SEVERITY_INFO,"has selecionado el asiento: "+asientoSelected.getNombre());
+        System.out.println("se ha selecionado algo");
+
             this.estado=ESTADO_CRUD.MODIFICAR;
             frmAsientoCaracteristica.setAsientoSelecionado(registro);
-
+            frmAsientoCaracteristica.setAsientoCaracteristicaList(registro);
             frmAsientoCaracteristica.expresionTipoAsiento= frmAsientoCaracteristica.tipoAsientoslist.getFirst().getExpresionRegular();
-        System.out.println("se ha selecionado algo");
+//            frmAsientoCaracteristica.inicioRegistros();
+
     }
 
     @Override
