@@ -7,6 +7,10 @@ import jakarta.persistence.PersistenceContext;
 import sv.edu.ues.occ.ingenieria.prn335_2024.cine.entity.ReservaDetalle;
 
 import java.io.Serializable;
+import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 @Stateless
 @LocalBean
 public class ReservaDetalleBean extends AbstractDataPersist<ReservaDetalle> implements Serializable {
@@ -24,5 +28,16 @@ public class ReservaDetalleBean extends AbstractDataPersist<ReservaDetalle> impl
     @Override
     public String orderParameterQuery() {
         return "idReservaDetalle";
+    }
+
+    public List<ReservaDetalle> findByIdReserva(Integer idReserva) {
+
+        try {
+           return em.createNamedQuery("ReservaDetalle.findByIdReserva", ReservaDetalle.class).setParameter("idReserva", idReserva.longValue()).getResultList();
+        }catch (Exception e) {
+            Logger.getLogger(getClass().getName()).log(Level.SEVERE, e.getMessage(), e);
+        }
+
+        return List.of();
     }
 }

@@ -19,6 +19,7 @@ import jakarta.validation.constraints.Size;
 import jakarta.xml.bind.annotation.XmlRootElement;
 import jakarta.xml.bind.annotation.XmlTransient;
 import java.io.Serializable;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 
@@ -130,6 +131,15 @@ public class Programacion implements Serializable {
         this.reservaList = reservaList;
     }
 
+    public String getFormattedLabel() {
+        SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy HH:mm");
+        return idPelicula.getNombre() + ": " + dateFormat.format(desde);
+    }
+    public String getFormattedNombre() {
+        SimpleDateFormat dateDesde = new SimpleDateFormat("dd-MM-yyyy HH:mm");
+        SimpleDateFormat dateHasta = new SimpleDateFormat("HH:mm");
+        return idPelicula.getNombre() + ": (" + dateDesde.format(desde)+" - "+dateHasta.format(hasta)+")";
+    }
     @Override
     public int hashCode() {
         int hash = 0;

@@ -33,6 +33,7 @@ import java.util.List;
 @NamedQueries({
     @NamedQuery(name = "ReservaDetalle.findAll", query = "SELECT r FROM ReservaDetalle r"),
     @NamedQuery(name = "ReservaDetalle.findByIdReservaDetalle", query = "SELECT r FROM ReservaDetalle r WHERE r.idReservaDetalle = :idReservaDetalle"),
+    @NamedQuery(name = "ReservaDetalle.findByIdReserva", query = "SELECT rd FROM ReservaDetalle rd WHERE rd.idReserva.idReserva = :idReserva"),
     @NamedQuery(name = "ReservaDetalle.findByEstado", query = "SELECT r FROM ReservaDetalle r WHERE r.estado = :estado")})
 public class ReservaDetalle implements Serializable {
 

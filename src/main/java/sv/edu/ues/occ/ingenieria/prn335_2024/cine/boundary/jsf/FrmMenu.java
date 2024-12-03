@@ -48,6 +48,8 @@ public class FrmMenu implements Serializable {
         cineList.add("Sala");
         cineList.add("Reserva");
         cineList.add("Producto");
+        cineList.add("Pago");
+        cineList.add("Factura");
 
         tiposList.add("Pago");
         tiposList.add("Asiento");

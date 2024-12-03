@@ -23,6 +23,7 @@ import jakarta.validation.constraints.Size;
 import jakarta.xml.bind.annotation.XmlRootElement;
 import jakarta.xml.bind.annotation.XmlTransient;
 import java.io.Serializable;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 
@@ -127,6 +128,12 @@ public class Reserva implements Serializable {
 
     public void setIdTipoReserva(TipoReserva idTipoReserva) {
         this.idTipoReserva = idTipoReserva;
+    }
+
+
+    public String getFormattedfecha() {
+        SimpleDateFormat dateDesde = new SimpleDateFormat("dd-MM-yyyy HH:mm");
+        return dateDesde.format(fechaReserva);
     }
 
     @Override

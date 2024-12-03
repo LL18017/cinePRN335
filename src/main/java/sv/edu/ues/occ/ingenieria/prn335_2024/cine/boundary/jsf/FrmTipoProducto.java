@@ -10,9 +10,12 @@ import sv.edu.ues.occ.ingenieria.prn335_2024.cine.boundary.jsf.rest.WS.TipoProdu
 import sv.edu.ues.occ.ingenieria.prn335_2024.cine.boundary.jsf.rest.WS.WS;
 import sv.edu.ues.occ.ingenieria.prn335_2024.cine.control.AbstractDataPersist;
 import sv.edu.ues.occ.ingenieria.prn335_2024.cine.control.TipoProductoBean;
+import sv.edu.ues.occ.ingenieria.prn335_2024.cine.entity.Producto;
 import sv.edu.ues.occ.ingenieria.prn335_2024.cine.entity.TipoProducto;
 
 import java.io.Serializable;
+import java.util.List;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 @Named
@@ -89,5 +92,14 @@ public class FrmTipoProducto extends AbstractFrm<TipoProducto> implements Serial
     @Override
     public WS getWebsocketController() {
         return tipoProductoEndPoint;
+    }
+
+    public List<TipoProducto> getTipoProductoList() {
+        try {
+            return tpBean.findAll();
+        }catch (Exception e) {
+            Logger.getLogger(getClass().getName()).log(Level.SEVERE, e.getMessage(), e);
+        }
+        return List.of();
     }
 }

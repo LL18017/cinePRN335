@@ -86,7 +86,7 @@
                                 <p:selectOneListbox id="asientoDisponiblesSOB" value="#{frmReservas.idAsientoSelecionado}" columns="2" style="width: 200px;">
                                     <o:selectItems value="#{frmReservas.asientosDisponibles}" var="ta" itemLabel="#{ta.nombre}"
                                                    itemValue="#{ta.idAsiento}" />
-                                    <p:ajax event="valueChange" listener="#{frmReservas.onTipoReservaChange}" update="btnCambiosSOB" />
+                                    <p:ajax event="valueChange" update="btnCambiosSOB" />
                                 </p:selectOneListbox>
                             </h:panelGroup>
                             <h:panelGrid columns="1" id="btnCambiosSOB">
