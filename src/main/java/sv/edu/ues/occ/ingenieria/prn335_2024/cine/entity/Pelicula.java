@@ -4,6 +4,7 @@
  */
 package sv.edu.ues.occ.ingenieria.prn335_2024.cine.entity;
 
+import jakarta.json.bind.annotation.JsonbTransient;
 import jakarta.persistence.Basic;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -48,8 +49,10 @@ public class Pelicula implements Serializable {
     @Column(name = "sinopsis")
     private String sinopsis;
     @OneToMany(mappedBy = "idPelicula", fetch = FetchType.LAZY)
+    @JsonbTransient
     private List<Programacion> programacionList;
     @OneToMany(mappedBy = "idPelicula", fetch = FetchType.LAZY)
+    @JsonbTransient
     private List<PeliculaCaracteristica> peliculaCaracteristicaList;
 
     public Pelicula() {

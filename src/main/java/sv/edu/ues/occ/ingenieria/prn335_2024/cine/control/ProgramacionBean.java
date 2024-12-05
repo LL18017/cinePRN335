@@ -55,6 +55,27 @@ public class ProgramacionBean extends AbstractDataPersist<Programacion> implemen
         return List.of();
     }
 
+    public List<Programacion> getProgramacionByIdSalaAfter(Sala sala) {
+        if (sala !=null){
+            try {
+                LocalDate fechaInicio = LocalDate.now();
+
+                // Convertir a Date si el campo es de tipo Date
+                Date inicio = Date.from(fechaInicio.atStartOfDay(ZoneId.systemDefault()).toInstant());
+
+                return em.createNamedQuery("Programacion.findProgramacionBySalaAfter", Programacion.class).
+                        setParameter("sala", sala.getIdSala())
+                        .setParameter("fechaInicio",inicio)
+                        .getResultList();
+            }catch (Exception ex){
+                Logger.getLogger(SalaBean.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+
+
+        return List.of();
+    }
+
 
     // es creado por hdz
     public List<Programacion> findProgramacionesByDate(Date fechaReserva) {

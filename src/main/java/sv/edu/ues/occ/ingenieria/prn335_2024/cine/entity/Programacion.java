@@ -1,5 +1,6 @@
 
 package sv.edu.ues.occ.ingenieria.prn335_2024.cine.entity;
+import jakarta.json.bind.annotation.JsonbTransient;
 import jakarta.persistence.Basic;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -39,6 +40,7 @@ import java.util.List;
         @NamedQuery(name = "Programacion.findByHasta", query = "SELECT p FROM Programacion p WHERE p.hasta = :hasta"),
         @NamedQuery(name = "Programacion.findProgramacionBySala", query = "SELECT p FROM Programacion p WHERE p.idSala = :sala"),
         @NamedQuery(name = "Programacion.findProgramacionBySalaRangoTiempo", query = "SELECT p FROM Programacion p WHERE p.idSala = :sala AND p.desde BETWEEN :fechaInicio AND :fechaFin"),
+        @NamedQuery(name = "Programacion.findProgramacionBySalaAfter", query = "SELECT p FROM Programacion p WHERE p.idSala.idSala = :sala AND p.desde  > :fechaInicio"),
         @NamedQuery(name = "Programacion.findAsientoParaReserva", query = "SELECT a FROM Sala s,Asiento a where a.asientoCaracteristicaList = a "),
         @NamedQuery(name = "Programacion.findByComentarios", query = "SELECT p FROM Programacion p WHERE p.comentarios = :comentarios")})
 public class Programacion implements Serializable {
@@ -58,12 +60,16 @@ public class Programacion implements Serializable {
     @Size(max = 2147483647)
     @Column(name = "comentarios")
     private String comentarios;
+    @JsonbTransient
     @JoinColumn(name = "id_pelicula", referencedColumnName = "id_pelicula")
     @ManyToOne(fetch = FetchType.LAZY)
     private Pelicula idPelicula;
     @JoinColumn(name = "id_sala", referencedColumnName = "id_sala")
     @ManyToOne(fetch = FetchType.LAZY)
+    @JsonbTransient
     private Sala idSala;
+
+    @JsonbTransient
     @OneToMany(mappedBy = "idProgramacion", fetch = FetchType.LAZY)
     private List<Reserva> reservaList;
 
