@@ -40,7 +40,7 @@ public abstract class AbstracDataSource<T> implements Serializable {
                 return Response.status(422).header("wrong parameter, first:", first+",max: "+max  ).header("wrong parameter : max","s").build();
             }
         }catch (Exception e) {
-            Logger.getLogger(getClass().getName()).log(Level.SEVERE, e.getMessage(), e);
+            Logger.getLogger(getClass().getName()).log(Level.SEVERE, e.getMessage());
             return Response.status(500).entity(e.getMessage()).build();
         }
     }

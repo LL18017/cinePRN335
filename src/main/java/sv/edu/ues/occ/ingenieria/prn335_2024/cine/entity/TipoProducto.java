@@ -4,6 +4,10 @@
  */
 package sv.edu.ues.occ.ingenieria.prn335_2024.cine.entity;
 
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
+import jakarta.json.bind.annotation.JsonbTransient;
 import jakarta.persistence.Basic;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -35,6 +39,8 @@ import java.util.List;
     @NamedQuery(name = "TipoProducto.findByNombre", query = "SELECT t FROM TipoProducto t WHERE t.nombre = :nombre"),
     @NamedQuery(name = "TipoProducto.findByActivo", query = "SELECT t FROM TipoProducto t WHERE t.activo = :activo"),
     @NamedQuery(name = "TipoProducto.findByComentarios", query = "SELECT t FROM TipoProducto t WHERE t.comentarios = :comentarios")})
+
+@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "idTipoProducto")
 public class TipoProducto implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -52,6 +58,7 @@ public class TipoProducto implements Serializable {
     @Column(name = "comentarios")
     private String comentarios;
     @OneToMany(mappedBy = "idTipoProducto", fetch = FetchType.LAZY)
+    @JsonbTransient
     private List<Producto> productoList;
 
     public TipoProducto() {
@@ -93,7 +100,6 @@ public class TipoProducto implements Serializable {
         this.comentarios = comentarios;
     }
 
-    @XmlTransient
     public List<Producto> getProductoList() {
         return productoList;
     }

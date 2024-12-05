@@ -4,6 +4,10 @@
  */
 package sv.edu.ues.occ.ingenieria.prn335_2024.cine.entity;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import jakarta.persistence.Basic;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -36,6 +40,9 @@ import java.util.List;
     @NamedQuery(name = "Producto.findByNombre", query = "SELECT p FROM Producto p WHERE p.nombre = :nombre"),
     @NamedQuery(name = "Producto.findByActivo", query = "SELECT p FROM Producto p WHERE p.activo = :activo"),
     @NamedQuery(name = "Producto.findByDescripcion", query = "SELECT p FROM Producto p WHERE p.descripcion = :descripcion")})
+
+@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "idProducto")
+
 public class Producto implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -55,7 +62,9 @@ public class Producto implements Serializable {
     @JoinColumn(name = "id_tipo_producto", referencedColumnName = "id_tipo_producto")
     @ManyToOne(fetch = FetchType.LAZY)
     private TipoProducto idTipoProducto;
+
     @OneToMany(mappedBy = "idProducto", fetch = FetchType.LAZY)
+
     private List<FacturaDetalleProducto> facturaDetalleProductoList;
 
     public Producto() {

@@ -73,14 +73,15 @@
     </dependency>
     <dependency>
         <groupId>net.sf.jasperreports</groupId>
-        <artifactId>jasperreports</artifactId>
-        <version>7.0.1</version>
-    </dependency>
-    <dependency>
-        <groupId>net.sf.jasperreports</groupId>
         <artifactId>jasperreports-pdf</artifactId>
         <version>7.0.1</version>
     </dependency>
+    <dependency>
+        <groupId>com.fasterxml.jackson.core</groupId>
+        <artifactId>jackson-databind</artifactId>
+        <version>2.17.1</version> <!-- Ajusta según la versión más reciente -->
+    </dependency>
+
 </dependencies>
 <build>
     <plugins>
