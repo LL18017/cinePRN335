@@ -4,6 +4,7 @@
  */
 package sv.edu.ues.occ.ingenieria.prn335_2024.cine.entity;
 
+import jakarta.json.bind.annotation.JsonbTransient;
 import jakarta.persistence.Basic;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -48,9 +49,11 @@ import java.io.Serializable;
     @Column(name = "valor")
     private String valor;
     @JoinColumn(name = "id_pelicula", referencedColumnName = "id_pelicula")
+    @JsonbTransient
     @ManyToOne(fetch = FetchType.LAZY)
     private Pelicula idPelicula;
     @JoinColumn(name = "id_tipo_pelicula", referencedColumnName = "id_tipo_pelicula")
+    @JsonbTransient
     @ManyToOne(fetch = FetchType.LAZY)
     private TipoPelicula idTipoPelicula;
 

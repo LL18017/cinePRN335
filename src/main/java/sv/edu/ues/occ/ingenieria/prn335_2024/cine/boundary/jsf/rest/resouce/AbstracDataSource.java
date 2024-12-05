@@ -23,20 +23,28 @@ public abstract class AbstracDataSource<T> implements Serializable {
             int first,
             @QueryParam("max")
             @DefaultValue("20")
-            int max
+            int max,
+            @QueryParam("range")
+            @DefaultValue("all")
+            String all
     ) {
         try {
+            if (all != null && !all.equals("all")) {
+            List<T> encontrados= getBean().findAll();
+            return Response.ok(encontrados, MediaType.APPLICATION_JSON).build();
+            }
             if (first >= 0 && max >= 0 && max <=50) {
 
             List<T> encontrados= getBean().findRange(first,max);
             Integer total=getBean().count();
-
-                System.out.println("total:"+total);
                 Response.ResponseBuilder builder = Response.ok(encontrados).
                         header("Total-records", total).
                         type(MediaType.APPLICATION_JSON);
                 return builder.build();
             }else{
+                if (all != null && !all.equals("all")) {
+                return Response.status(422).header("wrong parameter", "all:"+all).build();
+                }
                 return Response.status(422).header("wrong parameter, first:", first+",max: "+max  ).header("wrong parameter : max","s").build();
             }
         }catch (Exception e) {
