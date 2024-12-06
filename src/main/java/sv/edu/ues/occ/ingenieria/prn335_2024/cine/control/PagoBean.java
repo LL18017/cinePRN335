@@ -15,7 +15,7 @@ public class PagoBean extends AbstractDataPersist<Pago> implements Serializable 
     EntityManager em;
 
     public PagoBean() {
-        super(PagoBean.class);
+        super(Pago.class);
     }
 
     @Override

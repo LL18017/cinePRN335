@@ -4,6 +4,7 @@
  */
 package sv.edu.ues.occ.ingenieria.prn335_2024.cine.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.json.bind.annotation.JsonbTransient;
 import jakarta.persistence.Basic;
 import jakarta.persistence.Column;
@@ -48,10 +49,12 @@ import java.io.Serializable;
     @Size(max = 2147483647)
     @Column(name = "valor")
     private String valor;
+
     @JoinColumn(name = "id_pelicula", referencedColumnName = "id_pelicula")
-    @JsonbTransient
+    @JsonIgnore
     @ManyToOne(fetch = FetchType.LAZY)
     private Pelicula idPelicula;
+
     @JoinColumn(name = "id_tipo_pelicula", referencedColumnName = "id_tipo_pelicula")
     @JsonbTransient
     @ManyToOne(fetch = FetchType.LAZY)

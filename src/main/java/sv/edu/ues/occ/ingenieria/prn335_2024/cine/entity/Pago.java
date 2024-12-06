@@ -4,6 +4,8 @@
  */
 package sv.edu.ues.occ.ingenieria.prn335_2024.cine.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import jakarta.json.bind.annotation.JsonbTransient;
 import jakarta.persistence.Basic;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -47,12 +49,18 @@ public class Pago implements Serializable {
     @Column(name = "fecha")
     @Temporal(TemporalType.TIMESTAMP)
     private Date fecha;
+
+    @JsonIgnore
     @JoinColumn(name = "id_factura", referencedColumnName = "id_factura")
     @ManyToOne(fetch = FetchType.LAZY)
     private Factura idFactura;
+
+    @JsonIgnore
     @JoinColumn(name = "id_tipo_pago", referencedColumnName = "id_tipo_pago")
     @ManyToOne(fetch = FetchType.LAZY)
     private TipoPago idTipoPago;
+
+    @JsonbTransient
     @OneToMany(mappedBy = "idPago", fetch = FetchType.LAZY)
     private List<PagoDetalle> pagoDetalleList;
 

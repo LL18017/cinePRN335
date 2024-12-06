@@ -57,9 +57,11 @@ public class Asiento implements Serializable {
     @Column(name = "activo")
     private Boolean activo;
     @OneToMany(mappedBy = "idAsiento", fetch = FetchType.LAZY)
+
     @JsonbTransient
     private List<ReservaDetalle> reservaDetalleList;
     @JoinColumn(name = "id_sala", referencedColumnName = "id_sala")
+
     @ManyToOne(fetch = FetchType.LAZY)
     private Sala idSala;
     @OneToMany(mappedBy = "idAsiento", fetch = FetchType.LAZY)

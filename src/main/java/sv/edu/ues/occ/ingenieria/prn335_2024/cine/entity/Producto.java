@@ -8,6 +8,7 @@ import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
+import jakarta.json.bind.annotation.JsonbTransient;
 import jakarta.persistence.Basic;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -65,6 +66,8 @@ public class Producto implements Serializable {
     @JoinColumn(name = "id_tipo_producto", referencedColumnName = "id_tipo_producto")
     @ManyToOne(fetch = FetchType.LAZY)
     private TipoProducto idTipoProducto;
+
+    @JsonbTransient
     @OneToMany(mappedBy = "idProducto", fetch = FetchType.LAZY)
     private List<FacturaDetalleProducto> facturaDetalleProductoList;
 

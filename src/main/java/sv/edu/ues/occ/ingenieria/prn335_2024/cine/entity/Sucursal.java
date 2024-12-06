@@ -4,6 +4,8 @@
  */
 package sv.edu.ues.occ.ingenieria.prn335_2024.cine.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import jakarta.json.bind.annotation.JsonbTransient;
 import jakarta.persistence.Basic;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -58,6 +60,8 @@ public class Sucursal implements Serializable {
     private String comentarios;
     @Column(name = "activo")
     private Boolean activo;
+
+    @JsonIgnore
     @OneToMany(mappedBy = "idSucursal", fetch = FetchType.LAZY)
     private List<Sala> salaList;
 

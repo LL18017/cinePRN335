@@ -1,9 +1,11 @@
 package sv.edu.ues.occ.ingenieria.prn335_2024.cine.boundary.jsf;
 
 import jakarta.faces.context.FacesContext;
+import jakarta.faces.view.ViewScoped;
 import jakarta.inject.Inject;
 import jakarta.inject.Named;
 import org.primefaces.event.SelectEvent;
+import sv.edu.ues.occ.ingenieria.prn335_2024.cine.boundary.jsf.rest.WS.ReservaEndPoint;
 import sv.edu.ues.occ.ingenieria.prn335_2024.cine.boundary.jsf.rest.WS.WS;
 import sv.edu.ues.occ.ingenieria.prn335_2024.cine.control.AbstractDataPersist;
 import sv.edu.ues.occ.ingenieria.prn335_2024.cine.control.ReservaBean;
@@ -12,11 +14,14 @@ import sv.edu.ues.occ.ingenieria.prn335_2024.cine.entity.Reserva;
 import java.io.Serializable;
 
 @Named
+@ViewScoped
 public class FrmReserva extends AbstractFrm<Reserva> implements Serializable {
     @Inject
     ReservaBean reservaBean;
     @Inject
     FacesContext fc;
+    @Inject
+    ReservaEndPoint reservaEndPoint;
 
 
     //variables para la pagina
@@ -65,7 +70,7 @@ public class FrmReserva extends AbstractFrm<Reserva> implements Serializable {
 
     @Override
     public WS getWebsocketController() {
-        return null;
+        return reservaEndPoint;
     }
 
     //funcionalidad

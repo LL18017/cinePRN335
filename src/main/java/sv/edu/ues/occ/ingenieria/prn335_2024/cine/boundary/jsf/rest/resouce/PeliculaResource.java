@@ -8,7 +8,7 @@ import sv.edu.ues.occ.ingenieria.prn335_2024.cine.entity.Pelicula;
 
 import java.io.Serializable;
 
-@Path("peliculas")
+@Path("pelicula")
 public class PeliculaResource extends AbstracDataSource<Pelicula> implements Serializable {
     @Inject
     PeliculaBean peliculaBean;
@@ -19,7 +19,11 @@ public class PeliculaResource extends AbstracDataSource<Pelicula> implements Ser
 
     @Override
     public Integer getId(Pelicula registro) {
+        if (registro.getIdPelicula()!=null){
+
         return registro.getIdPelicula().intValue();
+        }
+        return null;
     }
 
     @Override

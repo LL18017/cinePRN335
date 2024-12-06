@@ -6,20 +6,24 @@ import jakarta.faces.view.ViewScoped;
 import jakarta.inject.Inject;
 import jakarta.inject.Named;
 import org.primefaces.event.SelectEvent;
+import sv.edu.ues.occ.ingenieria.prn335_2024.cine.boundary.jsf.rest.WS.TipoReservaEndPoint;
 import sv.edu.ues.occ.ingenieria.prn335_2024.cine.boundary.jsf.rest.WS.WS;
 import sv.edu.ues.occ.ingenieria.prn335_2024.cine.control.AbstractDataPersist;
 import sv.edu.ues.occ.ingenieria.prn335_2024.cine.control.TipoReservaBean;
 import sv.edu.ues.occ.ingenieria.prn335_2024.cine.entity.TipoReserva;
 
+import java.io.Serializable;
 import java.util.logging.Logger;
 
 @Named
 @ViewScoped
-public class FrmTipoReserva extends AbstractFrm<TipoReserva> {
+public class FrmTipoReserva extends AbstractFrm<TipoReserva> implements Serializable {
     @Inject
     TipoReservaBean trBean;
     @Inject
     FacesContext fc;
+    @Inject
+    TipoReservaEndPoint tipoReservaEndPoint;
     @Override
     public void instanciarRegistro() {
 
@@ -75,6 +79,6 @@ public class FrmTipoReserva extends AbstractFrm<TipoReserva> {
 
     @Override
     public WS getWebsocketController() {
-        return null;
+        return tipoReservaEndPoint;
     }
 }

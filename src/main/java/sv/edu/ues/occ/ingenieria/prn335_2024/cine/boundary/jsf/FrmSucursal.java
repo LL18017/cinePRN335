@@ -6,6 +6,7 @@ import jakarta.faces.view.ViewScoped;
 import jakarta.inject.Inject;
 import jakarta.inject.Named;
 import org.primefaces.event.SelectEvent;
+import sv.edu.ues.occ.ingenieria.prn335_2024.cine.boundary.jsf.rest.WS.SucursalEndPoint;
 import sv.edu.ues.occ.ingenieria.prn335_2024.cine.boundary.jsf.rest.WS.WS;
 import sv.edu.ues.occ.ingenieria.prn335_2024.cine.control.AbstractDataPersist;
 import sv.edu.ues.occ.ingenieria.prn335_2024.cine.control.SucursalBean;
@@ -28,6 +29,8 @@ public class FrmSucursal extends AbstractFrm<Sucursal> implements Serializable {
     SucursalBean scBean;
     @Inject
     FacesContext fc;
+    @Inject
+    SucursalEndPoint sucursalEndPoint;
 
     @Override
     public void instanciarRegistro() {
@@ -82,7 +85,7 @@ public class FrmSucursal extends AbstractFrm<Sucursal> implements Serializable {
 
     @Override
     public WS getWebsocketController() {
-        return null;
+        return sucursalEndPoint;
     }
 
 

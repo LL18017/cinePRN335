@@ -47,9 +47,11 @@ public class SalaCaracteristica implements Serializable {
     @Size(max = 2147483647)
     @Column(name = "valor")
     private String valor;
+
     @JoinColumn(name = "id_sala", referencedColumnName = "id_sala")
     @ManyToOne(fetch = FetchType.LAZY)
     private Sala idSala;
+
     @JoinColumn(name = "id_tipo_sala", referencedColumnName = "id_tipo_sala")
     @ManyToOne(fetch = FetchType.LAZY)
     private TipoSala idTipoSala;

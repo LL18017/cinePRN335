@@ -114,7 +114,7 @@ public abstract class AbstractFrm<T> implements Serializable {
          mensaje.setSeverity(FacesMessage.SEVERITY_INFO);
          mensaje.setSummary("registro guardado");
          getFC().addMessage(null,mensaje);
-         getWebsocketController().PropargarMensaje("nuevo dato guardado");
+         getWebsocketController().PropargarMensaje("nuevo dato guardado:");
          this.registro = null;
          System.out.println("se esta enviado");
 

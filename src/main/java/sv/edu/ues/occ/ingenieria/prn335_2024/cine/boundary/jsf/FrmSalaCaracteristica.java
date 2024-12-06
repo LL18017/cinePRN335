@@ -9,6 +9,7 @@ import jakarta.faces.validator.ValidatorException;
 import jakarta.inject.Inject;
 import jakarta.inject.Named;
 import org.primefaces.event.SelectEvent;
+import sv.edu.ues.occ.ingenieria.prn335_2024.cine.boundary.jsf.rest.WS.SalaCaracteristicaEndPoint;
 import sv.edu.ues.occ.ingenieria.prn335_2024.cine.boundary.jsf.rest.WS.WS;
 import sv.edu.ues.occ.ingenieria.prn335_2024.cine.control.AbstractDataPersist;
 import sv.edu.ues.occ.ingenieria.prn335_2024.cine.control.SalaCaracteristicaBean;
@@ -31,6 +32,8 @@ public class FrmSalaCaracteristica extends AbstractFrm<SalaCaracteristica> imple
     FacesContext fc;
     @Inject
     SalaCaracteristicaBean salaCaracteristicaBean;
+    @Inject
+    SalaCaracteristicaEndPoint salaCaracteristicaEndPoint;
 
     List<TipoSala> tipoSalaList;
     TipoSala tipoSalaSelecionada;
@@ -119,12 +122,12 @@ public class FrmSalaCaracteristica extends AbstractFrm<SalaCaracteristica> imple
 
     @Override
     public String paginaNombre() {
-        return "";
+        return "SalaCaracteristica";
     }
 
     @Override
     public WS getWebsocketController() {
-        return null;
+        return salaCaracteristicaEndPoint;
     }
 
     @Override

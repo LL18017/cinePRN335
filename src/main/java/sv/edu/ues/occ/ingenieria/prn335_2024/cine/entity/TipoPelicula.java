@@ -55,6 +55,7 @@ public class TipoPelicula implements Serializable {
     @Column(name = "expresion_regular")
     private String expresionRegular;
     @OneToMany(mappedBy = "idTipoPelicula", fetch = FetchType.LAZY)
+
     private List<PeliculaCaracteristica> peliculaCaracteristicaList;
 
     public TipoPelicula() {

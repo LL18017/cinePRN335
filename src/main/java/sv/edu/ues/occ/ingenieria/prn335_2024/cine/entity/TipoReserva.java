@@ -4,6 +4,7 @@
  */
 package sv.edu.ues.occ.ingenieria.prn335_2024.cine.entity;
 
+import jakarta.json.bind.annotation.JsonbTransient;
 import jakarta.persistence.Basic;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -51,6 +52,7 @@ public class TipoReserva implements Serializable {
     @Column(name = "comentarios")
     private String comentarios;
     @OneToMany(mappedBy = "idTipoReserva", fetch = FetchType.LAZY)
+    @JsonbTransient
     private List<Reserva> reservaList;
 
     public TipoReserva() {

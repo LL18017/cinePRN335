@@ -6,20 +6,24 @@ import jakarta.faces.view.ViewScoped;
 import jakarta.inject.Inject;
 import jakarta.inject.Named;
 import org.primefaces.event.SelectEvent;
+import sv.edu.ues.occ.ingenieria.prn335_2024.cine.boundary.jsf.rest.WS.TipoPeliculaEndPoint;
 import sv.edu.ues.occ.ingenieria.prn335_2024.cine.boundary.jsf.rest.WS.WS;
 import sv.edu.ues.occ.ingenieria.prn335_2024.cine.control.AbstractDataPersist;
 import sv.edu.ues.occ.ingenieria.prn335_2024.cine.control.TipoPeliculaBean;
 import sv.edu.ues.occ.ingenieria.prn335_2024.cine.entity.TipoPelicula;
 
+import java.io.Serializable;
 import java.util.logging.Logger;
 
 @Named
 @ViewScoped
-public class FrmTipoPelicula extends AbstractFrm<TipoPelicula> {
+public class FrmTipoPelicula extends AbstractFrm<TipoPelicula> implements Serializable {
     @Inject
     TipoPeliculaBean tpBean;
     @Inject
     FacesContext fc;
+    @Inject
+    TipoPeliculaEndPoint tipoPeliculaEndPoint;
 
     @Override
     public void instanciarRegistro() {
@@ -74,6 +78,6 @@ public class FrmTipoPelicula extends AbstractFrm<TipoPelicula> {
     }
     @Override
     public WS getWebsocketController() {
-        return null;
+        return tipoPeliculaEndPoint;
     }
 }

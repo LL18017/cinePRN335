@@ -1,5 +1,6 @@
 
 package sv.edu.ues.occ.ingenieria.prn335_2024.cine.entity;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.json.bind.annotation.JsonbTransient;
 import jakarta.persistence.Basic;
 import jakarta.persistence.Column;
@@ -60,13 +61,15 @@ public class Programacion implements Serializable {
     @Size(max = 2147483647)
     @Column(name = "comentarios")
     private String comentarios;
-    @JsonbTransient
+
+    @JsonIgnore
     @JoinColumn(name = "id_pelicula", referencedColumnName = "id_pelicula")
     @ManyToOne(fetch = FetchType.LAZY)
     private Pelicula idPelicula;
+
     @JoinColumn(name = "id_sala", referencedColumnName = "id_sala")
     @ManyToOne(fetch = FetchType.LAZY)
-    @JsonbTransient
+    @JsonIgnore
     private Sala idSala;
 
     @JsonbTransient

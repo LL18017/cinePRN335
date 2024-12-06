@@ -15,6 +15,7 @@ import sv.edu.ues.occ.ingenieria.prn335_2024.cine.boundary.jsf.rest.WS.WS;
 import sv.edu.ues.occ.ingenieria.prn335_2024.cine.control.*;
 import sv.edu.ues.occ.ingenieria.prn335_2024.cine.entity.*;
 
+import java.io.IOException;
 import java.io.Serializable;
 import java.text.SimpleDateFormat;
 import java.util.*;
@@ -275,7 +276,10 @@ public class FrmReservas extends AbstractFrm<Reserva> implements Serializable {
                 asientosDisponibles.remove(asientoSelecionado);
                 asientosSelecionados.add(asientoSelecionado);
             }
+            this.getWebsocketController().PropargarMensaje("se selecciono el asiento:" + idAsientoSelecionado);
             idAsientoSelecionado = "";
+
+
         } catch (Exception e) {
             Logger.getLogger(getClass().getName()).log(Level.SEVERE, e.getMessage(), e);
         }
@@ -333,6 +337,11 @@ public class FrmReservas extends AbstractFrm<Reserva> implements Serializable {
                         reservaDetalle.setIdAsiento(a);
                         reservaDetalle.setEstado("Creado");
                         reservaDetalleBean.create(reservaDetalle);
+                        try {
+                            getWebsocketController().PropargarMensaje("se ha guardado el asiento:"+a.getIdAsiento());
+                        } catch (IOException e) {
+                            Logger.getLogger(getClass().getName()).log(Level.SEVERE, e.getMessage(), e);
+                        }
                     });
                 } catch (Exception e) {
                     Logger.getLogger(getClass().getName()).log(Level.SEVERE, e.getMessage(), e);

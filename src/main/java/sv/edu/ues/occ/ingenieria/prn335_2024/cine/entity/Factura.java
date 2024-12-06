@@ -4,6 +4,7 @@
  */
 package sv.edu.ues.occ.ingenieria.prn335_2024.cine.entity;
 
+import jakarta.json.bind.annotation.JsonbTransient;
 import jakarta.persistence.Basic;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -58,10 +59,16 @@ public class Factura implements Serializable {
     @Size(max = 2147483647)
     @Column(name = "comentarios")
     private String comentarios;
+
+    @JsonbTransient
     @OneToMany(mappedBy = "idFactura", fetch = FetchType.LAZY)
     private List<FacturaDetalleSala> facturaDetalleSalaList;
+
+    @JsonbTransient
     @OneToMany(mappedBy = "idFactura", fetch = FetchType.LAZY)
     private List<Pago> pagoList;
+
+    @JsonbTransient
     @OneToMany(mappedBy = "idFactura", fetch = FetchType.LAZY)
     private List<FacturaDetalleProducto> facturaDetalleProductoList;
 

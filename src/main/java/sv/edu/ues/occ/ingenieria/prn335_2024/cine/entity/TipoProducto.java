@@ -54,6 +54,7 @@ public class TipoProducto implements Serializable {
     @Size(max = 2147483647)
     @Column(name = "comentarios")
     private String comentarios;
+
     @OneToMany(mappedBy = "idTipoProducto", fetch = FetchType.LAZY)
     @JsonbTransient
     private List<Producto> productoList;

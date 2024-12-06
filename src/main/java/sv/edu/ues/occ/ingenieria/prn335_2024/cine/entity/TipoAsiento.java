@@ -55,6 +55,7 @@ public class TipoAsiento implements Serializable {
     @Size(max = 2147483647)
     @Column(name = "expresion_regular")
     private String expresionRegular;
+
     @OneToMany(mappedBy = "idTipoAsiento", fetch = FetchType.LAZY)
     private List<AsientoCaracteristica> asientoCaracteristicaList;
 

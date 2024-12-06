@@ -17,7 +17,11 @@ public class ProductoResources extends AbstracDataSource<Producto> {
 
     @Override
     public Integer getId(Producto registro) {
+        if (registro.getIdProducto() != null){
+
         return registro.getIdProducto().intValue();
+        }
+        return null;
     }
 
     @Override

@@ -1,5 +1,6 @@
 package sv.edu.ues.occ.ingenieria.prn335_2024.cine.control;
 
+import jakarta.ejb.LocalBean;
 import jakarta.ejb.Stateless;
 import jakarta.inject.Named;
 import jakarta.persistence.EntityManager;
@@ -12,8 +13,8 @@ import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-@Named
 @Stateless
+@LocalBean
 public class AsientoCaracteristicaBean extends AbstractDataPersist<AsientoCaracteristica> implements Serializable {
     @PersistenceContext(unitName = "cinePU")
     EntityManager em;

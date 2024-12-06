@@ -11,6 +11,7 @@ import org.primefaces.model.DefaultScheduleEvent;
 import org.primefaces.model.DefaultScheduleModel;
 import org.primefaces.model.ScheduleEvent;
 import org.primefaces.model.ScheduleModel;
+import sv.edu.ues.occ.ingenieria.prn335_2024.cine.boundary.jsf.rest.WS.ProgramacionEndPoint;
 import sv.edu.ues.occ.ingenieria.prn335_2024.cine.boundary.jsf.rest.WS.WS;
 import sv.edu.ues.occ.ingenieria.prn335_2024.cine.control.AbstractDataPersist;
 import sv.edu.ues.occ.ingenieria.prn335_2024.cine.control.PeliculaBean;
@@ -38,6 +39,8 @@ public class FrmProgramacion extends AbstractFrm<Programacion> implements Serial
     ProgramacionBean pBean;
     @Inject
     PeliculaBean peliculaBean;
+    @Inject
+    ProgramacionEndPoint programacionEndPoint;
 
     List<Pelicula> peliculasDisponibles = new ArrayList<>();
 
@@ -128,7 +131,7 @@ public class FrmProgramacion extends AbstractFrm<Programacion> implements Serial
 
     @Override
     public WS getWebsocketController() {
-        return null;
+        return programacionEndPoint;
     }
     public void BuscarPeliculaDisponibles() {
         try {

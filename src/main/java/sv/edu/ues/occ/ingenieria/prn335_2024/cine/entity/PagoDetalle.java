@@ -4,6 +4,7 @@
  */
 package sv.edu.ues.occ.ingenieria.prn335_2024.cine.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.Basic;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -47,6 +48,8 @@ public class PagoDetalle implements Serializable {
     @Size(max = 2147483647)
     @Column(name = "concepto")
     private String concepto;
+
+    @JsonIgnore
     @JoinColumn(name = "id_pago", referencedColumnName = "id_pago")
     @ManyToOne(fetch = FetchType.LAZY)
     private Pago idPago;

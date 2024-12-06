@@ -4,6 +4,10 @@
  */
 package sv.edu.ues.occ.ingenieria.prn335_2024.cine.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import jakarta.json.bind.annotation.JsonbProperty;
+import jakarta.json.bind.annotation.JsonbTransient;
 import jakarta.persistence.Basic;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -57,11 +61,17 @@ public class Reserva implements Serializable {
     @Size(max = 2147483647)
     @Column(name = "observaciones")
     private String observaciones;
+
+    @JsonbTransient
     @OneToMany(mappedBy = "idReserva", fetch = FetchType.LAZY)
     private List<ReservaDetalle> reservaDetalleList;
+
+    @JsonIgnore
     @JoinColumn(name = "id_programacion", referencedColumnName = "id_programacion")
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne
     private Programacion idProgramacion;
+
+    @JsonIgnore
     @JoinColumn(name = "id_tipo_reserva", referencedColumnName = "id_tipo_reserva")
     @ManyToOne(fetch = FetchType.LAZY)
     private TipoReserva idTipoReserva;
@@ -114,6 +124,7 @@ public class Reserva implements Serializable {
         this.reservaDetalleList = reservaDetalleList;
     }
 
+
     public Programacion getIdProgramacion() {
         return idProgramacion;
     }
@@ -130,10 +141,14 @@ public class Reserva implements Serializable {
         this.idTipoReserva = idTipoReserva;
     }
 
-
+@JsonbTransient
     public String getFormattedfecha() {
         SimpleDateFormat dateDesde = new SimpleDateFormat("dd-MM-yyyy HH:mm");
         return dateDesde.format(fechaReserva);
+    }
+
+    public void setIdProgramacionR(Programacion idProgramacionR) {
+        this.idProgramacion = idProgramacionR;
     }
 
     @Override

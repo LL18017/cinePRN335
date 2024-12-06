@@ -4,6 +4,7 @@
  */
 package sv.edu.ues.occ.ingenieria.prn335_2024.cine.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.Basic;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -42,9 +43,13 @@ public class FacturaDetalleSala implements Serializable {
     // @Max(value=?)  @Min(value=?)//if you know range of your decimal fields consider using these annotations to enforce field validation
     @Column(name = "monto")
     private BigDecimal monto;
+
+    @JsonIgnore
     @JoinColumn(name = "id_factura", referencedColumnName = "id_factura")
     @ManyToOne(fetch = FetchType.LAZY)
     private Factura idFactura;
+
+    @JsonIgnore
     @JoinColumn(name = "id_reserva_detalle", referencedColumnName = "id_reserva_detalle")
     @ManyToOne(fetch = FetchType.LAZY)
     private ReservaDetalle idReservaDetalle;

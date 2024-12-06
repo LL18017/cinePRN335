@@ -12,9 +12,6 @@ import java.util.logging.Logger;
 public class WS implements Serializable {
     @Inject
     ManagerSessionWS msw;
-
-
-
     public  void conecto(Session s){
         msw.agregar(s);
         System.out.println("se conecto: "+ s.getId());
@@ -28,12 +25,10 @@ public class WS implements Serializable {
 
 
     public void PropargarMensaje(String mensaje) throws IOException {
-        System.out.println("tiene " + msw.getSessiones().size());
         try {
             for (Session session : msw.getSessiones()) {
                 if (session.isOpen()) {
                     session.getBasicRemote().sendText(mensaje);
-                    System.out.println("se envio ws");
                 }
             }
         }catch (Exception e){

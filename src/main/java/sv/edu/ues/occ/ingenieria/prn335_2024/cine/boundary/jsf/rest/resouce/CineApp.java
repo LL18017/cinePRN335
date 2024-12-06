@@ -9,5 +9,4 @@ import jakarta.ws.rs.core.MediaType;
 @ApplicationPath("v1")
 public class CineApp extends Application {
 
-
 }

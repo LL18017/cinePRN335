@@ -29,10 +29,6 @@ public abstract class AbstracDataSource<T> implements Serializable {
             String all
     ) {
         try {
-            if (all != null && !all.equals("all")) {
-            List<T> encontrados= getBean().findAll();
-            return Response.ok(encontrados, MediaType.APPLICATION_JSON).build();
-            }
             if (first >= 0 && max >= 0 && max <=50) {
 
             List<T> encontrados= getBean().findRange(first,max);
@@ -42,9 +38,6 @@ public abstract class AbstracDataSource<T> implements Serializable {
                         type(MediaType.APPLICATION_JSON);
                 return builder.build();
             }else{
-                if (all != null && !all.equals("all")) {
-                return Response.status(422).header("wrong parameter", "all:"+all).build();
-                }
                 return Response.status(422).header("wrong parameter, first:", first+",max: "+max  ).header("wrong parameter : max","s").build();
             }
         }catch (Exception e) {
@@ -56,7 +49,7 @@ public abstract class AbstracDataSource<T> implements Serializable {
     @Path("/{id}")
     @GET
     @Produces({MediaType.APPLICATION_JSON})
-    public Response findById(@PathParam("id") Integer id) {
+    public Response findById(@PathParam("id") Long id) {
         if (id != null) {
             try {
                 T encontrado= getBean().findById(id);
@@ -78,13 +71,13 @@ public abstract class AbstracDataSource<T> implements Serializable {
     @Produces({MediaType.APPLICATION_JSON})
     @Consumes({MediaType.APPLICATION_JSON})
         public Response create(T registro, @Context UriInfo uriInfo){
+
+        System.out.println(registro);
         if (registro != null && getId(registro) == null ) {
-            System.out.println(registro.toString());
             try {
                 getBean().create(registro);
                     System.out.println("se ha creado");
                 if (getId(registro) !=null) {
-
                     UriBuilder uriBuilder= uriInfo.getAbsolutePathBuilder();
                     uriBuilder.path(String.valueOf(getId(registro)));
                     return Response.created(uriBuilder.build()).build();

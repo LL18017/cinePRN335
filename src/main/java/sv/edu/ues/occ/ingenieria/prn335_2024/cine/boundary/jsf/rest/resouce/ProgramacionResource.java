@@ -33,7 +33,11 @@ public class ProgramacionResource extends AbstracDataSource<Programacion> implem
 
     @Override
     public Integer getId(Programacion registro) {
+        if (registro.getIdProgramacion()!=null){
+
         return registro.getIdProgramacion().intValue();
+        }
+        return null;
     }
 
     @Override
@@ -52,7 +56,7 @@ public class ProgramacionResource extends AbstracDataSource<Programacion> implem
                     Response.ResponseBuilder builder = Response.ok(encontrados);
                     return builder.build();
                 }
-                return Response.status(401).header("not-found-id-sala", id).build();
+                return Response.status(400).header("not-found-id-sala", id).build();
             }catch (Exception e) {
                 Logger.getLogger(getClass().getName()).log(Level.SEVERE, e.getMessage(), e);
                 return Response.status(500).entity(e.getMessage()).build();

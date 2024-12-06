@@ -8,6 +8,7 @@ import jakarta.inject.Inject;
 import jakarta.inject.Named;
 import org.primefaces.event.SelectEvent;
 import org.primefaces.event.TabChangeEvent;
+import sv.edu.ues.occ.ingenieria.prn335_2024.cine.boundary.jsf.rest.WS.SalaEndPoint;
 import sv.edu.ues.occ.ingenieria.prn335_2024.cine.boundary.jsf.rest.WS.WS;
 import sv.edu.ues.occ.ingenieria.prn335_2024.cine.control.*;
 import sv.edu.ues.occ.ingenieria.prn335_2024.cine.entity.Sala;
@@ -37,6 +38,8 @@ public class FrmSala extends AbstractFrm<Sala> {
     FrmProgramacion frmProgramacion;
     @Inject
     FrmAsiento frmAsiento;
+    @Inject
+    SalaEndPoint salaEndPoint;
 
 
 
@@ -104,7 +107,7 @@ public class FrmSala extends AbstractFrm<Sala> {
 
     @Override
     public WS getWebsocketController() {
-        return null;
+        return salaEndPoint;
     }
 
     //funcionaliddaes de Sala

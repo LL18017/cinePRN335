@@ -14,7 +14,7 @@ import java.util.List;
 
 @Stateless
 @LocalBean
-public class TipoSalaBean extends AbstractDataPersist<TipoSala>{
+public class TipoSalaBean extends AbstractDataPersist<TipoSala> implements Serializable {
     @PersistenceContext(unitName = "cinePU")
     EntityManager em;
 

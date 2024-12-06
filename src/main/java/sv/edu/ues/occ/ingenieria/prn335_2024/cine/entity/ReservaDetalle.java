@@ -4,6 +4,8 @@
  */
 package sv.edu.ues.occ.ingenieria.prn335_2024.cine.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import jakarta.json.bind.annotation.JsonbTransient;
 import jakarta.persistence.Basic;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -46,12 +48,18 @@ public class ReservaDetalle implements Serializable {
     @Size(max = 155)
     @Column(name = "estado")
     private String estado;
+
+
     @JoinColumn(name = "id_asiento", referencedColumnName = "id_asiento")
     @ManyToOne(fetch = FetchType.LAZY)
     private Asiento idAsiento;
+
+
     @JoinColumn(name = "id_reserva", referencedColumnName = "id_reserva")
     @ManyToOne(fetch = FetchType.LAZY)
+
     private Reserva idReserva;
+    @JsonbTransient
     @OneToMany(mappedBy = "idReservaDetalle", fetch = FetchType.LAZY)
     private List<FacturaDetalleSala> facturaDetalleSalaList;
 
