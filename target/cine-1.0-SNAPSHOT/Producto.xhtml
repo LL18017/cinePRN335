@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<f:composition xmlns="http://www.w3.org/1999/xhtml"
+               xmlns:h="jakarta.faces.html"
+               xmlns:f="jakarta.faces.facelets"
+               xmlns:o="http://xmlns.jcp.org/jsf/core"
+               xmlns:p="http://primefaces.org/ui"
+               xmlns:crud="jakarta.faces.composite/crud"
+               template="WEB-INF/templates/principal.xhtml"
+
+>
+
+
+   <f:define name="titulo">
+      #{frmProducto.paginaNombre()}
+   </f:define>
+
+   <f:define name="cuerpo">
+      <h:panelGrid>
+         <h:panelGroup id="pnlTabla">
+            <h:form id="frmTabla">
+               <p:dataTable value="#{frmProducto.modelo}" var="r"
+                            lazy="true"
+                            paginator="true"
+                            rows="5"
+                            first="0"
+                            selectionMode="single"
+                            selection="#{frmProducto.registro}"
+                            rendered="#{empty frmProducto.registro}"
+               >
+                  <p:ajax process="@this" update=":pnlDetalle frmTabla @form" event="rowSelect"
+                          listener="#{frmProducto.selecionarFila}"/>
+                  <p:column headerText="ID"><h:outputText value="#{r.idProducto}"/></p:column>
+                  <p:column headerText="NOMBRE"><h:outputText value="#{r.nombre}"/></p:column>
+                  <p:column headerText="TIPO PRODUCTO"><h:outputText value="#{r.idTipoProducto.nombre}"/></p:column>
+                  <p:column headerText="ACTIVO"><h:outputText value="#{r.activo?'ACTIVO':'INACTIVO'}"/></p:column>
+                  <p:column headerText="DESCRIPCION"><h:outputText value="#{r.descripcion}"/></p:column>
+
+               </p:dataTable>
+               <crud:botonesTop frm="#{frmProducto}"/>
+               <p:growl id="growl" showDetail="true" sticky="false" life="10000"/>
+            </h:form>
+         </h:panelGroup>
+      </h:panelGrid>
+
+      <h:panelGroup id="pnlDetalle">
+         <p:tabView id="tabDetalle" rendered="#{not empty frmProducto.registro}">
+            <!--            generalidades-->
+            <p:tab title="Generalidades" id="generalidades" cache="false" dynamic="true" closable="false">
+               <h:form id="frmDetalle" rendered="#{not empty frmProducto.registro}">
+
+
+                  <h:panelGrid columns="2">
+                     <p:outputLabel value="ID" for="txtid"/>
+                     <p:inputText id="txtid" value="#{frmProducto.registro.idProducto}" readonly="true"
+                                  disabled="true"/>
+
+                     <p:outputLabel value="Nombre" for="txtNombre"/>
+                     <p:inputText id="txtNombre" value="#{frmProducto.registro.nombre}" size="70"/>
+
+                     <p:outputLabel value="Tipo Producto" for="lstTipoProducto"/>
+                     <p:selectOneMenu id="lstTipoProducto"
+                                      value="#{frmProducto.idTipoProducto}">
+                        <o:selectItems value="#{frmProducto.tipoProductoList}"
+                                       var="tp" itemLabel="#{tp.nombre}"
+                                       itemValue="#{tp.idTipoProducto}"/>
+                        <p:ajax event="itemSelect" update=":growl pnlValorValues" process="@this" listener="#{frmProducto.frmTipoProducto.selecionarFila}"/>
+                     </p:selectOneMenu>
+
+
+                     <p:outputLabel value="Descripcion" for="txtDescripcion"/>
+                     <p:inputText id="txtDescripcion" value="#{frmProducto.registro.descripcion}" size="70"/>
+                  </h:panelGrid>
+                  <h:panelGrid columns="#{frmProducto.estado=='CREAR'?'1':'2'}">
+                     <crud:botonesBottom frm="#{frmProducto}" actualizar=":frmTabla  :pnlDetalle @form"/>
+                  </h:panelGrid>
+               </h:form>
+            </p:tab>
+         </p:tabView>
+      </h:panelGroup>
+   </f:define>
+
+</f:composition>

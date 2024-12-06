@@ -1,0 +1,36 @@
+body{
+    background-image: url("#{resource['imagenes/cine.jpg']}");
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+    color: white;
+
+}
+h1{
+    text-align: center;
+    color: #ffff;
+}
+
+.btn-warning {
+    background-color: #38ea20; /* Amarillo */
+    color: #fff;
+    border: none;
+}
+
+.btn-danger {
+    background-color: #dc3545; /* Rojo */
+    color: #fff;
+    border: none;
+}
+
+.my-grid-class {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr); /* 2 columnas uniformes */
+    gap: 10px; /* Espacio entre celdas */
+}
+
+.my-grid-class .inner-grid {
+    display: contents; /* Los elementos internos usan las columnas principales */
+}
+

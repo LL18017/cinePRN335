@@ -1,0 +1,301 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="jakarta.faces.html"
+                xmlns:ui="jakarta.faces.facelets"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:crud="jakarta.faces.composite/crud"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:o="jakarta.faces.facelets"
+                template="WEB-INF/templates/principal.xhtml"
+>
+
+    <ui:define name="titulo">
+        #{frmFactura.paginaNombre()}
+    </ui:define>
+    <ui:define name="cuerpo">
+        <h:panelGrid>
+            <h:panelGroup id="pnlTabla">
+                <h:form id="frmTabla">
+                    <p:dataTable value="#{frmFactura.modelo}" var="r"
+                                 lazy="true"
+                                 paginator="true"
+                                 rows="5"
+                                 first="0"
+                                 selectionMode="single"
+                                 selection="#{frmFactura.registro}"
+                                 rendered="#{empty frmFactura.registro}"
+                    >
+                        <p:ajax process="@this" update=":pnlDetalle :growl frmTabla  @form" event="rowSelect"
+                                listener="#{frmFactura.selecionarFila}"/>
+                        <p:column headerText="ID"><h:outputText value="#{r.idFactura}"/></p:column>
+                        <p:column headerText="CLIENTE"><h:outputText value="#{r.cliente}"/></p:column>
+                        <p:column headerText="DUI"><h:outputText value="#{r.dui}"/></p:column>
+                        <p:column headerText="FECHA"><h:outputText value="#{r.fecha}"/></p:column>
+                        <p:column headerText="COMENTARIOS"><h:outputText value="#{r.comentarios}"/></p:column>
+                    </p:dataTable>
+                    <h:panelGrid columns="2">
+                        <crud:botonesTop frm="#{frmFactura}"  actualizar=":pnlDetalle :pnlTabla buttons"/>
+                    </h:panelGrid>
+                    <p:growl id="growl" showDetail="true" sticky="false" life="10500"/>
+                </h:form>
+            </h:panelGroup>
+        </h:panelGrid>
+
+        <h:panelGroup id="pnlDetalle">
+            <p:tabView id="tabDetalle" cache="false" dynamic="true" rendered="#{not empty frmFactura.registro}"  activeIndex="#{frmFactura.indexTab}">
+                <p:ajax process="@this" event="tabChange" update="tabGeneralidades tabproductos tabReserva tabResumen buttons"
+                        listener="#{frmFactura.changeTab}"/>
+
+
+                <!--            info de la sala-->
+                <p:tab disabled="#{frmFactura.indexTab!=0}" id="tabGeneralidades" closable="false" title="Generalidades">
+                    <h:form rendered="#{not empty frmFactura.registro}" id="frmDetalle">
+
+                        <h:panelGrid columns="2">
+                            <p:outputLabel value="ID" for="txtid"/>
+                            <p:inputText id="txtid" value="#{frmFactura.registro.idFactura}" readonly="true" disabled="true"/>
+
+                            <p:outputLabel value="Cliente" for="txtCLiente"/>
+                            <p:inputText id="txtCLiente" value="#{frmFactura.registro.cliente}" size="70" required="true"/>
+
+                            <p:outputLabel value="DUI" for="txtdui"/>
+                            <p:inputText id="txtdui" value="#{frmFactura.registro.dui}" size="70" required="true"/>
+
+                            <p:outputLabel value="fecha" for="cldFecha"/>
+                            <p:calendar id="cldFecha" value="#{frmFactura.registro.fecha}" size="70" required="true"  showTime="true" pattern="dd/MM/yyyy HH:mm"/>
+
+                            <p:outputLabel value="comentarios" for="txtComentarios"/>
+                            <p:inputTextarea id="taComentarios" value="#{frmFactura.registro.comentarios}"/>
+
+                        </h:panelGrid>
+                        <h:panelGrid columns="#{frmFactura.estado=='CREAR'?'1':'2'}">
+                            <crud:botonesBottom frm="#{frmFactura}"/>
+                        </h:panelGrid>
+
+                    </h:form>
+                </p:tab>
+
+                <p:tab disabled="#{frmFactura.indexTab!=1}" closable="false" title="productos" id="tabproductos" rendered="#{not empty frmFactura.ultimoRegistro or  not empty frmFactura.registro}">
+                    <h:panelGrid>
+                        <h:panelGroup id="pnlTablaSC">
+                            <h:form rendered="#{not empty frmSala.registro}" id="frmTablaSC">
+                                <p:dataTable value="#{frmSala.frmSalaCaracteristica.modelo}" var="sc"
+                                             lazy="true"
+                                             paginator="true"
+                                             rows="5"
+                                             first="0"
+                                             selectionMode="single"
+                                             selection="#{frmSala.frmSalaCaracteristica.registro}"
+                                             rendered="#{frmSala.frmSalaCaracteristica.registro eq null}"
+                                >
+                                    <p:ajax process="@this" update="pnlDetalleSC @form :growl" event="rowSelect"
+                                            listener="#{frmSala.frmSalaCaracteristica.selecionarFila}"/>
+                                    <p:column headerText="ID"><h:outputText value="#{sc.idSalaCaracteristica}"/></p:column>
+                                    <p:column headerText="CARRACTERISTICA"><h:outputText value="#{sc.idTipoSala.nombre}"/></p:column>
+                                    <p:column headerText="VALOR"><h:outputText value="#{sc.valor}"/></p:column>
+                                </p:dataTable>
+
+                                <h:panelGrid columns="2">
+                                    <crud:botonesTop frm="#{frmSala.frmSalaCaracteristica}" actualizar="pnlTablaSC pnlDetalleSC growl"/>
+                                </h:panelGrid>
+
+
+                            </h:form>
+
+                        </h:panelGroup>
+                    </h:panelGrid>
+                    <h:panelGroup id="pnlDetalleSC">
+                        <p:outputLabel value="Selecion de productos"/>
+                        <h:form rendered="#{not empty frmFactura.registro or not empty frmFactura.ultimoRegistro}" id="frmDetalleSC">
+                            <h:panelGrid columns="2">
+                                <p:outputLabel value="Producto" for="lstProductos"/>
+                                <p:selectOneMenu id="lstProductos" value="#{frmFactura.idProducto}">
+                                    <f:selectItems value="#{frmFactura.listaProductos}" var="ts" itemLabel="#{ts.nombre}" itemValue="#{ts.idProducto}"/>
+                                    <p:ajax event="change"  listener="#{frmSala.frmSalaCaracteristica.selecionarTipoSala}" update=":growl pnlValorValues"/>
+                                </p:selectOneMenu>
+
+                                <p:outputLabel value="cantidad" for="txtCantidad"/>
+                                <p:inputText type="number" value="#{frmFactura.cantidadProducto}"/>
+
+                                <p:commandButton value="agregar" action="#{frmFactura.agregarProductos}" update="productosSelecionadosSOB @form"/>
+                                <p:commandButton value="eliminar" action="#{frmFactura.eliminarProductos}" update="productosSelecionadosSOB @form"/>
+
+                            </h:panelGrid>
+                            <h:panelGrid columns="1">
+                                <p:selectOneListbox id="productosSelecionadosSOB" value="#{frmFactura.productoSeleccionado}" columns="2" style="width: 200px;">
+                                    <f:selectItems value="#{frmFactura.productosSelecionados}" var="ta" itemLabel="#{ta}"
+                                                   itemValue="#{ta}" />
+                                    <p:ajax event="valueChange" listener="#{frmReservas.onTipoReservaChange}" update="btnCambiosSOB" />
+                                </p:selectOneListbox>
+                            </h:panelGrid>
+                            <h:panelGrid columns="#{frmTipoProducto.estado=='CREAR'?'1':'2'}">
+                                <h:panelGrid>
+                                    <crud:botonesBottom frm="#{frmSala.frmSalaCaracteristica}" actualizar="pnlTablaSC pnlDetalleSC :growl"/>
+                                </h:panelGrid>
+                            </h:panelGrid>
+                        </h:form>
+                    </h:panelGroup>
+
+
+                </p:tab>
+
+<!--                //reserva-->
+                <p:tab disabled="#{frmFactura.indexTab!=2}" closable="false" title="Reserva" id="tabReserva" rendered="#{not empty frmFactura.ultimoRegistro or  not empty frmFactura.registro}">
+                    <h:panelGroup id="pnlDetalleRS">
+
+                        <p:commandButton value="Cancelar" rendered="#{not empty frmFactura.reserva}" actionListener="#{frmFactura.cancelarReserva}" update="pnlDetalleRS frmDetalleRS growl"/>
+
+                        <br/>
+                        <p:outputLabel value="Selecion de Reserva"/>
+                        <br/>
+
+                        <h:form rendered="#{empty frmFactura.reserva}" id="frmBuscarRS">
+                                <h:panelGrid columns="2" id="pnlBuscarProgramacion">
+
+                                    <p:outputLabel value="ID" for="txtReservaBuscada" />
+                                    <p:inputText type="TEXT" value="#{frmFactura.idReservaSelecionada}"/>
+
+                                    <p:commandButton value="Buscar" actionListener="#{frmFactura.buscarReserva}" update="pnlDetalleRS frmDetalleRS growl"/>
+                                    <p:commandButton value="crear" actionListener="#{frmFactura.crearReserva}"  update="pnlDetalleRS growl"/>
+
+                                </h:panelGrid>
+                        </h:form>
+                        <h:form rendered="#{not empty frmFactura.reserva}" id="frmDetalleRS">
+                            <h:panelGrid columns="2">
+
+                                <p:outputLabel value="ID" for="txtCantidad"/>
+                                <p:inputText type="TEXT" value="#{frmFactura.reserva.idReserva} "  disabled="true" readonly="true"/>
+
+                                <p:outputLabel value="SALA" for="lstSala"/>
+                                <p:selectOneMenu id="lstSala" value="#{frmFactura.idSalaSelecionada}">
+                                    <f:selectItems value="#{frmFactura.salaList}" var="ts" itemLabel="#{ts.nombre}" itemValue="#{ts.idSala}"/>
+                                    <p:ajax event="itemSelect" listener="#{frmFactura.buscarProgramacion}" update="pnlDetalleRS" />
+                                </p:selectOneMenu>
+
+                                <p:outputLabel value="PROGRAMACION" for="lstProgramacion"/>
+                                <p:selectOneMenu id="lstProgramacion" value="#{frmFactura.idProgramacionSelecionada}">
+                                    <f:selectItems value="#{frmFactura.programacionList}" var="ts"
+                                                   itemLabel="#{ts.formattedLabel}"
+                                                   itemValue="#{ts.idProgramacion}" />
+                                    <p:ajax event="itemSelect" listener="#{frmFactura.buscarAsientos}" update="pnlDetalleRS" />
+                                </p:selectOneMenu>
+
+                                <h:outputText value="Selecione un dia"/>
+                                <p:calendar value="#{frmFactura.fechaActual}"
+                                            required="true"
+                                            showOnFocus="true"
+                                            pattern="dd/MM/yyyy"
+                                            minDate="#{frmReservas.fechaActual}">
+                                    <p:ajax event="dateSelect" listener="#{frmReservas.buscarProgramaciones}" update="text" />
+                                </p:calendar>
+
+                            </h:panelGrid>
+                        </h:form>
+                        <h:form>
+                            <p:panel header="Asientos" rendered="#{not empty frmFactura.reserva}">
+                                <h:panelGrid columns="3">
+                                    <h:panelGroup>
+                                        <h:outputText value="Asientos disponibles"/>
+
+                                        <p:selectOneListbox id="asientoDisponiblesSOB" value="#{frmFactura.idAsientoSelecionado}" columns="2" style="width: 200px;">
+                                            <f:selectItems value="#{frmFactura.asientosList}" var="ta" itemLabel="#{ta.nombre}"
+                                                           itemValue="#{ta.idAsiento}" />
+                                            <p:ajax event="valueChange" listener="#{frmFactura.pruebas}" update="btnCambiosSOB growl" />
+                                        </p:selectOneListbox>
+                                    </h:panelGroup>
+                                    <h:panelGrid columns="1" id="btnCambiosSOB">
+                                        <p:commandButton value="⭢ Reservar" disabled="#{empty frmFactura.idAsientoSelecionado}" actionListener="#{frmFactura.agregarAsiento}"
+                                                         update="asientoDisponiblesSOB btnCambiosSOB asientoSelecionadosSOB text"/>
+                                        <p:commandButton value="⭠ Eliminar" disabled="#{empty frmFactura.idAsientoELiminado}" actionListener="#{frmFactura.eliminarAsiento}"
+                                                         update="asientoDisponiblesSOB btnCambiosSOB asientoSelecionadosSOB text"/>
+                                    </h:panelGrid>
+                                    <h:panelGroup>
+                                        <h:outputText value="Asientos Selecionados"/>
+
+                                        <p:selectOneListbox id="asientoSelecionadosSOB" value="#{frmFactura.idAsientoELiminado}" columns="2" style="width: 200px;">
+                                            <f:selectItems value="#{frmFactura.asientosSelecionados}" var="ta" itemLabel="#{ta.nombre}"
+                                                           itemValue="#{ta.idAsiento}" />
+                                            <p:ajax event="valueChange" update="btnCambiosSOB" />
+                                        </p:selectOneListbox>
+                                    </h:panelGroup>
+                                </h:panelGrid>
+                            </p:panel>
+                        </h:form>
+                    </h:panelGroup>
+
+                </p:tab >
+                <p:tab disabled="#{frmFactura.indexTab!=3}" closable="false" title="Resumen" id="tabResumen">
+                   <h:form id="frmFactura">
+                       <p:panel header="General">
+                           <h:panelGrid columns="2" id="pnlDetallFcG">
+                               <p:outputLabel value="ID"/>
+                               <p:inputText  value="#{frmFactura.registro.idFactura}" readonly="true" disabled="true"/>
+
+                               <p:outputLabel value="Cliente"/>
+                               <p:inputText  value="#{frmFactura.registro.cliente}" size="70" required="true"/>
+
+                               <p:outputLabel value="DUI"/>
+                               <p:inputText value="#{frmFactura.registro.dui}" size="70" required="true"/>
+
+                               <p:outputLabel value="fecha"/>
+                               <p:calendar disabled="true" value="#{frmFactura.registro.fecha}" size="70" required="true"  showTime="true" pattern="dd/MM/yyyy HH:mm"/>
+                           </h:panelGrid>
+                       </p:panel>
+
+
+                       <p:panel header=" Productos">
+                           <h:panelGrid columns="2" id="pnlDetallFcPr" rendered="#{not empty frmFactura.productosSelecionados}">
+                               <p:outputLabel value="Producto"/>
+                               <p:outputLabel value="Cantidad"/>
+
+                               <o:repeat value="#{frmFactura.productosSelecionados}" var="pr">
+                                   <p:outputLabel value="#{pr.split(',')[0]}" />
+                                   <br/>
+                               </o:repeat>
+                               <o:repeat value="#{frmFactura.productosSelecionados}" var="pr">
+                                   <p:inputText disabled="true"  value="#{pr.split(',')[1]}" size="10" required="true"/>
+                                   <br/>
+                               </o:repeat>
+
+                           </h:panelGrid>
+                       </p:panel>
+                       <p:panel header="Reserva">
+                           <h:panelGrid columns="2" id="pnlDetallFcRs">
+
+                               <p:outputLabel value="Reserva:"/>
+                               <br/>
+                               <p:outputLabel value="ID"/>
+                               <p:inputText  value="#{frmFactura.reserva.idReserva}" readonly="true" disabled="true"/>
+
+                               <p:outputLabel value="Pelicula "/>
+                               <p:inputText disabled="true"  value="#{frmFactura.reserva.idProgramacion.formattedNombre}" required="true"/>
+
+                               <p:outputLabel value="fecha de reserva "/>
+                               <p:inputText disabled="true"  value="#{frmFactura.reserva.formattedfecha}" required="true"/>
+
+                               <p:outputLabel value="Asientos"/>
+
+                               <o:repeat value="#{frmFactura.asientosSelecionados}" var="As">
+                                   <p:outputLabel value="#{As.nombre}" />
+                                   <br/>
+                               </o:repeat>
+                           </h:panelGrid>
+                       </p:panel>
+
+                       <crud:botonesBottom frm="#{frmFactura}" actualizar="tabDetalle"/>
+                   </h:form>
+                </p:tab>
+
+            </p:tabView>
+        </h:panelGroup>
+            <h:panelGrid id="buttons" columns="2">
+                <p:commandButton rendered="#{frmFactura.indexTab != 3 and frmFactura.indexTab >= 1}"
+                                 value="#{abstrasctpffrm['abstrasctpffrm.next']}" actionListener="#{frmFactura.nextTab}" update="growl tabDetalle text buttons" />
+
+                <p:commandButton rendered="#{frmFactura.indexTab>1}" value="#{abstrasctpffrm['abstrasctpffrm.back']}" actionListener="#{frmFactura.BackTab}" update="tabDetalle text buttons" />
+            </h:panelGrid>
+
+
+    </ui:define>
+</ui:composition>
